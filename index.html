@@ -201,6 +201,49 @@
             --shadow-lg: 0 10px 25px rgba(0,0,0,0.3);
         }
 
+        /* Sunset */
+        [data-palette="sunset"] {
+            --primary: #3a0f0a;
+            --secondary: #5a1a14;
+            --accent: #ea580c;
+            --accent-light: #fb923c;
+            --success: #65a30d;
+            --warning: #d97706;
+            --danger: #b91c1c;
+            --text: #3a0f0a;
+            --text-light: #8a4a3f;
+            --border: #f1d9c8;
+            --bg: #fff8f1;
+            --bg-alt: #fdebd9;
+            --header-from: #5a1a14;
+            --header-to: #c2410c;
+            --shadow: 0 1px 3px rgba(154, 52, 18, 0.08);
+            --shadow-lg: 0 10px 30px rgba(194, 65, 12, 0.18);
+            --ambient: radial-gradient(1200px 700px at 80% -10%, rgba(251, 146, 60, 0.55) 0%, rgba(251, 146, 60, 0) 60%),
+                       radial-gradient(900px 600px at 0% 110%, rgba(154, 52, 18, 0.35) 0%, rgba(154, 52, 18, 0) 60%);
+        }
+        [data-palette="sunset"][data-theme="dark"] {
+            --primary: #fff1e6;
+            --secondary: #fcd9bd;
+            --accent: #fb923c;
+            --accent-light: #fdba74;
+            --success: #a3e635;
+            --warning: #fbbf24;
+            --danger: #f87171;
+            --text: #fff1e6;
+            --text-light: #f3c5a8;
+            --border: rgba(255, 200, 160, 0.18);
+            --bg: #2a0907;
+            --bg-alt: rgba(255, 240, 220, 0.06);
+            --header-from: #4a1410;
+            --header-to: #8a2a1f;
+            --shadow: 0 1px 3px rgba(0,0,0,0.35);
+            --shadow-lg: 0 14px 40px rgba(0,0,0,0.45);
+            --ambient: radial-gradient(1200px 800px at 75% -15%, #b13b1b 0%, rgba(177, 59, 27, 0) 55%),
+                       radial-gradient(900px 700px at 100% 50%, #7a1f12 0%, rgba(122, 31, 18, 0) 55%),
+                       linear-gradient(180deg, #2a0907 0%, #401410 100%);
+        }
+
         /* Mono */
         [data-palette="mono"] {
             --primary: #09090b;
@@ -2405,43 +2448,305 @@
                 font-size: 1.1rem;
             }
         }
+
+        /* =====================================================
+           App shell: slim icon sidebar + topbar
+           ===================================================== */
+        body {
+            background: var(--ambient, none), var(--bg);
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+
+        .app-shell {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        /* Sidebar */
+        .app-sidebar {
+            width: 76px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem 0 1.25rem;
+            gap: 0.5rem;
+            border-right: 1px solid var(--border);
+            background: color-mix(in srgb, var(--bg) 70%, transparent);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            z-index: 50;
+        }
+
+        .app-logo {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            background: var(--accent);
+            color: #fff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 16px color-mix(in srgb, var(--accent) 35%, transparent);
+            margin-bottom: 0.75rem;
+        }
+        .app-logo svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .app-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+            width: 100%;
+            align-items: center;
+            margin-top: 0.25rem;
+        }
+
+        /* Tabs inside the slim sidebar — override the legacy .tab styles */
+        .app-sidebar .tab {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            padding: 0;
+            border: none;
+            border-radius: 12px;
+            background: transparent;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
+            border-left: none;
+        }
+        .app-sidebar .tab svg {
+            width: 22px;
+            height: 22px;
+        }
+        .app-sidebar .tab:hover {
+            background: color-mix(in srgb, var(--accent) 10%, transparent);
+            color: var(--accent);
+            border-left: none;
+        }
+        .app-sidebar .tab.active {
+            background: var(--accent);
+            color: #fff;
+            border-left: none;
+            box-shadow: 0 6px 14px color-mix(in srgb, var(--accent) 30%, transparent);
+        }
+        .app-sidebar .tab[data-label]::after {
+            content: attr(data-label);
+            position: absolute;
+            left: calc(100% + 10px);
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--primary);
+            color: var(--bg);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.35rem 0.6rem;
+            border-radius: 6px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.15s ease;
+            z-index: 100;
+            box-shadow: var(--shadow);
+        }
+        .app-sidebar .tab:hover[data-label]::after {
+            opacity: 1;
+        }
+
+        /* Main column */
+        .app-main {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Topbar */
+        .app-topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 1rem 2rem;
+            background: color-mix(in srgb, var(--bg) 60%, transparent);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 40;
+        }
+
+        .topbar-title {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--primary);
+            margin: 0;
+        }
+
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+        }
+
+        .topbar-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.55rem 0.95rem;
+            border-radius: 10px;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 600;
+            font-size: 0.875rem;
+            border: 1px solid var(--border);
+            background: color-mix(in srgb, var(--bg) 65%, transparent);
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            width: auto;
+        }
+        .topbar-btn:hover {
+            background: var(--bg-alt);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .topbar-btn[hidden] { display: none; }
+        .topbar-btn svg { width: 16px; height: 16px; }
+
+        .topbar-btn.primary {
+            background: var(--accent);
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 30%, transparent);
+        }
+        .topbar-btn.primary:hover {
+            background: color-mix(in srgb, var(--accent) 88%, black);
+            color: #fff;
+            border-color: transparent;
+        }
+
+        /* Topbar variants of month-nav and currency — override the dark-on-dark legacy look */
+        .app-topbar .month-nav {
+            background: color-mix(in srgb, var(--bg) 65%, transparent);
+            border: 1px solid var(--border);
+            padding: 0.35rem 0.6rem;
+        }
+        .app-topbar .month-nav button {
+            color: var(--text);
+        }
+        .app-topbar .month-nav span {
+            color: var(--text);
+            min-width: 130px;
+            font-size: 0.875rem;
+        }
+        .app-topbar select.currency-select {
+            background: color-mix(in srgb, var(--bg) 65%, transparent);
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 0.55rem 0.75rem;
+            font-size: 0.875rem;
+        }
+
+        /* Content lives inside .app-main */
+        .app-main .content {
+            padding: 2rem;
+        }
+
+        /* Hide legacy header + retire the old .main-layout/.sidebar styles when shell is active */
+        .app-shell ~ * { /* no-op selector to keep specificity context */ }
+        body header { display: none; }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .app-sidebar {
+                width: 100%;
+                height: auto;
+                flex-direction: row;
+                position: sticky;
+                padding: 0.6rem 0.75rem;
+                gap: 0.4rem;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+                overflow-x: auto;
+            }
+            .app-logo { margin-bottom: 0; margin-right: 0.5rem; }
+            .app-nav { flex-direction: row; margin-top: 0; }
+            .app-sidebar .tab[data-label]::after { display: none; }
+            .app-shell { flex-direction: column; }
+            .app-topbar { padding: 0.85rem 1rem; }
+            .topbar-title { font-size: 1.25rem; }
+            .app-main .content { padding: 1rem; padding-bottom: 6rem; }
+        }
     </style>
 </head>
-<body data-theme="dark" data-palette="slate">
-    <header>
-        <div class="header-container">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
-                <div>
-                    <h1>Personal Finance</h1>
-                    <div class="subtitle">Track • Save • Grow</div>
-                </div>
-                <div class="header-controls">
+<body data-theme="dark" data-palette="sunset">
+    <div class="app-shell">
+        <!-- Slim icon sidebar -->
+        <aside class="app-sidebar" aria-label="Primary navigation">
+            <div class="app-logo" title="Personal Finance">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 1 0 0 7h5a3.5 3.5 0 1 1 0 7H6"/>
+                </svg>
+            </div>
+            <nav class="app-nav">
+                <button class="tab active" data-tab="overview" data-label="Overview" onclick="switchTab('overview', this)" aria-label="Overview">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12 12 3l9 9"/><path d="M5 10v10h14V10"/></svg>
+                </button>
+                <button class="tab" data-tab="expenses" data-label="Expenses" onclick="switchTab('expenses', this)" aria-label="Expenses">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/></svg>
+                </button>
+                <button class="tab" data-tab="goals" data-label="Goals" onclick="switchTab('goals', this)" aria-label="Goals">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>
+                </button>
+                <button class="tab" data-tab="insights" data-label="Insights" onclick="switchTab('insights', this)" aria-label="Insights">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg>
+                </button>
+                <button class="tab" data-tab="budget" data-label="Settings" onclick="switchTab('budget', this)" aria-label="Settings">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3h.1a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8v.1a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Main column -->
+        <div class="app-main">
+            <!-- Topbar -->
+            <div class="app-topbar">
+                <h1 class="topbar-title" id="topbarTitle">Overview</h1>
+                <div class="topbar-actions">
+                    <button class="topbar-btn primary" id="topbarAddBtn" onclick="topbarAdd()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        <span>Add</span>
+                    </button>
                     <div class="month-nav">
-                        <button onclick="previousMonth()">‹</button>
+                        <button onclick="previousMonth()" aria-label="Previous month">‹</button>
                         <span id="currentMonth"></span>
-                        <button onclick="nextMonth()">›</button>
+                        <button onclick="nextMonth()" aria-label="Next month">›</button>
                     </div>
-                    <select id="currencySelect" onchange="changeCurrency()" class="currency-select">
+                    <select id="currencySelect" onchange="changeCurrency()" class="currency-select" aria-label="Currency">
                         <option value="SEK">SEK (kr)</option>
                         <option value="USD">USD ($)</option>
                     </select>
                 </div>
             </div>
-        </div>
-    </header>
 
-    <div class="main-layout">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <button class="tab active" data-tab="overview" onclick="switchTab('overview', this)">Overview</button>
-            <button class="tab" data-tab="expenses" onclick="switchTab('expenses', this)">Expenses</button>
-            <button class="tab" data-tab="goals" onclick="switchTab('goals', this)">Goals</button>
-            <button class="tab" data-tab="insights" onclick="switchTab('insights', this)">Insights</button>
-            <button class="tab" data-tab="budget" onclick="switchTab('budget', this)">Settings</button>
-        </div>
-
-        <!-- Content -->
-        <div class="content">
+            <!-- Content -->
+            <div class="content">
             <!-- Overview Tab -->
             <div class="tab-content active" id="overview-tab">
                 <!-- Hero: Savings Rate + Streak -->
@@ -2797,8 +3102,9 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
+        </div><!-- /.content -->
+        </div><!-- /.app-main -->
+    </div><!-- /.app-shell -->
 
     <!-- Edit Expense Modal -->
     <div class="modal" id="editModal">
@@ -3301,7 +3607,8 @@ const palettePresets = [
     { id: 'forest', name: 'Forest', swatches: ['#1c2a1e', '#15803d', '#16a34a', '#ca8a04'] },
     { id: 'plum',   name: 'Plum',   swatches: ['#2d1b2e', '#9333ea', '#10b981', '#f59e0b'] },
     { id: 'mono',   name: 'Mono',   swatches: ['#09090b', '#52525b', '#16a34a', '#ca8a04'] },
-    { id: 'ocean',  name: 'Ocean',  swatches: ['#0c1e2e', '#0891b2', '#10b981', '#f97316'] }
+    { id: 'ocean',  name: 'Ocean',  swatches: ['#0c1e2e', '#0891b2', '#10b981', '#f97316'] },
+    { id: 'sunset', name: 'Sunset', swatches: ['#3a0f0a', '#c2410c', '#ea580c', '#fb923c'] }
 ];
 let currentViewMonth = new Date();
 let currentEditingExpense = null;
@@ -4005,6 +4312,14 @@ function changePalette(id) {
 }
 
 // Tabs
+const TAB_META = {
+    overview: { title: 'Overview', addable: true },
+    expenses: { title: 'Expenses', addable: true },
+    goals:    { title: 'Goals',    addable: true },
+    insights: { title: 'Insights', addable: false },
+    budget:   { title: 'Settings', addable: false }
+};
+
 function switchTab(tabName, btnEl) {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
@@ -4017,12 +4332,33 @@ function switchTab(tabName, btnEl) {
     }
     document.getElementById(tabName + '-tab').classList.add('active');
 
+    // Drive the topbar — title + contextual Add button
+    const meta = TAB_META[tabName];
+    if (meta) {
+        const titleEl = document.getElementById('topbarTitle');
+        if (titleEl) titleEl.textContent = meta.title;
+        const addBtn = document.getElementById('topbarAddBtn');
+        if (addBtn) addBtn.hidden = !meta.addable;
+    }
+
     // Render contextual content when activating these tabs
     if (tabName === 'goals') {
         renderGoals();
         renderNetWorth();
     } else if (tabName === 'insights') {
         renderInsights();
+    }
+}
+
+// Topbar "+ Add" — routes to the right add flow per active tab
+function topbarAdd() {
+    const active = document.querySelector('.tab.active');
+    const tabName = active ? active.dataset.tab : 'expenses';
+    if (tabName === 'goals') {
+        if (typeof openGoalModal === 'function') openGoalModal(null);
+    } else {
+        // Overview & Expenses both add an expense
+        if (typeof openQuickAdd === 'function') openQuickAdd();
     }
 }
 
