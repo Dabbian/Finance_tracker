@@ -6,31 +6,35 @@
     <title>Sign in · Personal Finance</title>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        /* Locked to light + mint — same design tokens as the app's mint palette */
+        /* Locked to dark + sunset — same design tokens as the app's sunset palette */
         :root {
-            --primary: #1a202c;
-            --secondary: #2d3748;
-            --accent: #0d9488;
-            --accent-light: #14b8a6;
-            --accent-dark: #0f766e;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #e11d48;
-            --text: #1a202c;
-            --text-light: #718096;
-            --border: #d8e2dd;
-            --bg: #f7fafc;
-            --bg-alt: #edf2f7;
-            --bg-card: #ffffff;
-            --shadow: 0 1px 3px rgba(0,0,0,0.06);
-            --shadow-lg: 0 10px 40px rgba(13, 148, 136, 0.10), 0 2px 8px rgba(0,0,0,0.04);
+            --primary: #fff1e6;
+            --secondary: #fcd9bd;
+            --accent: #fb923c;
+            --accent-light: #fdba74;
+            --accent-dark: #ea580c;
+            --success: #a3e635;
+            --warning: #fbbf24;
+            --danger: #f87171;
+            --text: #fff1e6;
+            --text-light: #f3c5a8;
+            --border: rgba(255, 200, 160, 0.18);
+            --bg: #2a0907;
+            --bg-alt: rgba(255, 240, 220, 0.06);
+            --bg-card: rgba(255, 240, 220, 0.05);
+            --shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+            --shadow-lg: 0 18px 50px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.25);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            background: var(--bg);
+            background:
+                radial-gradient(1200px 800px at 75% -15%, #b13b1b 0%, rgba(177, 59, 27, 0) 55%),
+                radial-gradient(900px 700px at 100% 50%, #7a1f12 0%, rgba(122, 31, 18, 0) 55%),
+                linear-gradient(180deg, #2a0907 0%, #401410 100%);
+            background-attachment: fixed;
             color: var(--text);
             min-height: 100vh;
             display: flex;
@@ -39,31 +43,6 @@
             padding: 1.5rem;
             position: relative;
             overflow-x: hidden;
-        }
-
-        /* Decorative background — subtle mint blobs */
-        body::before, body::after {
-            content: '';
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.35;
-            pointer-events: none;
-            z-index: 0;
-        }
-        body::before {
-            width: 480px;
-            height: 480px;
-            background: var(--accent-light);
-            top: -120px;
-            right: -120px;
-        }
-        body::after {
-            width: 380px;
-            height: 380px;
-            background: #5eead4;
-            bottom: -100px;
-            left: -100px;
         }
 
         .auth-shell {
@@ -86,9 +65,9 @@
             height: 56px;
             border-radius: 16px;
             background: var(--accent);
-            color: white;
+            color: #2a0907;
             margin-bottom: 0.75rem;
-            box-shadow: 0 6px 20px rgba(13, 148, 136, 0.25);
+            box-shadow: 0 6px 20px rgba(251, 146, 60, 0.35);
         }
         .brand-mark svg {
             width: 28px;
@@ -117,13 +96,15 @@
             padding: 2rem;
             box-shadow: var(--shadow-lg);
             border: 1px solid var(--border);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
         }
 
         /* Tabs (Sign in / Sign up) */
         .tab-bar {
             display: flex;
             gap: 4px;
-            background: var(--bg-alt);
+            background: rgba(0, 0, 0, 0.25);
             padding: 4px;
             border-radius: 12px;
             margin-bottom: 1.5rem;
@@ -145,9 +126,9 @@
             color: var(--text);
         }
         .tab-btn.active {
-            background: var(--bg-card);
-            color: var(--primary);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+            background: rgba(255, 240, 220, 0.10);
+            color: var(--text);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
         }
 
         .panel { display: none; }
@@ -205,24 +186,25 @@
         input[type="text"] {
             width: 100%;
             padding: 0.75rem 0.9rem;
-            border: 2px solid var(--border);
+            border: 1.5px solid var(--border);
             border-radius: 10px;
             font-size: 1rem;
             font-family: inherit;
-            background: var(--bg-card);
+            background: rgba(0, 0, 0, 0.25);
             color: var(--text);
             transition: border-color 0.15s ease, box-shadow 0.15s ease;
         }
+        input::placeholder { color: var(--text-light); opacity: 0.6; }
         input:focus {
             outline: none;
             border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.12);
+            box-shadow: 0 0 0 3px rgba(251, 146, 60, 0.18);
         }
         input.error {
             border-color: var(--danger);
         }
         input.error:focus {
-            box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.12);
+            box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.18);
         }
         .field-error {
             color: var(--danger);
@@ -252,7 +234,7 @@
             border-radius: 6px;
         }
         .password-toggle:hover {
-            background: var(--bg-alt);
+            background: rgba(255, 240, 220, 0.08);
             color: var(--text);
         }
         .password-toggle svg {
@@ -278,12 +260,12 @@
         }
         .btn-primary {
             background: var(--accent);
-            color: white;
-            box-shadow: 0 1px 3px rgba(13, 148, 136, 0.2);
+            color: #2a0907;
+            box-shadow: 0 4px 14px rgba(251, 146, 60, 0.25);
         }
         .btn-primary:hover {
-            background: var(--accent-dark);
-            box-shadow: 0 4px 14px rgba(13, 148, 136, 0.3);
+            background: var(--accent-light);
+            box-shadow: 0 6px 20px rgba(251, 146, 60, 0.40);
             transform: translateY(-1px);
         }
         .btn-primary:active {
@@ -295,13 +277,13 @@
             transform: none;
         }
         .btn-secondary {
-            background: var(--bg-card);
+            background: rgba(0, 0, 0, 0.25);
             color: var(--text);
             border: 1.5px solid var(--border);
         }
         .btn-secondary:hover {
-            background: var(--bg-alt);
-            border-color: var(--text-light);
+            background: rgba(255, 240, 220, 0.08);
+            border-color: var(--accent);
         }
         .btn svg {
             width: 18px;
@@ -342,9 +324,9 @@
 
         /* Demo banner */
         .demo-banner {
-            background: color-mix(in srgb, var(--accent) 8%, transparent);
-            border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
-            color: var(--accent-dark);
+            background: color-mix(in srgb, var(--accent) 14%, transparent);
+            border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+            color: var(--accent-light);
             border-radius: 10px;
             padding: 0.7rem 0.85rem;
             font-size: 0.8rem;
@@ -366,11 +348,12 @@
             bottom: 24px;
             left: 50%;
             transform: translateX(-50%) translateY(20px);
-            background: var(--primary);
-            color: white;
+            background: #1a0504;
+            color: var(--text);
+            border: 1px solid var(--border);
             padding: 0.85rem 1.25rem;
             border-radius: 10px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             opacity: 0;
             transition: all 0.3s ease;
             font-size: 0.9rem;
@@ -392,8 +375,6 @@
 
         @media (max-width: 480px) {
             .auth-card { padding: 1.5rem; }
-            body::before { width: 320px; height: 320px; }
-            body::after { width: 260px; height: 260px; }
         }
     </style>
 </head>
