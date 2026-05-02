@@ -1,0 +1,31 @@
+Personal Finance
+
+# Förbättrings punkter
+- Kunna klicka på en utgift för att lägga till swish återbetalning/ar
+- Lägga till Återkommande/ Fasta utgifter
+- Ha en till graf som visar hur mycket plus eller minus per dag
+- Grafen visar fel månad
+- Dark Theme
+- Kunna ändra vilket kategori i efterhand.
+- Lägga till kategorier
+- Välja själv vilka kategorier som skall automatiskt delas in i baserad på description
+- Tabort "Total expenses", ersätt med Daily budget
+- Grön/röd text på Daily average baserat på ifall Daily budget är under eller över
+- Databas som sparas någonstans
+- Flytta Monthly budget och fasta utgifter till en seperat sida
+- Category Breakdown, diagramet skall visa procent, under skall det finnas alla kategorier som visar totalt belopp för varje kategori i vald valuta.
+- Byt ut Track, analyze, optimize. Till Overview, expenses, Budget
+    - Overview, visar "Total Spent This Month", "Daily Average", "Budget Remaining", "Daily budget", "category breakdown", "Spending Trend", "Saving Trend"
+    - Expenses, "Add Expense", "Recent Expenses"(Där man kan klicka på en utgift för att redigera kategorin eller lägga till swish återbetalning/ar), "import from excel"
+    - Budget, "Monthly Budget", "Configure Categories", "Fixed Expenses"
+
+# Framtid Önske Punkter
+- Modulär interface, där man kan välja vilka grafer som ska visas
+- BankID inloggning
+- Databas
+- Mobil App
+
+#Monetization
+- 60 kr månaden?
+- Fast konstnad?
+- Gratis version? med reklam och mindre funktioner.

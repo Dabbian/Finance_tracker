@@ -1,0 +1,22 @@
+# macOS
+.DS_Store
+
+# Local backups
+Versions/
+
+# Databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Archives / exports
+files.zip
+files/
+
+# Editor / OS
+.idea/
+.vscode/
+*.swp
+
+# Claude Code local
+.claude/
