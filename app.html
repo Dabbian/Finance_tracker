@@ -2910,20 +2910,20 @@
         <div class="app-main">
             <!-- Topbar -->
             <div class="app-topbar">
-                <h1 class="topbar-title" id="topbarTitle">Overview</h1>
+                <h1 class="topbar-title" id="topbarTitle" data-i18n="tabs.overview">Overview</h1>
                 <div class="topbar-actions">
                     <button class="topbar-btn" id="topbarAddBtn" onclick="topbarAdd()">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-                        <span>Add</span>
+                        <span data-i18n="topbar.add">Add</span>
                     </button>
                     <div class="month-nav">
-                        <button onclick="previousMonth()" aria-label="Previous month">‹</button>
+                        <button onclick="previousMonth()" data-i18n-aria-label="topbar.previousMonth" aria-label="Previous month">‹</button>
                         <span id="currentMonth"></span>
-                        <button onclick="nextMonth()" aria-label="Next month">›</button>
+                        <button onclick="nextMonth()" data-i18n-aria-label="topbar.nextMonth" aria-label="Next month">›</button>
                     </div>
-                    <select id="currencySelect" onchange="changeCurrency()" class="currency-select" aria-label="Currency">
-                        <option value="SEK">SEK (kr)</option>
-                        <option value="USD">USD ($)</option>
+                    <select id="currencySelect" onchange="changeCurrency()" class="currency-select" data-i18n-aria-label="topbar.currency" aria-label="Currency">
+                        <option value="SEK" data-i18n="currency.sek">SEK (kr)</option>
+                        <option value="USD" data-i18n="currency.usd">USD ($)</option>
                     </select>
                 </div>
             </div>
@@ -2936,9 +2936,9 @@
                 <div class="hero-card">
                     <div class="hero-grid">
                         <div>
-                            <div class="hero-savings-label">Savings Rate</div>
+                            <div class="hero-savings-label" data-i18n="hero.savingsRate">Savings Rate</div>
                             <div class="hero-savings-value" id="heroSavingsRate">—</div>
-                            <div class="hero-savings-detail" id="heroSavingsDetail">Set your income in Settings to track savings</div>
+                            <div class="hero-savings-detail" id="heroSavingsDetail" data-i18n="hero.setIncomeHint">Set your income in Settings to track savings</div>
                         </div>
                         <div class="hero-divider"></div>
                         <div class="streak-display">
@@ -2948,7 +2948,7 @@
                                 </svg>
                             </div>
                             <div class="streak-count" id="streakCount">0</div>
-                            <div class="streak-label">Day Streak</div>
+                            <div class="streak-label" data-i18n="hero.dayStreak">Day Streak</div>
                             <div class="streak-best" id="streakBest"></div>
                         </div>
                     </div>
@@ -2957,19 +2957,19 @@
 
                 <div class="stats-grid">
                     <div class="stat-card">
-                        <div class="stat-label">Total Spent This Cycle</div>
+                        <div class="stat-label" data-i18n="stats.totalSpentCycle">Total Spent This Cycle</div>
                         <div class="stat-value" id="totalSpent">0 kr</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-label">Daily Average</div>
+                        <div class="stat-label" data-i18n="stats.dailyAverage">Daily Average</div>
                         <div class="stat-value" id="dailyAverage">0 kr</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-label">Budget Remaining</div>
+                        <div class="stat-label" data-i18n="stats.budgetRemaining">Budget Remaining</div>
                         <div class="stat-value" id="budgetRemaining">0 kr</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-label">Daily Budget</div>
+                        <div class="stat-label" data-i18n="stats.dailyBudget">Daily Budget</div>
                         <div class="stat-value" id="dailyBudget">0 kr</div>
                     </div>
                 </div>
@@ -2977,10 +2977,10 @@
                 <div class="dashboard-grid">
                     <div>
                         <div class="card">
-                            <h2 class="card-title">Category Breakdown</h2>
+                            <h2 class="card-title" data-i18n="cards.categoryBreakdown">Category Breakdown</h2>
                             <label class="checkbox-label">
                                 <input type="checkbox" id="includeFixed" onchange="updateCharts()">
-                                <span>Include Fixed Expenses</span>
+                                <span data-i18n="labels.includeFixed">Include Fixed Expenses</span>
                             </label>
                             <div class="chart-container">
                                 <canvas id="categoryChart"></canvas>
@@ -2990,29 +2990,29 @@
                     </div>
                     <div>
                         <div class="card">
-                            <h2 class="card-title">Spending Trend</h2>
+                            <h2 class="card-title" data-i18n="cards.spendingTrend">Spending Trend</h2>
                             <div class="chart-container">
                                 <canvas id="trendChart"></canvas>
                             </div>
                         </div>
                         <div class="card">
-                            <h2 class="card-title">Daily Savings</h2>
-                            <p style="color: var(--text-light); font-size: 0.875rem; margin-bottom: 1rem;">
+                            <h2 class="card-title" data-i18n="cards.dailySavings">Daily Savings</h2>
+                            <p style="color: var(--text-light); font-size: 0.875rem; margin-bottom: 1rem;" data-i18n="savings.hint">
                                 Hover over a day to see details, click to view expenses
                             </p>
                             <div id="savingsGrid" class="savings-grid"></div>
                             <div style="display: flex; gap: 1.5rem; margin-top: 1.5rem; font-size: 0.875rem; color: var(--text-light); justify-content: center;">
                                 <div style="display: flex; align-items: center; gap: 0.5rem;">
                                     <div style="width: 16px; height: 16px; background: var(--success); border-radius: 4px;"></div>
-                                    <span>Under budget</span>
+                                    <span data-i18n="savings.underBudget">Under budget</span>
                                 </div>
                                 <div style="display: flex; align-items: center; gap: 0.5rem;">
                                     <div style="width: 16px; height: 16px; background: var(--danger); border-radius: 4px;"></div>
-                                    <span>Over budget</span>
+                                    <span data-i18n="savings.overBudget">Over budget</span>
                                 </div>
                                 <div style="display: flex; align-items: center; gap: 0.5rem;">
                                     <div style="width: 16px; height: 16px; background: var(--bg-alt); border: 1px solid var(--border); border-radius: 4px;"></div>
-                                    <span>Future</span>
+                                    <span data-i18n="savings.future">Future</span>
                                 </div>
                             </div>
                         </div>
@@ -3025,35 +3025,35 @@
                 <div class="expenses-grid">
                     <div>
                         <div class="card">
-                            <h2 class="card-title">Add Expense</h2>
+                            <h2 class="card-title" data-i18n="cards.addExpense">Add Expense</h2>
                             <form id="expenseForm">
                                 <div class="form-group">
-                                    <label for="amount" id="amountLabel">Amount (kr)</label>
-                                    <input type="number" id="amount" step="0.01" min="0" required placeholder="0.00">
+                                    <label for="amount" id="amountLabel" data-i18n="labels.amountKr">Amount (kr)</label>
+                                    <input type="number" id="amount" step="0.01" min="0" required placeholder="0.00" data-i18n-placeholder="placeholders.amount">
                                 </div>
                                 <div class="form-group">
-                                    <label for="category">Category</label>
+                                    <label for="category" data-i18n="labels.category">Category</label>
                                     <select id="category" required></select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="description">Description (Optional)</label>
-                                    <input type="text" id="description" placeholder="Coffee at Starbucks">
+                                    <label for="description" data-i18n="labels.descriptionOptional">Description (Optional)</label>
+                                    <input type="text" id="description" placeholder="Coffee at Starbucks" data-i18n-placeholder="placeholders.descriptionExample">
                                 </div>
                                 <div class="form-group">
-                                    <label for="date">Date</label>
+                                    <label for="date" data-i18n="labels.date">Date</label>
                                     <input type="date" id="date" required>
                                 </div>
-                                <button type="submit">Add Expense</button>
+                                <button type="submit" data-i18n="buttons.addExpense">Add Expense</button>
                             </form>
                         </div>
 
                         <div class="card">
-                            <h2 class="card-title">Import from Excel</h2>
+                            <h2 class="card-title" data-i18n="cards.importExcel">Import from Excel</h2>
                             <div class="file-upload" id="fileUpload">
                                 <div class="upload-icon">📊</div>
                                 <div>
-                                    <strong>Click to upload</strong> or drag and drop<br>
-                                    <small>Support for .xlsx and .xls files</small>
+                                    <strong data-i18n="buttons.uploadClick">Click to upload</strong> <span data-i18n="buttons.dragDrop">or drag and drop</span><br>
+                                    <small data-i18n="buttons.uploadHelp">Support for .xlsx and .xls files</small>
                                 </div>
                                 <input type="file" id="excelFile" accept=".xlsx,.xls">
                             </div>
@@ -3061,9 +3061,9 @@
                     </div>
 
                     <div class="card">
-                        <h2 class="card-title">Recent Expenses</h2>
+                        <h2 class="card-title" data-i18n="cards.recentExpenses">Recent Expenses</h2>
                         <div class="expenses-list" id="expensesList">
-                            <p style="text-align: center; color: var(--text-light); padding: 2rem;">No expenses yet</p>
+                            <p style="text-align: center; color: var(--text-light); padding: 2rem;" data-i18n="expenses.empty">No expenses yet</p>
                         </div>
                     </div>
                 </div>
@@ -3249,9 +3249,13 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group" style="margin-bottom: 0;">
-                                <label>Color Palette</label>
+                            <div class="form-group">
+                                <label data-i18n="labels.colorPalette">Color Palette</label>
                                 <div class="palette-grid" id="paletteGrid"></div>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label data-i18n="labels.language">Language</label>
+                                <div class="theme-buttons" id="languageButtons" role="tablist"></div>
                             </div>
                         </div>
 
@@ -3775,6 +3779,7 @@ let monthlyIncome = 0;
 let currency = 'SEK';
 let theme = 'dark';
 let palette = 'slate';
+let language = 'en'; // 'en' | 'sv'
 let cycleStartDay = 1;          // 1 = calendar month, otherwise 1–28
 let cycleAdjustment = 'none';   // 'none' | 'weekend' | 'sweden'
 let achievedMilestones = []; // [{type, key}] for confetti dedupe
@@ -3795,6 +3800,491 @@ const palettePresets = [
     { id: 'blossom', name: 'Blossom', swatches: ['#4c0d2e', '#ec4899', '#f472b6', '#10b981'] },
     { id: 'honey',   name: 'Honey',   swatches: ['#713f12', '#fde047', '#fef08a', '#84cc16'] }
 ];
+
+// =====================================================
+// I18N — translations + helpers
+// Add new strings to BOTH en and sv. The t(path) helper takes a
+// dot-separated path and returns the matching string in the active
+// language, falling back to English, then to the path itself.
+// =====================================================
+const languagePresets = [
+    { id: 'en', label: 'English' },
+    { id: 'sv', label: 'Svenska' }
+];
+
+const translations = {
+    en: {
+        tabs: {
+            overview: 'Overview',
+            expenses: 'Expenses',
+            goals: 'Goals',
+            insights: 'Insights',
+            settings: 'Settings'
+        },
+        topbar: {
+            add: 'Add',
+            previousMonth: 'Previous month',
+            nextMonth: 'Next month',
+            currency: 'Currency'
+        },
+        common: {
+            save: 'Save',
+            cancel: 'Cancel',
+            close: 'Close',
+            delete: 'Delete',
+            edit: 'Edit',
+            add: 'Add',
+            confirm: 'Confirm',
+            yes: 'Yes',
+            no: 'No',
+            today: 'Today',
+            yesterday: 'Yesterday',
+            optional: 'Optional',
+            loading: 'Loading…'
+        },
+        currency: { sek: 'SEK (kr)', usd: 'USD ($)' },
+        hero: {
+            savingsRate: 'Savings Rate',
+            dayStreak: 'Day Streak',
+            best: 'Best: {n}',
+            setIncomeHint: 'Set your income in Settings to track savings',
+            keeping: "You're keeping <strong>{amount}</strong> this cycle",
+            spendingOver: 'Spending <strong style="color:var(--danger);">{amount}</strong> over income'
+        },
+        stats: {
+            totalSpentCycle: 'Total Spent This Cycle',
+            dailyAverage: 'Daily Average',
+            budgetRemaining: 'Budget Remaining',
+            dailyBudget: 'Daily Budget'
+        },
+        savings: {
+            hint: 'Hover over a day to see details, click to view expenses',
+            underBudget: 'Under budget',
+            overBudget: 'Over budget',
+            future: 'Future'
+        },
+        expenses: {
+            empty: 'No expenses yet',
+            edit: 'Edit Expense',
+            details: 'Expense Details',
+            confirmDelete: 'Delete this expense?',
+            previewTitle: 'Preview Import',
+            foundCount: '<strong id="importCount">0</strong> expenses found',
+            previewIntro: "Review the expenses below before importing. You can uncheck any rows you don't want.",
+            recurringNote: 'Recurring monthly subscriptions are auto-categorized as "Fixed Expenses" and excluded from your daily budget.'
+        },
+        cards: {
+            addExpense: 'Add Expense',
+            importExcel: 'Import from Excel',
+            recentExpenses: 'Recent Expenses',
+            configureCategories: 'Configure Categories',
+            savingsGoals: 'Savings Goals',
+            netWorth: 'Net Worth',
+            insights: 'Insights',
+            account: 'Account',
+            incomeBudget: 'Income & Budget',
+            cycleSettings: 'Budget Cycle',
+            appearance: 'Appearance',
+            subscriptions: 'Subscriptions',
+            database: 'Database',
+            categoryBreakdown: 'Category Breakdown',
+            spendingTrend: 'Spending Trend',
+            dailySavings: 'Daily Savings',
+            milestones: 'Milestones'
+        },
+        labels: {
+            amount: 'Amount',
+            amountKr: 'Amount (kr)',
+            amountUsd: 'Amount ($)',
+            category: 'Category',
+            description: 'Description',
+            descriptionOptional: 'Description (Optional)',
+            date: 'Date',
+            categoryName: 'Category Name',
+            color: 'Color',
+            theme: 'Theme',
+            colorPalette: 'Color Palette',
+            language: 'Language',
+            monthlyIncome: 'Monthly Income',
+            monthlyIncomeKr: 'Monthly Income (kr)',
+            monthlyIncomeUsd: 'Monthly Income ($)',
+            discretionaryBudget: 'Discretionary Budget',
+            discretionaryBudgetKr: 'Discretionary Budget (kr)',
+            discretionaryBudgetUsd: 'Discretionary Budget ($)',
+            cycleStartsOnDay: 'Cycle Starts on Day',
+            cycleAdjustment: 'When start date lands on…',
+            email: 'Email',
+            password: 'Password',
+            signInMethod: 'Sign-in method',
+            signedIn: 'Signed in',
+            accountType: 'Account type',
+            light: 'Light',
+            dark: 'Dark',
+            includeFixed: 'Include Fixed Expenses'
+        },
+        placeholders: {
+            amount: '0.00',
+            categoryExample: 'e.g., Groceries',
+            descriptionExample: 'Coffee at Starbucks',
+            incomeExample: '35000',
+            budgetExample: '10000'
+        },
+        buttons: {
+            addExpense: 'Add Expense',
+            addCategory: 'Add Category',
+            addGoal: 'Add Goal',
+            addSubscription: '+ Add Subscription',
+            addRepayment: 'Add Repayment',
+            addKeyword: 'Add',
+            saveGoal: 'Save Goal',
+            contribute: 'Contribute',
+            takeSnapshot: 'Take Snapshot',
+            signOut: 'Sign out',
+            downloadDb: '💾 Download Database',
+            loadDb: '📂 Load Database',
+            importAll: 'Import All',
+            uploadClick: 'Click to upload',
+            dragDrop: 'or drag and drop',
+            uploadHelp: 'Support for .xlsx and .xls files',
+            getStarted: 'Get started'
+        },
+        cycle: {
+            help: 'Choose when your budget month resets. Useful for payday-based budgeting (e.g., Swedish 25th payday) or credit card billing cycles (e.g., Amex on the 2nd).',
+            adjustNone: 'Use that exact day',
+            adjustWeekend: 'Move to nearest weekday',
+            adjustSweden: 'Move to nearest Swedish business day'
+        },
+        subs: {
+            help: 'Track your recurring subscriptions and see what they cost. Auto-detected from import data and any you add manually.',
+            amountPerCycle: 'Amount per cycle',
+            billingCycle: 'Billing cycle',
+            monthly: 'Monthly',
+            yearly: 'Yearly',
+            quarterly: 'Quarterly',
+            weekly: 'Weekly'
+        },
+        goals: {
+            intro: "Name what you're saving for. Watch the jar fill up.",
+            whatSavingFor: 'What are you saving for?',
+            targetAmount: 'Target amount',
+            startingBalance: 'Starting balance',
+            deadlineOptional: 'Deadline (optional)',
+            newSavingsGoal: 'New Savings Goal',
+            editGoal: 'Edit goal',
+            addContribution: 'Add a contribution',
+            takeSnapshotTitle: 'Take a snapshot',
+            netWorthIntro: 'A quick log of where you stand. No accounts to link.'
+        },
+        insights: {
+            empty: 'No insights yet — add a few expenses to see trends.'
+        },
+        signIn: {
+            title: 'Welcome back',
+            subtitle: 'Sign in to continue tracking your finances.',
+            signIn: 'Sign in',
+            signUp: 'Sign up',
+            createAccount: 'Create account',
+            createAccountSub: 'Start tracking what you keep, not just what you spend.',
+            forgot: 'Forgot password?',
+            withPasskey: 'Sign in with passkey',
+            setupPasskey: 'Set up with passkey',
+            or: 'or',
+            resetTitle: 'Reset password',
+            resetSub: "We'll send a reset link to your email.",
+            sendReset: 'Send reset link',
+            backToSignIn: 'Back to sign in',
+            footer: 'Protected by <strong>passkeys</strong> & end-to-end encryption (planned)',
+            emailHint: 'you@example.com',
+            passwordHint: '••••••••',
+            passwordMin: 'At least 8 characters',
+            invalidEmail: 'Please enter a valid email.',
+            passwordRequired: 'Password is required.',
+            passwordTooShort: 'Password must be at least 8 characters.',
+            signingIn: 'Signing in…',
+            creatingAccount: 'Creating account…',
+            sending: 'Sending…',
+            waitingPasskey: 'Waiting for passkey…',
+            resetSent: 'If that email exists, a reset link has been sent.',
+            passkeyUnsupported: "Passkeys aren't supported in this browser.",
+            demoNote: '<strong>Demo mode.</strong> Any email and password works. Real authentication coming once a backend is connected.',
+            tagline: 'Track · Save · Grow'
+        }
+    },
+    sv: {
+        tabs: {
+            overview: 'Översikt',
+            expenses: 'Utgifter',
+            goals: 'Mål',
+            insights: 'Insikter',
+            settings: 'Inställningar'
+        },
+        topbar: {
+            add: 'Lägg till',
+            previousMonth: 'Föregående månad',
+            nextMonth: 'Nästa månad',
+            currency: 'Valuta'
+        },
+        common: {
+            save: 'Spara',
+            cancel: 'Avbryt',
+            close: 'Stäng',
+            delete: 'Ta bort',
+            edit: 'Redigera',
+            add: 'Lägg till',
+            confirm: 'Bekräfta',
+            yes: 'Ja',
+            no: 'Nej',
+            today: 'Idag',
+            yesterday: 'Igår',
+            optional: 'Valfritt',
+            loading: 'Laddar…'
+        },
+        currency: { sek: 'SEK (kr)', usd: 'USD ($)' },
+        hero: {
+            savingsRate: 'Sparkvot',
+            dayStreak: 'Dagar i rad',
+            best: 'Bästa: {n}',
+            setIncomeHint: 'Ange din inkomst i Inställningar för att följa sparandet',
+            keeping: 'Du behåller <strong>{amount}</strong> denna cykel',
+            spendingOver: 'Spenderar <strong style="color:var(--danger);">{amount}</strong> över inkomsten'
+        },
+        stats: {
+            totalSpentCycle: 'Totalt spenderat denna cykel',
+            dailyAverage: 'Snitt per dag',
+            budgetRemaining: 'Kvar av budget',
+            dailyBudget: 'Daglig budget'
+        },
+        savings: {
+            hint: 'Hovra över en dag för att se detaljer, klicka för att visa utgifter',
+            underBudget: 'Under budget',
+            overBudget: 'Över budget',
+            future: 'Framtid'
+        },
+        expenses: {
+            empty: 'Inga utgifter än',
+            edit: 'Redigera utgift',
+            details: 'Utgiftsdetaljer',
+            confirmDelete: 'Ta bort denna utgift?',
+            previewTitle: 'Förhandsgranska import',
+            foundCount: '<strong id="importCount">0</strong> utgifter hittade',
+            previewIntro: 'Granska utgifterna nedan innan du importerar. Du kan avmarkera rader du inte vill ta med.',
+            recurringNote: 'Återkommande månadsprenumerationer kategoriseras automatiskt som "Fasta utgifter" och räknas inte mot din dagliga budget.'
+        },
+        cards: {
+            addExpense: 'Lägg till utgift',
+            importExcel: 'Importera från Excel',
+            recentExpenses: 'Senaste utgifter',
+            configureCategories: 'Hantera kategorier',
+            savingsGoals: 'Sparmål',
+            netWorth: 'Nettoförmögenhet',
+            insights: 'Insikter',
+            account: 'Konto',
+            incomeBudget: 'Inkomst & budget',
+            cycleSettings: 'Budgetcykel',
+            appearance: 'Utseende',
+            subscriptions: 'Prenumerationer',
+            database: 'Databas',
+            categoryBreakdown: 'Fördelning per kategori',
+            spendingTrend: 'Utgiftstrend',
+            dailySavings: 'Dagligt sparande',
+            milestones: 'Milstolpar'
+        },
+        labels: {
+            amount: 'Belopp',
+            amountKr: 'Belopp (kr)',
+            amountUsd: 'Belopp ($)',
+            category: 'Kategori',
+            description: 'Beskrivning',
+            descriptionOptional: 'Beskrivning (valfritt)',
+            date: 'Datum',
+            categoryName: 'Kategorinamn',
+            color: 'Färg',
+            theme: 'Tema',
+            colorPalette: 'Färgpalett',
+            language: 'Språk',
+            monthlyIncome: 'Månadsinkomst',
+            monthlyIncomeKr: 'Månadsinkomst (kr)',
+            monthlyIncomeUsd: 'Månadsinkomst ($)',
+            discretionaryBudget: 'Disponibel budget',
+            discretionaryBudgetKr: 'Disponibel budget (kr)',
+            discretionaryBudgetUsd: 'Disponibel budget ($)',
+            cycleStartsOnDay: 'Cykeln börjar dag',
+            cycleAdjustment: 'När startdatumet hamnar på…',
+            email: 'E-post',
+            password: 'Lösenord',
+            signInMethod: 'Inloggningsmetod',
+            signedIn: 'Inloggad',
+            accountType: 'Kontotyp',
+            light: 'Ljust',
+            dark: 'Mörkt',
+            includeFixed: 'Inkludera fasta utgifter'
+        },
+        placeholders: {
+            amount: '0,00',
+            categoryExample: 't.ex. Mat',
+            descriptionExample: 'Kaffe på Espresso House',
+            incomeExample: '35000',
+            budgetExample: '10000'
+        },
+        buttons: {
+            addExpense: 'Lägg till utgift',
+            addCategory: 'Lägg till kategori',
+            addGoal: 'Lägg till mål',
+            addSubscription: '+ Lägg till prenumeration',
+            addRepayment: 'Lägg till återbetalning',
+            addKeyword: 'Lägg till',
+            saveGoal: 'Spara mål',
+            contribute: 'Bidra',
+            takeSnapshot: 'Ta ögonblicksbild',
+            signOut: 'Logga ut',
+            downloadDb: '💾 Ladda ner databas',
+            loadDb: '📂 Ladda databas',
+            importAll: 'Importera alla',
+            uploadClick: 'Klicka för att ladda upp',
+            dragDrop: 'eller dra och släpp',
+            uploadHelp: 'Stöder .xlsx och .xls-filer',
+            getStarted: 'Kom igång'
+        },
+        cycle: {
+            help: 'Välj när din budgetmånad återställs. Praktiskt för lönedagsbaserad budgetering (t.ex. svensk lön den 25:e) eller kreditkortsfaktureringar (t.ex. Amex den 2:a).',
+            adjustNone: 'Använd den exakta dagen',
+            adjustWeekend: 'Flytta till närmaste vardag',
+            adjustSweden: 'Flytta till närmaste svenska bankdag'
+        },
+        subs: {
+            help: 'Håll koll på återkommande prenumerationer och se vad de kostar. Identifieras automatiskt från importerad data, eller läggs till manuellt.',
+            amountPerCycle: 'Belopp per cykel',
+            billingCycle: 'Faktureringscykel',
+            monthly: 'Månadsvis',
+            yearly: 'Årsvis',
+            quarterly: 'Kvartalsvis',
+            weekly: 'Veckovis'
+        },
+        goals: {
+            intro: 'Namnge det du sparar till. Se burken fyllas på.',
+            whatSavingFor: 'Vad sparar du till?',
+            targetAmount: 'Målbelopp',
+            startingBalance: 'Ingående saldo',
+            deadlineOptional: 'Deadline (valfritt)',
+            newSavingsGoal: 'Nytt sparmål',
+            editGoal: 'Redigera mål',
+            addContribution: 'Lägg till ett bidrag',
+            takeSnapshotTitle: 'Ta en ögonblicksbild',
+            netWorthIntro: 'En snabb logg över var du står. Inga konton att koppla.'
+        },
+        insights: {
+            empty: 'Inga insikter än — lägg till några utgifter för att se trender.'
+        },
+        signIn: {
+            title: 'Välkommen tillbaka',
+            subtitle: 'Logga in för att fortsätta följa din ekonomi.',
+            signIn: 'Logga in',
+            signUp: 'Registrera',
+            createAccount: 'Skapa konto',
+            createAccountSub: 'Börja följa det du behåller, inte bara det du spenderar.',
+            forgot: 'Glömt lösenordet?',
+            withPasskey: 'Logga in med passkey',
+            setupPasskey: 'Skapa med passkey',
+            or: 'eller',
+            resetTitle: 'Återställ lösenord',
+            resetSub: 'Vi skickar en återställningslänk till din e-post.',
+            sendReset: 'Skicka återställningslänk',
+            backToSignIn: 'Tillbaka till inloggning',
+            footer: 'Skyddat av <strong>passkeys</strong> och end-to-end-kryptering (planerat)',
+            emailHint: 'du@exempel.se',
+            passwordHint: '••••••••',
+            passwordMin: 'Minst 8 tecken',
+            invalidEmail: 'Ange en giltig e-postadress.',
+            passwordRequired: 'Lösenord krävs.',
+            passwordTooShort: 'Lösenordet måste vara minst 8 tecken.',
+            signingIn: 'Loggar in…',
+            creatingAccount: 'Skapar konto…',
+            sending: 'Skickar…',
+            waitingPasskey: 'Väntar på passkey…',
+            resetSent: 'Om e-postadressen finns har en återställningslänk skickats.',
+            passkeyUnsupported: 'Passkeys stöds inte i denna webbläsare.',
+            demoNote: '<strong>Demoläge.</strong> Vilken e-post och vilket lösenord som helst fungerar. Riktig autentisering tillkommer när en backend är ansluten.',
+            tagline: 'Följ · Spara · Väx'
+        }
+    }
+};
+
+function t(path, vars) {
+    const lookup = (root) => {
+        let val = root;
+        for (const p of path.split('.')) {
+            if (val == null) return null;
+            val = val[p];
+        }
+        return val;
+    };
+    let val = lookup(translations[language]);
+    if (val == null) val = lookup(translations.en);
+    if (typeof val !== 'string') return path;
+    if (vars) {
+        Object.keys(vars).forEach(k => {
+            val = val.replace(new RegExp('\\{' + k + '\\}', 'g'), vars[k]);
+        });
+    }
+    return val;
+}
+
+// Locale used for Intl helpers (currency, dates, numbers)
+function activeLocale() {
+    return language === 'sv' ? 'sv-SE' : 'en-US';
+}
+
+// Apply the current language to the DOM. Walks elements that opt in
+// via data-i18n / data-i18n-placeholder / data-i18n-aria-label /
+// data-i18n-title, and re-renders any dynamic content that includes
+// translated strings inside JS templates.
+function applyLanguage() {
+    document.documentElement.lang = language === 'sv' ? 'sv' : 'en';
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const html = t(el.dataset.i18n);
+        if (el.dataset.i18nHtml === 'true') el.innerHTML = html;
+        else el.textContent = html;
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        el.placeholder = t(el.dataset.i18nPlaceholder);
+    });
+    document.querySelectorAll('[data-i18n-aria-label]').forEach(el => {
+        el.setAttribute('aria-label', t(el.dataset.i18nAriaLabel));
+    });
+    document.querySelectorAll('[data-i18n-title]').forEach(el => {
+        el.title = t(el.dataset.i18nTitle);
+    });
+    // Sidebar tab tooltips + aria labels are driven by data-tab + tabs.* keys
+    document.querySelectorAll('.app-sidebar .tab[data-tab]').forEach(el => {
+        const label = t('tabs.' + el.dataset.tab);
+        el.dataset.label = label;
+        el.setAttribute('aria-label', label);
+    });
+    // Re-run dynamic renders that bake translated strings into innerHTML
+    if (typeof updateLabels === 'function') updateLabels();
+    if (typeof updateMonthDisplay === 'function') updateMonthDisplay();
+    if (typeof updateDashboard === 'function') updateDashboard();
+    if (typeof renderCategories === 'function') renderCategories();
+    if (typeof renderGoals === 'function') renderGoals();
+    if (typeof renderInsights === 'function') renderInsights();
+    if (typeof renderSubscriptions === 'function') renderSubscriptions();
+    if (typeof updateCyclePreview === 'function') updateCyclePreview();
+    if (typeof renderLanguageOptions === 'function') renderLanguageOptions();
+    // Update tab title in topbar to match the active tab in the new language
+    const activeTab = document.querySelector('.tab.active');
+    if (activeTab) {
+        const titleEl = document.getElementById('topbarTitle');
+        const meta = TAB_META && TAB_META[activeTab.dataset.tab];
+        if (titleEl && meta) titleEl.textContent = t('tabs.' + activeTab.dataset.tab);
+    }
+}
+
+function setLanguage(newLang) {
+    if (newLang !== 'en' && newLang !== 'sv') return;
+    language = newLang;
+    setSetting('language', language);
+    applyLanguage();
+}
 let currentViewMonth = new Date();
 let currentEditingExpense = null;
 
@@ -4269,6 +4759,7 @@ function loadDataFromDB() {
             if (key === 'currency') currency = value;
             if (key === 'theme') theme = value;
             if (key === 'palette') palette = value;
+            if (key === 'language') language = (value === 'sv' ? 'sv' : 'en');
             if (key === 'cycleStartDay') cycleStartDay = Math.max(1, Math.min(28, parseInt(value) || 1));
             if (key === 'cycleAdjustment') {
                 cycleAdjustment = ['none', 'weekend', 'sweden'].includes(value) ? value : 'none';
@@ -4402,6 +4893,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     document.body.setAttribute('data-palette', palette);
     renderThemeButtons();
     renderPaletteMenu();
+    renderLanguageOptions();
+    applyLanguage();
     document.getElementById('date').valueAsDate = new Date();
     document.getElementById('quickDate').valueAsDate = new Date();
     document.getElementById('snapshotDate').valueAsDate = new Date();
@@ -4496,6 +4989,16 @@ function changePalette(id) {
     renderPaletteMenu();
 }
 
+// Language picker — segmented control matching the Theme one
+function renderLanguageOptions() {
+    const wrap = document.getElementById('languageButtons');
+    if (!wrap) return;
+    wrap.innerHTML = languagePresets.map(l => `
+        <button type="button" class="theme-option ${l.id === language ? 'active' : ''}"
+                data-language-value="${l.id}" onclick="setLanguage('${l.id}')">${l.label}</button>
+    `).join('');
+}
+
 // Tabs
 const TAB_META = {
     overview: { title: 'Overview', addable: true },
@@ -4521,7 +5024,10 @@ function switchTab(tabName, btnEl) {
     const meta = TAB_META[tabName];
     if (meta) {
         const titleEl = document.getElementById('topbarTitle');
-        if (titleEl) titleEl.textContent = meta.title;
+        if (titleEl) {
+            titleEl.dataset.i18n = 'tabs.' + tabName;
+            titleEl.textContent = t('tabs.' + tabName);
+        }
         const addBtn = document.getElementById('topbarAddBtn');
         if (addBtn) addBtn.hidden = !meta.addable;
     }
@@ -5821,8 +6327,8 @@ function renderHero(monthSpent) {
         heroValue.textContent = `${rate.toFixed(0)}%`;
         heroValue.style.color = saved >= 0 ? '' : 'var(--danger)';
         heroDetail.innerHTML = saved >= 0
-            ? `You're keeping <strong>${formatCurrency(saved)}</strong> this cycle`
-            : `Spending <strong style="color:var(--danger);">${formatCurrency(Math.abs(saved))}</strong> over income`;
+            ? t('hero.keeping', { amount: formatCurrency(saved) })
+            : t('hero.spendingOver', { amount: formatCurrency(Math.abs(saved)) });
 
         // Trigger milestone celebration when crossing 10/20/30/40/50% savings rate
         if (saved > 0) {
@@ -5830,8 +6336,8 @@ function renderHero(monthSpent) {
         }
     } else {
         heroValue.textContent = '—';
-        heroValue.style.color = 'white';
-        heroDetail.textContent = 'Set your income in Settings to track savings';
+        heroValue.style.color = '';
+        heroDetail.textContent = t('hero.setIncomeHint');
     }
 
     // Streak
@@ -5851,7 +6357,7 @@ function renderHero(monthSpent) {
     }
     // 1–6 days: default white flame, no extra class
 
-    streakBest.textContent = streakInfo.best > 0 ? `Best: ${streakInfo.best} days` : '';
+    streakBest.textContent = streakInfo.best > 0 ? t('hero.best', { n: streakInfo.best + ' ' + (language === 'sv' ? 'dagar' : 'days') }) : '';
 
     checkStreakMilestone(streakInfo.current);
 }
