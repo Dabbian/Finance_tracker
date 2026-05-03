@@ -3058,6 +3058,22 @@
                                 <input type="file" id="excelFile" accept=".xlsx,.xls">
                             </div>
                         </div>
+
+                        <div class="card">
+                            <h2 class="card-title">Configure Categories</h2>
+                            <form id="addCategoryForm">
+                                <div class="form-group">
+                                    <label for="newCategoryName">Category Name</label>
+                                    <input type="text" id="newCategoryName" required placeholder="e.g., Groceries">
+                                </div>
+                                <div class="form-group">
+                                    <label for="newCategoryColor">Color</label>
+                                    <input type="color" id="newCategoryColor" value="#3b82f6">
+                                </div>
+                                <button type="submit">Add Category</button>
+                            </form>
+                            <div style="margin-top: 1.5rem;" id="categoriesList"></div>
+                        </div>
                     </div>
 
                     <div class="card">
@@ -3253,22 +3269,6 @@
                                 <label>Color Palette</label>
                                 <div class="palette-grid" id="paletteGrid"></div>
                             </div>
-                        </div>
-
-                        <div class="card">
-                            <h2 class="card-title">Configure Categories</h2>
-                            <form id="addCategoryForm">
-                                <div class="form-group">
-                                    <label for="newCategoryName">Category Name</label>
-                                    <input type="text" id="newCategoryName" required placeholder="e.g., Groceries">
-                                </div>
-                                <div class="form-group">
-                                    <label for="newCategoryColor">Color</label>
-                                    <input type="color" id="newCategoryColor" value="#3b82f6">
-                                </div>
-                                <button type="submit">Add Category</button>
-                            </form>
-                            <div style="margin-top: 1.5rem;" id="categoriesList"></div>
                         </div>
 
                         <div class="card">
