@@ -3873,7 +3873,12 @@ const translations = {
             weekly: 'Weekly'
         },
         categories: {
-            keywordsHelp: 'Add keywords that will automatically categorize expenses based on description'
+            keywordsHelp: 'Add keywords that will automatically categorize expenses based on description',
+            keywordCount: '{n} keywords',
+            noKeywords: 'No keywords',
+            exists: 'Category already exists',
+            cantDeleteDefault: 'Cannot delete default categories',
+            confirmDelete: 'Delete this category? Expenses will be moved to "Other"'
         },
         onboarding: {
             welcome: 'Welcome!',
@@ -3886,7 +3891,9 @@ const translations = {
             firstGoal: 'First Savings Goal',
             firstGoalSub: "What's something you want to save for? Skip if not sure.",
             goalName: 'Goal Name',
-            letsGo: "Let's go"
+            letsGo: "Let's go",
+            monthlyBudgetKr: 'Monthly Discretionary Budget (kr)',
+            monthlyBudgetUsd: 'Monthly Discretionary Budget ($)'
         },
         celebration: {
             milestoneReached: 'Milestone reached!',
@@ -4201,7 +4208,12 @@ const translations = {
             weekly: 'Veckovis'
         },
         categories: {
-            keywordsHelp: 'Lägg till sökord som automatiskt kategoriserar utgifter utifrån beskrivningen'
+            keywordsHelp: 'Lägg till sökord som automatiskt kategoriserar utgifter utifrån beskrivningen',
+            keywordCount: '{n} sökord',
+            noKeywords: 'Inga sökord',
+            exists: 'Kategorin finns redan',
+            cantDeleteDefault: 'Standardkategorier kan inte tas bort',
+            confirmDelete: 'Ta bort denna kategori? Utgifterna flyttas till "Övrigt"'
         },
         onboarding: {
             welcome: 'Välkommen!',
@@ -4214,7 +4226,9 @@ const translations = {
             firstGoal: 'Första sparmålet',
             firstGoalSub: 'Vad vill du spara till? Hoppa över om du är osäker.',
             goalName: 'Målets namn',
-            letsGo: 'Sätt igång'
+            letsGo: 'Sätt igång',
+            monthlyBudgetKr: 'Disponibel månadsbudget (kr)',
+            monthlyBudgetUsd: 'Disponibel månadsbudget ($)'
         },
         celebration: {
             milestoneReached: 'Milstolpe nådd!',
@@ -4545,6 +4559,8 @@ function setLanguage(newLang) {
     if (newLang !== 'en' && newLang !== 'sv') return;
     language = newLang;
     setSetting('language', language);
+    // Mirror to localStorage so the login page (no DB access) can pick it up.
+    try { localStorage.setItem('language', language); } catch (e) {}
     applyLanguage();
 }
 let currentViewMonth = new Date();
@@ -4748,12 +4764,15 @@ function holidayName(date) {
 // Given any reference date, return the cycle bounds containing it.
 function getCycleBounds(refDate) {
     const ref = new Date(refDate.getFullYear(), refDate.getMonth(), refDate.getDate()); // strip time
+    const loc = activeLocale();
     if (cycleStartDay === 1) {
         const start = new Date(ref.getFullYear(), ref.getMonth(), 1);
         const end = new Date(ref.getFullYear(), ref.getMonth() + 1, 0);
         const days = end.getDate();
-        const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-        return { start, end, days, label: `${monthNames[start.getMonth()]} ${start.getFullYear()}` };
+        // Capitalize first letter so Swedish month names ("januari") look right in headings
+        const monthLabel = start.toLocaleString(loc, { month: 'long' });
+        const cap = monthLabel.charAt(0).toUpperCase() + monthLabel.slice(1);
+        return { start, end, days, label: `${cap} ${start.getFullYear()}` };
     }
 
     const thisMonthStart = getCycleStartForMonth(ref.getFullYear(), ref.getMonth());
@@ -4768,11 +4787,11 @@ function getCycleBounds(refDate) {
     const end = new Date(nextStart);
     end.setDate(end.getDate() - 1);
     const days = Math.round((end - start) / 86400000) + 1;
-    const shortMonths = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const fmt = (d, opts) => d.toLocaleDateString(loc, opts);
     const sameYear = start.getFullYear() === end.getFullYear();
     const label = sameYear
-        ? `${shortMonths[start.getMonth()]} ${start.getDate()} – ${shortMonths[end.getMonth()]} ${end.getDate()}, ${end.getFullYear()}`
-        : `${shortMonths[start.getMonth()]} ${start.getDate()}, ${start.getFullYear()} – ${shortMonths[end.getMonth()]} ${end.getDate()}, ${end.getFullYear()}`;
+        ? `${fmt(start, { month: 'short', day: 'numeric' })} – ${fmt(end, { month: 'short', day: 'numeric', year: 'numeric' })}`
+        : `${fmt(start, { month: 'short', day: 'numeric', year: 'numeric' })} – ${fmt(end, { month: 'short', day: 'numeric', year: 'numeric' })}`;
     return { start, end, days, label };
 }
 
@@ -5021,7 +5040,10 @@ function loadDataFromDB() {
             if (key === 'currency') currency = value;
             if (key === 'theme') theme = value;
             if (key === 'palette') palette = value;
-            if (key === 'language') language = (value === 'sv' ? 'sv' : 'en');
+            if (key === 'language') {
+                language = (value === 'sv' ? 'sv' : 'en');
+                try { localStorage.setItem('language', language); } catch (e) {}
+            }
             if (key === 'cycleStartDay') cycleStartDay = Math.max(1, Math.min(28, parseInt(value) || 1));
             if (key === 'cycleAdjustment') {
                 cycleAdjustment = ['none', 'weekend', 'sweden'].includes(value) ? value : 'none';
@@ -5333,26 +5355,23 @@ function changeCurrency() {
 }
 
 function updateLabels() {
-    const symbol = currency === 'SEK' ? 'kr' : '$';
-    document.getElementById('amountLabel').textContent = `Amount (${symbol})`;
-    document.getElementById('budgetLabel').textContent = `Discretionary Budget (${symbol})`;
-    document.getElementById('fixedAmountLabel').textContent = `Amount (${symbol})`;
-    const incomeLabel = document.getElementById('incomeLabel');
-    if (incomeLabel) incomeLabel.textContent = `Monthly Income (${symbol})`;
-    const quickAmountLabel = document.getElementById('quickAmountLabel');
-    if (quickAmountLabel) quickAmountLabel.textContent = `Amount (${symbol})`;
-    const snapshotAmountLabel = document.getElementById('snapshotAmountLabel');
-    if (snapshotAmountLabel) snapshotAmountLabel.textContent = `Total Net Worth (${symbol})`;
-    const goalTargetLabel = document.getElementById('goalTargetLabel');
-    if (goalTargetLabel) goalTargetLabel.textContent = `Target Amount (${symbol})`;
-    const goalCurrentLabel = document.getElementById('goalCurrentLabel');
-    if (goalCurrentLabel) goalCurrentLabel.textContent = `Already Saved (${symbol})`;
-    const goalContribLabel = document.getElementById('goalContribLabel');
-    if (goalContribLabel) goalContribLabel.textContent = `Amount to Add (${symbol})`;
-    const obBudgetLabel = document.getElementById('obBudgetLabel');
-    if (obBudgetLabel) obBudgetLabel.textContent = `Monthly Discretionary Budget (${symbol})`;
-    const obGoalAmountLabel = document.getElementById('obGoalAmountLabel');
-    if (obGoalAmountLabel) obGoalAmountLabel.textContent = `Target Amount (${symbol})`;
+    const k = currency === 'SEK' ? 'Kr' : 'Usd';   // suffix used in keys
+    const set = (id, key) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = t(key);
+    };
+    set('amountLabel',         'labels.amount' + k);
+    set('budgetLabel',         'labels.discretionaryBudget' + k);
+    set('fixedAmountLabel',    'labels.amount' + k);
+    set('incomeLabel',         'labels.monthlyIncome' + k);
+    set('quickAmountLabel',    'labels.amount' + k);
+    set('snapshotAmountLabel', 'netWorth.total' + k);
+    set('goalTargetLabel',     'goals.targetAmount' + k);
+    set('goalCurrentLabel',    'goals.alreadySaved' + k);
+    set('goalContribLabel',    'goals.amountToAdd' + k);
+    set('subAmountLabel',      'subs.amountPerCycle' + k);
+    set('obBudgetLabel',       'onboarding.monthlyBudget' + (currency === 'SEK' ? 'Kr' : 'Usd'));
+    set('obGoalAmountLabel',   'goals.targetAmount' + k);
 }
 
 // Month Navigation
@@ -5407,7 +5426,7 @@ function renderCategoriesList() {
                 <div class="category-badge" style="background: ${cat.color};"></div>
                 <div>
                     <strong>${cat.name}</strong><br>
-                    <small style="color: var(--text-light);">${cat.keywords.length} keywords</small>
+                    <small style="color: var(--text-light);">${t('categories.keywordCount', { n: cat.keywords.length })}</small>
                 </div>
             </div>
             <button class="delete-btn" onclick="event.stopPropagation(); deleteCategory('${cat.id}')">×</button>
@@ -5419,11 +5438,11 @@ function addCategory(e) {
     e.preventDefault();
     const name = document.getElementById('newCategoryName').value;
     const color = document.getElementById('newCategoryColor').value;
-    
+
     const id = name.toLowerCase().replace(/[^a-z0-9]/g, '_');
-    
+
     if (categories.find(c => c.id === id)) {
-        alert('Category already exists');
+        alert(t('categories.exists'));
         return;
     }
     
@@ -5441,11 +5460,11 @@ function addCategory(e) {
 
 function deleteCategory(id) {
     if (defaultCategories.find(c => c.id === id)) {
-        alert('Cannot delete default categories');
+        alert(t('categories.cantDeleteDefault'));
         return;
     }
-    
-    if (!confirm('Delete this category? Expenses will be moved to "Other"')) return;
+
+    if (!confirm(t('categories.confirmDelete'))) return;
     
     db.run('UPDATE expenses SET category = ? WHERE category = ?', ['other', id]);
     db.run('UPDATE fixed_expenses SET category = ? WHERE category = ?', ['other', id]);
@@ -5481,7 +5500,7 @@ function closeEditCategoryModal() {
 function renderKeywordsList(keywords) {
     const container = document.getElementById('keywordsList');
     if (keywords.length === 0) {
-        container.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: 1rem;">No keywords</p>';
+        container.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: 1rem;">' + t('categories.noKeywords') + '</p>';
         return;
     }
     container.innerHTML = keywords.map((kw, idx) => `
@@ -5972,7 +5991,7 @@ function renderSavingsGrid(bounds, dailyTotals) {
 
         let className = 'day-square ';
         let tooltipContent = '';
-        const dateLabel = dayDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+        const dateLabel = dayDate.toLocaleDateString(activeLocale(), { weekday: 'short', month: 'short', day: 'numeric' });
 
         if (isFuture) {
             className += 'future';
@@ -6020,7 +6039,7 @@ function showExpensesByCategory(categoryName) {
 function showExpensesByDate(dateStr) {
     const filteredExpenses = expenses.filter(exp => exp.date === dateStr);
     const date = new Date(dateStr + 'T00:00:00');
-    const formattedDate = date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    const formattedDate = date.toLocaleDateString(activeLocale(), { month: 'long', day: 'numeric', year: 'numeric' });
     showExpenseDetailsModal(filteredExpenses, `Expenses on ${formattedDate}`);
 }
 
@@ -7046,7 +7065,7 @@ function computeCutGoalProgress(goal) {
         breakdown.push({
             year: y,
             month: mo,
-            label: new Date(y, mo, 1).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
+            label: new Date(y, mo, 1).toLocaleDateString(activeLocale(), { month: 'short', year: 'numeric' }),
             baseline,
             actual,
             saved: clampedDelta,
@@ -8743,9 +8762,9 @@ function formatDate(dateStr) {
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
 
-    if (date.toDateString() === today.toDateString()) return 'Today';
-    if (date.toDateString() === yesterday.toDateString()) return 'Yesterday';
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    if (date.toDateString() === today.toDateString()) return t('common.today');
+    if (date.toDateString() === yesterday.toDateString()) return t('common.yesterday');
+    return date.toLocaleDateString(activeLocale(), { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
 // Close any open modal when the user clicks the dimmed backdrop.

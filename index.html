@@ -388,14 +388,14 @@
                 </svg>
             </div>
             <div class="brand-name">Personal Finance</div>
-            <div class="brand-sub">Track · Save · Grow</div>
+            <div class="brand-sub" data-i18n="tagline">Track · Save · Grow</div>
         </div>
 
         <!-- Card -->
         <div class="auth-card">
             <div class="tab-bar" role="tablist">
-                <button class="tab-btn active" data-panel="signin" onclick="switchPanel('signin', this)">Sign in</button>
-                <button class="tab-btn" data-panel="signup" onclick="switchPanel('signup', this)">Sign up</button>
+                <button class="tab-btn active" data-panel="signin" onclick="switchPanel('signin', this)" data-i18n="signIn">Sign in</button>
+                <button class="tab-btn" data-panel="signup" onclick="switchPanel('signup', this)" data-i18n="signUp">Sign up</button>
             </div>
 
             <!-- DEMO BANNER -->
@@ -403,102 +403,102 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
                 </svg>
-                <span><strong>Demo mode.</strong> Any email and password works. Real authentication coming once a backend is connected.</span>
+                <span data-i18n="demoNote" data-i18n-html="true"><strong>Demo mode.</strong> Any email and password works. Real authentication coming once a backend is connected.</span>
             </div>
 
             <!-- SIGN IN -->
             <div class="panel active" id="panel-signin">
-                <h2>Welcome back</h2>
-                <p class="subtitle-text">Sign in to continue tracking your finances.</p>
+                <h2 data-i18n="title">Welcome back</h2>
+                <p class="subtitle-text" data-i18n="subtitle">Sign in to continue tracking your finances.</p>
 
                 <form id="signinForm" novalidate>
                     <div class="field">
-                        <label for="signinEmail">Email</label>
-                        <input type="email" id="signinEmail" autocomplete="email" placeholder="you@example.com" required>
-                        <div class="field-error" id="signinEmailError">Please enter a valid email.</div>
+                        <label for="signinEmail" data-i18n="email">Email</label>
+                        <input type="email" id="signinEmail" autocomplete="email" placeholder="you@example.com" required data-i18n-placeholder="emailHint">
+                        <div class="field-error" id="signinEmailError" data-i18n="invalidEmail">Please enter a valid email.</div>
                     </div>
                     <div class="field">
                         <div class="field-label-row">
-                            <label for="signinPassword">Password</label>
-                            <button type="button" class="field-link" onclick="openForgot()">Forgot password?</button>
+                            <label for="signinPassword" data-i18n="password">Password</label>
+                            <button type="button" class="field-link" onclick="openForgot()" data-i18n="forgot">Forgot password?</button>
                         </div>
                         <div class="password-wrap">
-                            <input type="password" id="signinPassword" autocomplete="current-password" placeholder="••••••••" required>
-                            <button type="button" class="password-toggle" onclick="togglePassword('signinPassword', this)" aria-label="Show password">
+                            <input type="password" id="signinPassword" autocomplete="current-password" placeholder="••••••••" required data-i18n-placeholder="passwordHint">
+                            <button type="button" class="password-toggle" onclick="togglePassword('signinPassword', this)" aria-label="Show password" data-i18n-aria-label="showPassword">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
                                 </svg>
                             </button>
                         </div>
-                        <div class="field-error" id="signinPasswordError">Password is required.</div>
+                        <div class="field-error" id="signinPasswordError" data-i18n="passwordRequired">Password is required.</div>
                     </div>
-                    <button type="submit" class="btn btn-primary" id="signinSubmit">Sign in</button>
+                    <button type="submit" class="btn btn-primary" id="signinSubmit" data-i18n="signIn">Sign in</button>
                 </form>
 
-                <div class="divider">or</div>
+                <div class="divider" data-i18n="or">or</div>
 
                 <button class="btn btn-secondary" onclick="signInWithPasskey()" id="passkeyBtn">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                     </svg>
-                    Sign in with passkey
+                    <span data-i18n="withPasskey">Sign in with passkey</span>
                 </button>
             </div>
 
             <!-- SIGN UP -->
             <div class="panel" id="panel-signup">
-                <h2>Create account</h2>
-                <p class="subtitle-text">Start tracking what you keep, not just what you spend.</p>
+                <h2 data-i18n="createAccount">Create account</h2>
+                <p class="subtitle-text" data-i18n="createAccountSub">Start tracking what you keep, not just what you spend.</p>
 
                 <form id="signupForm" novalidate>
                     <div class="field">
-                        <label for="signupEmail">Email</label>
-                        <input type="email" id="signupEmail" autocomplete="email" placeholder="you@example.com" required>
-                        <div class="field-error" id="signupEmailError">Please enter a valid email.</div>
+                        <label for="signupEmail" data-i18n="email">Email</label>
+                        <input type="email" id="signupEmail" autocomplete="email" placeholder="you@example.com" required data-i18n-placeholder="emailHint">
+                        <div class="field-error" id="signupEmailError" data-i18n="invalidEmail">Please enter a valid email.</div>
                     </div>
                     <div class="field">
-                        <label for="signupPassword">Password</label>
+                        <label for="signupPassword" data-i18n="password">Password</label>
                         <div class="password-wrap">
-                            <input type="password" id="signupPassword" autocomplete="new-password" placeholder="At least 8 characters" required minlength="8">
-                            <button type="button" class="password-toggle" onclick="togglePassword('signupPassword', this)" aria-label="Show password">
+                            <input type="password" id="signupPassword" autocomplete="new-password" placeholder="At least 8 characters" required minlength="8" data-i18n-placeholder="passwordMin">
+                            <button type="button" class="password-toggle" onclick="togglePassword('signupPassword', this)" aria-label="Show password" data-i18n-aria-label="showPassword">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
                                 </svg>
                             </button>
                         </div>
-                        <div class="field-error" id="signupPasswordError">Password must be at least 8 characters.</div>
+                        <div class="field-error" id="signupPasswordError" data-i18n="passwordTooShort">Password must be at least 8 characters.</div>
                     </div>
-                    <button type="submit" class="btn btn-primary" id="signupSubmit">Create account</button>
+                    <button type="submit" class="btn btn-primary" id="signupSubmit" data-i18n="createAccount">Create account</button>
                 </form>
 
-                <div class="divider">or</div>
+                <div class="divider" data-i18n="or">or</div>
 
                 <button class="btn btn-secondary" onclick="signUpWithPasskey()">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                     </svg>
-                    Set up with passkey
+                    <span data-i18n="setupPasskey">Set up with passkey</span>
                 </button>
             </div>
 
             <!-- FORGOT PASSWORD -->
             <div class="panel" id="panel-forgot">
-                <h2>Reset password</h2>
-                <p class="subtitle-text">We'll send a reset link to your email.</p>
+                <h2 data-i18n="resetTitle">Reset password</h2>
+                <p class="subtitle-text" data-i18n="resetSub">We'll send a reset link to your email.</p>
 
                 <form id="forgotForm" novalidate>
                     <div class="field">
-                        <label for="forgotEmail">Email</label>
-                        <input type="email" id="forgotEmail" autocomplete="email" placeholder="you@example.com" required>
-                        <div class="field-error" id="forgotEmailError">Please enter a valid email.</div>
+                        <label for="forgotEmail" data-i18n="email">Email</label>
+                        <input type="email" id="forgotEmail" autocomplete="email" placeholder="you@example.com" required data-i18n-placeholder="emailHint">
+                        <div class="field-error" id="forgotEmailError" data-i18n="invalidEmail">Please enter a valid email.</div>
                     </div>
-                    <button type="submit" class="btn btn-primary" id="forgotSubmit">Send reset link</button>
-                    <button type="button" class="btn btn-secondary" style="margin-top: 0.6rem;" onclick="switchPanel('signin', document.querySelector('[data-panel=signin]'))">Back to sign in</button>
+                    <button type="submit" class="btn btn-primary" id="forgotSubmit" data-i18n="sendReset">Send reset link</button>
+                    <button type="button" class="btn btn-secondary" style="margin-top: 0.6rem;" onclick="switchPanel('signin', document.querySelector('[data-panel=signin]'))" data-i18n="backToSignIn">Back to sign in</button>
                 </form>
             </div>
         </div>
 
-        <div class="footer-link">
+        <div class="footer-link" data-i18n="footer" data-i18n-html="true">
             Protected by <strong>passkeys</strong> & end-to-end encryption (planned)
         </div>
     </div>
@@ -516,6 +516,103 @@
     // Filename of the main app — change here if you rename.
     // Both files must sit in the same folder.
     const APP_URL = 'app.html';
+
+    // ====== I18N (login-page mirror of app.html's translations.signIn) ======
+    let language = 'en';
+    try {
+        const stored = localStorage.getItem('language');
+        if (stored === 'sv' || stored === 'en') language = stored;
+    } catch (e) {}
+
+    const STRINGS = {
+        en: {
+            tagline: 'Track · Save · Grow',
+            signIn: 'Sign in', signUp: 'Sign up',
+            createAccount: 'Create account',
+            createAccountSub: 'Start tracking what you keep, not just what you spend.',
+            title: 'Welcome back',
+            subtitle: 'Sign in to continue tracking your finances.',
+            email: 'Email', password: 'Password',
+            forgot: 'Forgot password?',
+            withPasskey: 'Sign in with passkey',
+            setupPasskey: 'Set up with passkey',
+            or: 'or',
+            resetTitle: 'Reset password',
+            resetSub: "We'll send a reset link to your email.",
+            sendReset: 'Send reset link',
+            backToSignIn: 'Back to sign in',
+            footer: 'Protected by <strong>passkeys</strong> & end-to-end encryption (planned)',
+            emailHint: 'you@example.com',
+            passwordHint: '••••••••',
+            passwordMin: 'At least 8 characters',
+            invalidEmail: 'Please enter a valid email.',
+            passwordRequired: 'Password is required.',
+            passwordTooShort: 'Password must be at least 8 characters.',
+            signingIn: 'Signing in…',
+            creatingAccount: 'Creating account…',
+            sending: 'Sending…',
+            waitingPasskey: 'Waiting for passkey…',
+            resetSent: 'If that email exists, a reset link has been sent.',
+            passkeyUnsupported: "Passkeys aren't supported in this browser.",
+            demoNote: '<strong>Demo mode.</strong> Any email and password works. Real authentication coming once a backend is connected.',
+            showPassword: 'Show password',
+            passkeyDemoNote: 'Demo only — enter an email above first to associate the passkey.'
+        },
+        sv: {
+            tagline: 'Följ · Spara · Väx',
+            signIn: 'Logga in', signUp: 'Registrera',
+            createAccount: 'Skapa konto',
+            createAccountSub: 'Börja följa det du behåller, inte bara det du spenderar.',
+            title: 'Välkommen tillbaka',
+            subtitle: 'Logga in för att fortsätta följa din ekonomi.',
+            email: 'E-post', password: 'Lösenord',
+            forgot: 'Glömt lösenordet?',
+            withPasskey: 'Logga in med passkey',
+            setupPasskey: 'Skapa med passkey',
+            or: 'eller',
+            resetTitle: 'Återställ lösenord',
+            resetSub: 'Vi skickar en återställningslänk till din e-post.',
+            sendReset: 'Skicka återställningslänk',
+            backToSignIn: 'Tillbaka till inloggning',
+            footer: 'Skyddat av <strong>passkeys</strong> och end-to-end-kryptering (planerat)',
+            emailHint: 'du@exempel.se',
+            passwordHint: '••••••••',
+            passwordMin: 'Minst 8 tecken',
+            invalidEmail: 'Ange en giltig e-postadress.',
+            passwordRequired: 'Lösenord krävs.',
+            passwordTooShort: 'Lösenordet måste vara minst 8 tecken.',
+            signingIn: 'Loggar in…',
+            creatingAccount: 'Skapar konto…',
+            sending: 'Skickar…',
+            waitingPasskey: 'Väntar på passkey…',
+            resetSent: 'Om e-postadressen finns har en återställningslänk skickats.',
+            passkeyUnsupported: 'Passkeys stöds inte i denna webbläsare.',
+            demoNote: '<strong>Demoläge.</strong> Vilken e-post och vilket lösenord som helst fungerar. Riktig autentisering tillkommer när en backend är ansluten.',
+            showPassword: 'Visa lösenord',
+            passkeyDemoNote: 'Endast demo — ange en e-post först för att koppla passkey:n.'
+        }
+    };
+
+    function tr(key) {
+        const dict = STRINGS[language] || STRINGS.en;
+        return (dict[key] != null ? dict[key] : (STRINGS.en[key] != null ? STRINGS.en[key] : key));
+    }
+
+    function applyLanguage() {
+        document.documentElement.lang = language === 'sv' ? 'sv' : 'en';
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const v = tr(el.dataset.i18n);
+            if (el.dataset.i18nHtml === 'true') el.innerHTML = v;
+            else el.textContent = v;
+        });
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+            el.placeholder = tr(el.dataset.i18nPlaceholder);
+        });
+        document.querySelectorAll('[data-i18n-aria-label]').forEach(el => {
+            el.setAttribute('aria-label', tr(el.dataset.i18nAriaLabel));
+        });
+    }
+    document.addEventListener('DOMContentLoaded', applyLanguage);
 
     // Tab switching
     function switchPanel(name, btn) {
@@ -601,7 +698,7 @@
         if (loading) {
             btn._originalLabel = btn.innerHTML;
             btn.disabled = true;
-            btn.innerHTML = '<span class="spinner"></span> ' + (restoreLabel || 'Working…');
+            btn.innerHTML = '<span class="spinner"></span> ' + (restoreLabel || (language === 'sv' ? 'Arbetar…' : 'Working…'));
         } else {
             btn.disabled = false;
             if (btn._originalLabel) btn.innerHTML = btn._originalLabel;
@@ -619,7 +716,7 @@
         if (!valid) return;
 
         const btn = document.getElementById('signinSubmit');
-        setLoading(btn, true, 'Signing in…');
+        setLoading(btn, true, tr('signingIn'));
         // Demo: simulate a tiny delay then "succeed"
         setTimeout(() => {
             sessionStorage.setItem('financeSession', JSON.stringify({
@@ -642,7 +739,7 @@
         if (!valid) return;
 
         const btn = document.getElementById('signupSubmit');
-        setLoading(btn, true, 'Creating account…');
+        setLoading(btn, true, tr('creatingAccount'));
         setTimeout(() => {
             sessionStorage.setItem('financeSession', JSON.stringify({
                 email: email,
@@ -661,10 +758,10 @@
         if (!isValidEmail(email)) { showError('forgotEmail', 'forgotEmailError'); return; }
 
         const btn = document.getElementById('forgotSubmit');
-        setLoading(btn, true, 'Sending…');
+        setLoading(btn, true, tr('sending'));
         setTimeout(() => {
             setLoading(btn, false);
-            showToast('If that email exists, a reset link has been sent.', 4000);
+            showToast(tr('resetSent'), 4000);
             switchPanel('signin', document.querySelector('[data-panel=signin]'));
             document.getElementById('signinEmail').value = email;
         }, 800);
@@ -677,11 +774,11 @@
 
     async function signInWithPasskey() {
         if (!passkeySupported()) {
-            showToast('Passkeys aren\u2019t supported in this browser.', 4000);
+            showToast(tr('passkeyUnsupported'), 4000);
             return;
         }
         const btn = document.getElementById('passkeyBtn');
-        setLoading(btn, true, 'Waiting for passkey…');
+        setLoading(btn, true, tr('waitingPasskey'));
 
         // In a real implementation:
         //   1. Server returns a WebAuthn challenge
@@ -701,10 +798,10 @@
 
     function signUpWithPasskey() {
         if (!passkeySupported()) {
-            showToast('Passkeys aren\u2019t supported in this browser.', 4000);
+            showToast(tr('passkeyUnsupported'), 4000);
             return;
         }
-        showToast('Demo only \u2014 enter an email above first to associate the passkey.', 4500);
+        showToast(tr('passkeyDemoNote'), 4500);
     }
 
     // If we arrive here while already "signed in", bounce to the app
