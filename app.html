@@ -3929,7 +3929,26 @@ const translations = {
             previewTitle: 'Preview Import',
             foundCount: '<strong id="importCount">0</strong> expenses found',
             previewIntro: "Review the expenses below before importing. You can uncheck any rows you don't want.",
-            recurringNote: 'Recurring monthly subscriptions are auto-categorized as "Fixed Expenses" and excluded from your daily budget.'
+            recurringNote: 'Recurring monthly subscriptions are auto-categorized as "Fixed Expenses" and excluded from your daily budget.',
+            countLabel: '{n} expenses',
+            swishOne: '{n} Swish repayment',
+            swishMany: '{n} Swish repayments'
+        },
+        empty: {
+            fixed: 'No fixed expenses',
+            repayments: 'No repayments',
+            noExpenses: 'No expenses',
+            noExpensesFound: 'No expenses found',
+            firstSnapshot: 'Add your first snapshot to start tracking',
+            noSubscriptions: 'No subscriptions yet. Add one or accept an auto-detected one above.'
+        },
+        confirms: {
+            deleteFixed: 'Delete this fixed expense?',
+            deleteExpense: 'Delete this expense?',
+            deleteGoal: 'Delete this goal? This cannot be undone.',
+            deleteSnapshot: 'Delete this snapshot?',
+            deleteSubscription: 'Delete this subscription? This only removes it from your tracking — your expense history is unaffected.',
+            loadDb: 'Load database from {name}? This will replace all current data.'
         },
         cards: {
             addExpense: 'Add Expense',
@@ -3960,11 +3979,18 @@ const translations = {
             from: 'from',
             snapshotHelp: 'Add up your accounts (checking, savings, investments) and subtract debts. Track this monthly.',
             totalKr: 'Total Net Worth (kr)',
-            totalUsd: 'Total Net Worth ($)'
+            totalUsd: 'Total Net Worth ($)',
+            allSnapshots: 'All snapshots'
         },
         insights: {
             empty: 'No insights yet — add a few expenses to see trends.',
-            intro: 'Patterns we noticed in your spending. Concrete actions, real numbers.'
+            emptyHint: 'Add a few weeks of expenses for personalized insights.',
+            intro: 'Patterns we noticed in your spending. Concrete actions, real numbers.',
+            thisCycle: 'This Cycle',
+            watchOut: 'Watch Out',
+            recurringCharges: 'Recurring Charges',
+            smallLeaks: 'Small Leaks Add Up',
+            whatIf: 'What If'
         },
         account: {
             note: 'Real account management (change email, change password, delete account) will appear here once a backend is connected.',
@@ -4105,13 +4131,26 @@ const translations = {
             amountToAddUsd: 'Amount to Add ($)',
             targetDate: 'Target Date (Optional)',
             autoTracked: 'Auto-tracked progress',
+            autoTrackedShort: 'Auto-tracked',
             startingBalance: 'Starting balance',
             deadlineOptional: 'Deadline (optional)',
             newSavingsGoal: 'New Savings Goal',
+            newGoal: 'New Goal',
             editGoal: 'Edit goal',
             addContribution: 'Add a contribution',
             takeSnapshotTitle: 'Take a snapshot',
-            netWorthIntro: 'A quick log of where you stand. No accounts to link.'
+            netWorthIntro: 'A quick log of where you stand. No accounts to link.',
+            of: 'of {amount}',
+            daysLeft: '{n} days left',
+            dueToday: 'Due today',
+            daysOverdue: '{n} days overdue',
+            trackingStarts: 'Tracking starts after your first full month.',
+            targetReached: 'Target reached',
+            onTrack: 'On track',
+            behindBy: 'Behind by {amount}',
+            projected: 'Projected',
+            status: 'Status',
+            viewProgress: 'View progress'
         },
         insights: {
             empty: 'No insights yet — add a few expenses to see trends.'
@@ -4264,7 +4303,26 @@ const translations = {
             previewTitle: 'Förhandsgranska import',
             foundCount: '<strong id="importCount">0</strong> utgifter hittade',
             previewIntro: 'Granska utgifterna nedan innan du importerar. Du kan avmarkera rader du inte vill ta med.',
-            recurringNote: 'Återkommande månadsprenumerationer kategoriseras automatiskt som "Fasta utgifter" och räknas inte mot din dagliga budget.'
+            recurringNote: 'Återkommande månadsprenumerationer kategoriseras automatiskt som "Fasta utgifter" och räknas inte mot din dagliga budget.',
+            countLabel: '{n} utgifter',
+            swishOne: '{n} Swish-återbetalning',
+            swishMany: '{n} Swish-återbetalningar'
+        },
+        empty: {
+            fixed: 'Inga fasta utgifter',
+            repayments: 'Inga återbetalningar',
+            noExpenses: 'Inga utgifter',
+            noExpensesFound: 'Inga utgifter hittade',
+            firstSnapshot: 'Lägg till din första ögonblicksbild för att börja följa',
+            noSubscriptions: 'Inga prenumerationer än. Lägg till en eller godkänn en automatiskt upptäckt ovan.'
+        },
+        confirms: {
+            deleteFixed: 'Ta bort denna fasta utgift?',
+            deleteExpense: 'Ta bort denna utgift?',
+            deleteGoal: 'Ta bort detta mål? Det går inte att ångra.',
+            deleteSnapshot: 'Ta bort denna ögonblicksbild?',
+            deleteSubscription: 'Ta bort denna prenumeration? Den tas endast bort från din spårning — din utgiftshistorik påverkas inte.',
+            loadDb: 'Läs in databas från {name}? All nuvarande data ersätts.'
         },
         cards: {
             addExpense: 'Lägg till utgift',
@@ -4295,11 +4353,18 @@ const translations = {
             from: 'från',
             snapshotHelp: 'Summera dina konton (lönekonto, sparkonto, investeringar) och dra av skulder. Logga detta varje månad.',
             totalKr: 'Total nettoförmögenhet (kr)',
-            totalUsd: 'Total nettoförmögenhet ($)'
+            totalUsd: 'Total nettoförmögenhet ($)',
+            allSnapshots: 'Alla ögonblicksbilder'
         },
         insights: {
             empty: 'Inga insikter än — lägg till några utgifter för att se trender.',
-            intro: 'Mönster vi sett i dina utgifter. Konkreta åtgärder, riktiga siffror.'
+            emptyHint: 'Lägg till några veckors utgifter för personliga insikter.',
+            intro: 'Mönster vi sett i dina utgifter. Konkreta åtgärder, riktiga siffror.',
+            thisCycle: 'Denna cykel',
+            watchOut: 'Se upp',
+            recurringCharges: 'Återkommande betalningar',
+            smallLeaks: 'Små läckor blir stora',
+            whatIf: 'Tänk om'
         },
         account: {
             note: 'Riktig kontohantering (byta e-post, byta lösenord, ta bort konto) visas här när en backend är kopplad.',
@@ -4440,13 +4505,26 @@ const translations = {
             amountToAddUsd: 'Belopp att lägga till ($)',
             targetDate: 'Måldatum (valfritt)',
             autoTracked: 'Autoföljda framsteg',
+            autoTrackedShort: 'Autoföljs',
             startingBalance: 'Ingående saldo',
             deadlineOptional: 'Deadline (valfritt)',
             newSavingsGoal: 'Nytt sparmål',
+            newGoal: 'Nytt mål',
             editGoal: 'Redigera mål',
             addContribution: 'Lägg till ett bidrag',
             takeSnapshotTitle: 'Ta en ögonblicksbild',
-            netWorthIntro: 'En snabb logg över var du står. Inga konton att koppla.'
+            netWorthIntro: 'En snabb logg över var du står. Inga konton att koppla.',
+            of: 'av {amount}',
+            daysLeft: '{n} dagar kvar',
+            dueToday: 'Ska klaras idag',
+            daysOverdue: '{n} dagar försenat',
+            trackingStarts: 'Spårning startar efter din första hela månad.',
+            targetReached: 'Mål uppnått',
+            onTrack: 'På banan',
+            behindBy: 'Efter med {amount}',
+            projected: 'Prognos',
+            status: 'Status',
+            viewProgress: 'Visa framsteg'
         },
         insights: {
             empty: 'Inga insikter än — lägg till några utgifter för att se trender.'
@@ -5634,7 +5712,7 @@ function addFixedExpense(e) {
 }
 
 function deleteFixedExpense(id) {
-    if (!confirm('Delete this fixed expense?')) return;
+    if (!confirm(t('confirms.deleteFixed'))) return;
     
     db.run('DELETE FROM fixed_expenses WHERE id = ?', [id]);
     saveDatabase();
@@ -5648,7 +5726,7 @@ function deleteFixedExpense(id) {
 function renderFixedExpenses() {
     const container = document.getElementById('fixedExpensesList');
     if (fixedExpenses.length === 0) {
-        container.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: 1rem;">No fixed expenses</p>';
+        container.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: 1rem;">' + t('empty.fixed') + '</p>';
         return;
     }
     container.innerHTML = fixedExpenses.map(f => `
@@ -5717,7 +5795,7 @@ function updateDashboard() {
 function renderExpensesList() {
     const container = document.getElementById('expensesList');
     if (expenses.length === 0) {
-        container.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: 2rem;">No expenses yet</p>';
+        container.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: 2rem;">' + t('expenses.empty') + '</p>';
         return;
     }
 
@@ -5762,7 +5840,7 @@ function closeEditModal() {
 function renderSwishList(repayments) {
     const container = document.getElementById('swishList');
     if (repayments.length === 0) {
-        container.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: 1rem;">No repayments</p>';
+        container.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: 1rem;">' + t('empty.repayments') + '</p>';
         return;
     }
     container.innerHTML = repayments.map((r, idx) => `
@@ -5824,7 +5902,7 @@ function saveExpenseEdit() {
 }
 
 function deleteExpense(id) {
-    if (!confirm('Delete this expense?')) return;
+    if (!confirm(t('confirms.deleteExpense'))) return;
     
     db.run('DELETE FROM expenses WHERE id = ?', [id]);
     saveDatabase();
@@ -5923,7 +6001,7 @@ function updateCharts() {
     // Category breakdown list
     const listContainer = document.getElementById('categoryBreakdownList');
     if (sortedCategories.length === 0) {
-        listContainer.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: 1rem;">No expenses</p>';
+        listContainer.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: 1rem;">' + t('empty.noExpenses') + '</p>';
     } else {
         listContainer.innerHTML = sortedCategories.map(([id, amount]) => {
             const percentage = ((amount / total) * 100).toFixed(1);
@@ -6057,7 +6135,7 @@ function showExpenseDetailsModal(expensesList, title) {
     const container = document.getElementById('expenseDetailsList');
     
     if (expensesList.length === 0) {
-        container.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: 2rem;">No expenses found</p>';
+        container.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: 2rem;">' + t('empty.noExpensesFound') + '</p>';
     } else {
         container.innerHTML = expensesList.map(exp => {
             const repayments = (exp.swishRepayments || []).reduce((s, r) => s + r.amount, 0);
@@ -6316,7 +6394,7 @@ function showImportModal() {
     // Update header summary
     const countEl = document.getElementById('importCount');
     if (swishCount > 0) {
-        countEl.innerHTML = `${expenseCount} expenses · <span style="color: var(--success);">${swishCount} Swish repayment${swishCount === 1 ? '' : 's'}</span>`;
+        countEl.innerHTML = `${t('expenses.countLabel', { n: expenseCount })} · <span style="color: var(--success);">${t(swishCount === 1 ? 'expenses.swishOne' : 'expenses.swishMany', { n: swishCount })}</span>`;
     } else {
         countEl.textContent = pendingImports.length;
     }
@@ -6548,7 +6626,7 @@ function loadDatabase(event) {
     const reader = new FileReader();
     reader.onload = function(e) {
         try {
-            if (!confirm(`Load database from ${file.name}? This will replace all current data.`)) {
+            if (!confirm(t('confirms.loadDb', { name: file.name }))) {
                 return;
             }
             
@@ -7219,10 +7297,10 @@ function renderGoals() {
             const today = new Date();
             const days = Math.ceil((dl - today) / 86400000);
             deadlineHtml = days > 0
-                ? `<div class="goal-deadline">${days} days left</div>`
+                ? `<div class="goal-deadline">${t('goals.daysLeft', { n: days })}</div>`
                 : days === 0
-                ? `<div class="goal-deadline" style="color: var(--warning);">Due today</div>`
-                : `<div class="goal-deadline" style="color: var(--danger);">${Math.abs(days)} days overdue</div>`;
+                ? `<div class="goal-deadline" style="color: var(--warning);">${t('goals.dueToday')}</div>`
+                : `<div class="goal-deadline" style="color: var(--danger);">${t('goals.daysOverdue', { n: Math.abs(days) })}</div>`;
         }
 
         // Cut-goal-specific: projection footer + "Auto-tracked" badge instead of "+ Add"
@@ -7232,21 +7310,21 @@ function renderGoals() {
             const p = computeCutGoalProgress(g);
             let projHtml;
             if (p.monthsElapsed === 0) {
-                projHtml = `<div style="color: var(--text-light);">Tracking starts after your first full month.</div>`;
+                projHtml = `<div style="color: var(--text-light);">${t('goals.trackingStarts')}</div>`;
             } else if (isComplete) {
-                projHtml = `<div style="color: var(--success); font-weight: 600;">Target reached</div>`;
+                projHtml = `<div style="color: var(--success); font-weight: 600;">${t('goals.targetReached')}</div>`;
             } else {
                 const status = p.onTrack
-                    ? `<span style="color: var(--success); font-weight: 600;">On track</span>`
-                    : `<span style="color: var(--warning); font-weight: 600;">Behind by ${formatCurrency(p.target - p.projected)}</span>`;
+                    ? `<span style="color: var(--success); font-weight: 600;">${t('goals.onTrack')}</span>`
+                    : `<span style="color: var(--warning); font-weight: 600;">${t('goals.behindBy', { amount: formatCurrency(p.target - p.projected) })}</span>`;
                 projHtml = `
                     <div style="display: flex; justify-content: space-between; gap: 0.5rem;">
                         <div>
-                            <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-light); font-family: 'IBM Plex Mono', monospace;">Projected</div>
+                            <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-light); font-family: 'IBM Plex Mono', monospace;">${t('goals.projected')}</div>
                             <div style="font-weight: 700;">${formatCurrency(p.projected)}</div>
                         </div>
                         <div style="text-align: right;">
-                            <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-light); font-family: 'IBM Plex Mono', monospace;">Status</div>
+                            <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-light); font-family: 'IBM Plex Mono', monospace;">${t('goals.status')}</div>
                             <div>${status}</div>
                         </div>
                     </div>
@@ -7255,23 +7333,23 @@ function renderGoals() {
             footerHtml = `<div class="goal-projection">${projHtml}</div>`;
             actionsHtml = `
                 <div class="goal-actions">
-                    <button onclick="openCutGoalDetail(${g.id})">View progress</button>
-                    <button class="btn-secondary" onclick="openGoalModal(${g.id})">Edit</button>
+                    <button onclick="openCutGoalDetail(${g.id})">${t('goals.viewProgress')}</button>
+                    <button class="btn-secondary" onclick="openGoalModal(${g.id})">${t('common.edit')}</button>
                 </div>
             `;
         } else {
             actionsHtml = `
                 <div class="goal-actions">
                     <button onclick="openGoalContribModal(${g.id})" ${isComplete ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''}>
-                        ${isComplete ? '✓ Done' : '+ Add'}
+                        ${isComplete ? '✓ ' + t('common.done') : '+ ' + t('common.add')}
                     </button>
-                    <button class="btn-secondary" onclick="openGoalModal(${g.id})">Edit</button>
+                    <button class="btn-secondary" onclick="openGoalModal(${g.id})">${t('common.edit')}</button>
                 </div>
             `;
         }
 
         const kindBadge = isCut
-            ? `<div class="goal-kind-badge"><span>Auto-tracked</span></div>`
+            ? `<div class="goal-kind-badge"><span>${t('goals.autoTrackedShort')}</span></div>`
             : '';
 
         return `
@@ -7293,10 +7371,10 @@ function renderGoals() {
                 <div class="goal-amounts">
                     <div>
                         <div class="goal-current">${formatCurrency(current)}</div>
-                        <div class="goal-target">of ${formatCurrency(g.targetAmount)}</div>
+                        <div class="goal-target">${t('goals.of', { amount: formatCurrency(g.targetAmount) })}</div>
                     </div>
                     <div style="text-align: right;">
-                        <div style="font-size: 0.75rem; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.05em;">Remaining</div>
+                        <div style="font-size: 0.75rem; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.05em;">${t('labels.remaining')}</div>
                         <div style="font-weight: 700;">${formatCurrency(remaining)}</div>
                     </div>
                 </div>
@@ -7309,8 +7387,8 @@ function renderGoals() {
     html += `
         <div class="add-goal-card" onclick="openGoalModal(null)">
             <div class="add-goal-icon">+</div>
-            <div style="font-weight: 600;">New Goal</div>
-            <div style="font-size: 0.875rem; color: var(--text-light); margin-top: 0.5rem;">What are you saving for?</div>
+            <div style="font-weight: 600;">${t('goals.newGoal')}</div>
+            <div style="font-size: 0.875rem; color: var(--text-light); margin-top: 0.5rem;">${t('goals.whatSavingFor')}</div>
         </div>
     `;
 
@@ -7459,7 +7537,7 @@ function saveGoal(e) {
 
 function deleteGoal() {
     if (!currentEditingGoal) return;
-    if (!confirm('Delete this goal? This cannot be undone.')) return;
+    if (!confirm(t('confirms.deleteGoal'))) return;
     db.run('DELETE FROM goals WHERE id=?', [parseInt(currentEditingGoal)]);
     saveDatabase();
     loadDataFromDB();
@@ -7554,7 +7632,7 @@ function saveSnapshot() {
 }
 
 function deleteSnapshot(id) {
-    if (!confirm('Delete this snapshot?')) return;
+    if (!confirm(t('confirms.deleteSnapshot'))) return;
     db.run('DELETE FROM net_worth_snapshots WHERE id=?', [id]);
     saveDatabase();
     loadDataFromDB();
@@ -7571,7 +7649,7 @@ function renderNetWorth() {
         latestEl.textContent = '—';
         dateEl.textContent = 'No snapshots yet';
         changeWrap.innerHTML = '';
-        list.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: 1rem;">Add your first snapshot to start tracking</p>';
+        list.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: 1rem;">' + t('empty.firstSnapshot') + '</p>';
         if (netWorthChart) {
             netWorthChart.data.labels = [];
             netWorthChart.data.datasets[0].data = [];
@@ -7630,7 +7708,7 @@ function renderNetWorth() {
     netWorthChart.update();
 
     // Snapshot list
-    list.innerHTML = '<div class="insight-section-title">All snapshots</div>' + [...snapshots].reverse().map(s => `
+    list.innerHTML = '<div class="insight-section-title">' + t('netWorth.allSnapshots') + '</div>' + [...snapshots].reverse().map(s => `
         <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; border-bottom: 1px solid var(--border);">
             <div>
                 <div style="font-weight: 600;">${formatDate(s.date)}</div>
@@ -7813,7 +7891,7 @@ function renderSubsLists() {
     const cancelled = subscriptions.filter(s => s.status === 'cancelled');
 
     if (active.length === 0 && subscriptions.filter(s => s.status === 'active' || s.status === 'cancelled').length === 0) {
-        activeContainer.innerHTML = `<div class="subs-empty">No subscriptions yet. Add one or accept an auto-detected one above.</div>`;
+        activeContainer.innerHTML = `<div class="subs-empty">${t('empty.noSubscriptions')}</div>`;
         cancelledContainer.innerHTML = '';
         return;
     }
@@ -7892,7 +7970,7 @@ function populateSubCategoryOptions() {
     const select = document.getElementById('subCategory');
     if (!select) return;
     const current = select.value;
-    select.innerHTML = '<option value="">— None —</option>' +
+    select.innerHTML = '<option value="">' + t('common.none') + '</option>' +
         categories.map(cat => `<option value="${cat.id}">${cat.name}</option>`).join('');
     if (current) select.value = current;
 }
@@ -7941,7 +8019,7 @@ function toggleSubscriptionStatus(id) {
 
 function deleteSubscription() {
     if (!currentEditingSubscription) return;
-    if (!confirm('Delete this subscription? This only removes it from your tracking — your expense history is unaffected.')) return;
+    if (!confirm(t('confirms.deleteSubscription'))) return;
     db.run('DELETE FROM subscriptions WHERE id=?', [parseInt(currentEditingSubscription)]);
     saveDatabase();
     loadDataFromDB();
@@ -7961,38 +8039,38 @@ function renderInsights() {
     // 1. Forecast
     const forecast = computeForecast();
     if (forecast) {
-        sections.push({ title: 'This Cycle', items: [forecast] });
+        sections.push({ title: t('insights.thisCycle'), items: [forecast] });
     }
 
     // 2. Anomaly alerts
     const anomalies = computeAnomalies();
     if (anomalies.length > 0) {
-        sections.push({ title: 'Watch Out', items: anomalies });
+        sections.push({ title: t('insights.watchOut'), items: anomalies });
     }
 
     // 3. Subscriptions
     const subs = detectSubscriptions();
     if (subs.length > 0) {
-        sections.push({ title: 'Recurring Charges', items: subs });
+        sections.push({ title: t('insights.recurringCharges'), items: subs });
     }
 
     // 4. Leak detection
     const leaks = detectLeaks();
     if (leaks.length > 0) {
-        sections.push({ title: 'Small Leaks Add Up', items: leaks });
+        sections.push({ title: t('insights.smallLeaks'), items: leaks });
     }
 
     // 5. Counterfactuals
     const cf = computeCounterfactuals();
     if (cf.length > 0) {
-        sections.push({ title: 'What If', items: cf });
+        sections.push({ title: t('insights.whatIf'), items: cf });
     }
 
     if (sections.length === 0) {
         container.innerHTML = `
             <div class="empty-state">
                 <div class="empty-state-icon-svg">${svgIcon('search')}</div>
-                <div>Add a few weeks of expenses for personalized insights.</div>
+                <div>${t('insights.emptyHint')}</div>
             </div>
         `;
         cachedInsights = {};
