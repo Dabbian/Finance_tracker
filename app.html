@@ -3878,7 +3878,18 @@ const translations = {
             noKeywords: 'No keywords',
             exists: 'Category already exists',
             cantDeleteDefault: 'Cannot delete default categories',
-            confirmDelete: 'Delete this category? Expenses will be moved to "Other"'
+            confirmDelete: 'Delete this category? Expenses will be moved to "Other"',
+            keywordExists: 'Keyword already exists'
+        },
+        defaultCategories: {
+            food: 'Food & Dining',
+            transport: 'Transport',
+            entertainment: 'Entertainment',
+            shopping: 'Shopping',
+            bills: 'Bills & Utilities',
+            health: 'Health & Fitness',
+            other: 'Other',
+            fixed: 'Fixed Expenses'
         },
         onboarding: {
             welcome: 'Welcome!',
@@ -3950,6 +3961,14 @@ const translations = {
             deleteSubscription: 'Delete this subscription? This only removes it from your tracking — your expense history is unaffected.',
             loadDb: 'Load database from {name}? This will replace all current data.'
         },
+        errors: {
+            initDb: 'Failed to initialize database. Please refresh the page.',
+            readFile: 'Error reading file: {msg}',
+            noExpensesFound: 'No expenses found.',
+            invalidAmount: 'Please enter a valid amount.',
+            invalidDate: 'Please pick a date.',
+            saveFailed: 'Could not save. Try again.'
+        },
         cards: {
             addExpense: 'Add Expense',
             importExcel: 'Import from Excel',
@@ -3990,7 +4009,40 @@ const translations = {
             watchOut: 'Watch Out',
             recurringCharges: 'Recurring Charges',
             smallLeaks: 'Small Leaks Add Up',
-            whatIf: 'What If'
+            whatIf: 'What If',
+            perMo: '/mo',
+            perYr: '/yr',
+            daysAgo: '{n} days ago',
+            forecastOver: {
+                title: 'On pace to exceed budget',
+                desc: 'Spending averages {avg}/day. {days} days left in this cycle. To stay on budget, cap daily spend at {cap}.'
+            },
+            forecastUnder: {
+                title: 'On track to stay under budget',
+                desc: "At your current pace, you'll save {amount} this cycle."
+            },
+            anomaly: {
+                title: '{category} is up {pct}%',
+                desc: '{current} this cycle vs {avg} average over last {n} cycles.'
+            },
+            subsSummary: {
+                title: '{n} recurring charges detected',
+                desc: 'About {monthly}/month, or {yearly}/year. Worth reviewing.'
+            },
+            subsStale: {
+                title: '{n} possibly cancelled',
+                desc: "Haven't seen {names} in 2+ months. Worth confirming you're not still being charged."
+            },
+            subsTop: {
+                desc: '{amount} every month, {months} months tracked. Last charge {last}.'
+            },
+            leak: {
+                desc: '{count} times in 30 days. Adds up to {yearly} a year at this pace.'
+            },
+            counterfactual: {
+                title: 'Cut {category} by 20%',
+                desc: 'Your average is {avg}/month. Trimming 20% would save {yearly} a year.'
+            }
         },
         account: {
             note: 'Real account management (change email, change password, delete account) will appear here once a backend is connected.',
@@ -4252,7 +4304,18 @@ const translations = {
             noKeywords: 'Inga sökord',
             exists: 'Kategorin finns redan',
             cantDeleteDefault: 'Standardkategorier kan inte tas bort',
-            confirmDelete: 'Ta bort denna kategori? Utgifterna flyttas till "Övrigt"'
+            confirmDelete: 'Ta bort denna kategori? Utgifterna flyttas till "Övrigt"',
+            keywordExists: 'Sökordet finns redan'
+        },
+        defaultCategories: {
+            food: 'Mat & restaurang',
+            transport: 'Transport',
+            entertainment: 'Nöje',
+            shopping: 'Shopping',
+            bills: 'Räkningar & abonnemang',
+            health: 'Hälsa & träning',
+            other: 'Övrigt',
+            fixed: 'Fasta utgifter'
         },
         onboarding: {
             welcome: 'Välkommen!',
@@ -4324,6 +4387,14 @@ const translations = {
             deleteSubscription: 'Ta bort denna prenumeration? Den tas endast bort från din spårning — din utgiftshistorik påverkas inte.',
             loadDb: 'Läs in databas från {name}? All nuvarande data ersätts.'
         },
+        errors: {
+            initDb: 'Kunde inte initiera databasen. Ladda om sidan.',
+            readFile: 'Kunde inte läsa filen: {msg}',
+            noExpensesFound: 'Inga utgifter hittades.',
+            invalidAmount: 'Ange ett giltigt belopp.',
+            invalidDate: 'Välj ett datum.',
+            saveFailed: 'Kunde inte spara. Försök igen.'
+        },
         cards: {
             addExpense: 'Lägg till utgift',
             importExcel: 'Importera från Excel',
@@ -4364,7 +4435,40 @@ const translations = {
             watchOut: 'Se upp',
             recurringCharges: 'Återkommande betalningar',
             smallLeaks: 'Små läckor blir stora',
-            whatIf: 'Tänk om'
+            whatIf: 'Tänk om',
+            perMo: '/mån',
+            perYr: '/år',
+            daysAgo: 'för {n} dagar sedan',
+            forecastOver: {
+                title: 'På väg att överskrida budgeten',
+                desc: 'Utgifterna ligger på {avg}/dag i snitt. {days} dagar kvar i denna cykel. För att hålla budgeten, sätt taket på {cap} per dag.'
+            },
+            forecastUnder: {
+                title: 'På väg att hålla under budget',
+                desc: 'I nuvarande takt sparar du {amount} denna cykel.'
+            },
+            anomaly: {
+                title: '{category} är upp {pct} %',
+                desc: '{current} denna cykel mot {avg} i snitt över de senaste {n} cyklerna.'
+            },
+            subsSummary: {
+                title: '{n} återkommande betalningar upptäckta',
+                desc: 'Cirka {monthly}/månad, eller {yearly}/år. Värt att se över.'
+            },
+            subsStale: {
+                title: '{n} möjligen avslutade',
+                desc: 'Vi har inte sett {names} på 2+ månader. Värt att bekräfta att du inte fortfarande debiteras.'
+            },
+            subsTop: {
+                desc: '{amount} varje månad, {months} månader spårade. Senaste betalning {last}.'
+            },
+            leak: {
+                desc: '{count} gånger på 30 dagar. Blir {yearly} på ett år i denna takt.'
+            },
+            counterfactual: {
+                title: 'Minska {category} med 20 %',
+                desc: 'Ditt snitt är {avg}/månad. 20 % mindre sparar {yearly} på ett år.'
+            }
         },
         account: {
             note: 'Riktig kontohantering (byta e-post, byta lösenord, ta bort konto) visas här när en backend är kopplad.',
@@ -4916,7 +5020,7 @@ async function initDatabase() {
         loadDataFromDB();
     } catch (error) {
         console.error('Failed to initialize database:', error);
-        alert('Failed to initialize database. Please refresh the page.');
+        alert(t('errors.initDb'));
     }
 }
 
@@ -5489,8 +5593,8 @@ function updateCategorySelects() {
     selects.forEach(select => {
         if (!select) return;
         const currentValue = select.value;
-        select.innerHTML = categories.map(cat => 
-            `<option value="${cat.id}">${cat.name}</option>`
+        select.innerHTML = categories.map(cat =>
+            `<option value="${cat.id}">${localizedCategoryName(cat)}</option>`
         ).join('');
         if (currentValue) select.value = currentValue;
     });
@@ -5503,7 +5607,7 @@ function renderCategoriesList() {
             <div style="display: flex; align-items: center;">
                 <div class="category-badge" style="background: ${cat.color};"></div>
                 <div>
-                    <strong>${cat.name}</strong><br>
+                    <strong>${localizedCategoryName(cat)}</strong><br>
                     <small style="color: var(--text-light);">${t('categories.keywordCount', { n: cat.keywords.length })}</small>
                 </div>
             </div>
@@ -5597,7 +5701,7 @@ function addKeyword() {
     if (!keyword) return;
     
     if (cat.keywords.includes(keyword)) {
-        alert('Keyword already exists');
+        alert(t('categories.keywordExists'));
         return;
     }
     
@@ -5660,9 +5764,16 @@ function getCategoryColor(id) {
     return cat ? cat.color : '#64748b';
 }
 
+// For default categories we translate the name even if the DB row was seeded in another language.
+function localizedCategoryName(cat) {
+    if (!cat) return '';
+    const seed = defaultCategories.find(d => d.id === cat.id);
+    return seed ? t('defaultCategories.' + cat.id) : cat.name;
+}
+
 function getCategoryName(id) {
     const cat = categories.find(c => c.id === id);
-    return cat ? cat.name : id;
+    return cat ? localizedCategoryName(cat) : id;
 }
 
 // Add Expense
@@ -6182,7 +6293,7 @@ function handleFile(file) {
             const rows = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
             processExcelData(rows);
         } catch (error) {
-            alert('Error reading file: ' + error.message);
+            alert(t('errors.readFile', { msg: error.message }));
         }
     };
     reader.readAsArrayBuffer(file);
@@ -6295,7 +6406,7 @@ function processExcelData(rows) {
         const detail = headerIdx === -1
             ? 'No header row found and no rows match a (date, description, amount) layout.'
             : `Found a header row at line ${headerIdx + 1}, but no valid expense rows below it.\n\nDate column: ${dateCol + 1}, Amount column: ${amountCol + 1}\nSkipped: ${skippedReasons.empty} empty, ${skippedReasons.badDate} bad date, ${skippedReasons.zeroAmount} zero amount.`;
-        alert('No expenses found.\n\n' + detail);
+        alert(t('errors.noExpensesFound') + '\n\n' + detail);
         return;
     }
 
@@ -6420,7 +6531,7 @@ function renderExpenseImportRow(item, idx) {
             <div class="import-amount">${formatCurrency(item.amount)}</div>
             <select id="import-cat-${idx}" style="padding: 0.5rem; width: 140px;" onchange="pendingImports[${idx}].category = this.value">
                 ${categories.map(cat =>
-                    `<option value="${cat.id}" ${item.category === cat.id ? 'selected' : ''}>${cat.name}</option>`
+                    `<option value="${cat.id}" ${item.category === cat.id ? 'selected' : ''}>${localizedCategoryName(cat)}</option>`
                 ).join('')}
             </select>
             <button class="delete-btn" onclick="removePendingImport(${idx})">×</button>
@@ -8452,8 +8563,12 @@ function computeForecast() {
             id: `forecast-over:${cycleId}`,
             type: 'alert',
             icon: 'chart',
-            title: `On pace to exceed budget`,
-            desc: `Spending averages ${formatCurrency(spentSoFar/dayElapsed)}/day. ${daysLeft} days left in this cycle. To stay on budget, cap daily spend at ${formatCurrency(Math.max(0, availableBudget - spentSoFar) / Math.max(1, daysLeft))}.`,
+            title: t('insights.forecastOver.title'),
+            desc: t('insights.forecastOver.desc', {
+                avg: formatCurrency(spentSoFar/dayElapsed),
+                days: daysLeft,
+                cap: formatCurrency(Math.max(0, availableBudget - spentSoFar) / Math.max(1, daysLeft))
+            }),
             amount: '+' + formatCurrency(overUnder),
             amountClass: 'warning',
             data: {
@@ -8467,8 +8582,8 @@ function computeForecast() {
             id: `forecast-under:${cycleId}`,
             type: 'success',
             icon: 'check-circle',
-            title: 'On track to stay under budget',
-            desc: `At your current pace, you'll save ${formatCurrency(Math.abs(overUnder))} this cycle.`,
+            title: t('insights.forecastUnder.title'),
+            desc: t('insights.forecastUnder.desc', { amount: formatCurrency(Math.abs(overUnder)) }),
             amount: formatCurrency(Math.abs(overUnder)),
             amountClass: 'savings',
             data: {
@@ -8531,8 +8646,8 @@ function computeAnomalies() {
                 id: `anomaly:${catId}:${cycleId}`,
                 type: 'alert',
                 icon: 'alert',
-                title: `${getCategoryName(catId)} is up ${pctIncrease.toFixed(0)}%`,
-                desc: `${formatCurrency(amt)} this cycle vs ${formatCurrency(avg)} average over last ${trailing.length} cycles.`,
+                title: t('insights.anomaly.title', { category: getCategoryName(catId), pct: pctIncrease.toFixed(0) }),
+                desc: t('insights.anomaly.desc', { current: formatCurrency(amt), avg: formatCurrency(avg), n: trailing.length }),
                 amount: '+' + formatCurrency(amt - avg),
                 amountClass: 'warning',
                 data: {
@@ -8608,9 +8723,9 @@ function detectSubscriptions() {
         id: `subs-summary`,
         type: 'tip',
         icon: 'repeat',
-        title: `${subs.length} recurring charges detected`,
-        desc: `About ${formatCurrency(totalMonthly)}/month, or ${formatCurrency(yearly)}/year. Worth reviewing.`,
-        amount: formatCurrency(totalMonthly) + '/mo',
+        title: t('insights.subsSummary.title', { n: subs.length }),
+        desc: t('insights.subsSummary.desc', { monthly: formatCurrency(totalMonthly), yearly: formatCurrency(yearly) }),
+        amount: formatCurrency(totalMonthly) + t('insights.perMo'),
         amountClass: 'warning',
         data: {
             kind: 'subs-summary',
@@ -8628,8 +8743,10 @@ function detectSubscriptions() {
             id: `subs-stale`,
             type: 'success',
             icon: 'scissors',
-            title: `${stale.length} possibly cancelled`,
-            desc: `Haven't seen ${stale.map(s => s.desc).slice(0, 3).join(', ')}${stale.length > 3 ? ', ...' : ''} in 2+ months. Worth confirming you're not still being charged.`,
+            title: t('insights.subsStale.title', { n: stale.length }),
+            desc: t('insights.subsStale.desc', {
+                names: stale.map(s => s.desc).slice(0, 3).join(', ') + (stale.length > 3 ? ', …' : '')
+            }),
             data: {
                 kind: 'subs-stale',
                 stale: stale.map(s => ({ desc: s.desc, avg: s.avg, daysSince: s.daysSince, lastDate: s.lastDate }))
@@ -8645,8 +8762,12 @@ function detectSubscriptions() {
             type: 'tip',
             icon: 'credit-card',
             title: capitalize(s.desc),
-            desc: `${formatCurrency(s.avg)} every month, ${s.months} months tracked. Last charge ${s.daysSince === 0 ? 'today' : s.daysSince + ' days ago'}.`,
-            amount: formatCurrency(s.avg * 12) + '/yr',
+            desc: t('insights.subsTop.desc', {
+                amount: formatCurrency(s.avg),
+                months: s.months,
+                last: s.daysSince === 0 ? t('common.today') : t('insights.daysAgo', { n: s.daysSince })
+            }),
+            amount: formatCurrency(s.avg * 12) + t('insights.perYr'),
             amountClass: 'warning',
             data: {
                 kind: 'subs-top',
@@ -8691,8 +8812,8 @@ function detectLeaks() {
         type: 'tip',
         icon: 'droplet',
         title: capitalize(l.desc),
-        desc: `${l.count} times in 30 days. Adds up to ${formatCurrency(l.total * 12)} a year at this pace.`,
-        amount: formatCurrency(l.total) + '/mo',
+        desc: t('insights.leak.desc', { count: l.count, yearly: formatCurrency(l.total * 12) }),
+        amount: formatCurrency(l.total) + t('insights.perMo'),
         amountClass: 'warning',
         data: {
             kind: 'leak',
@@ -8744,9 +8865,9 @@ function computeCounterfactuals() {
             id: `counterfactual:${cat}`,
             type: 'tip',
             icon: 'sparkles',
-            title: `Cut ${getCategoryName(cat)} by 20%`,
-            desc: `Your average is ${formatCurrency(avg)}/month. Trimming 20% would save ${formatCurrency(yearlySaving)} a year.`,
-            amount: formatCurrency(yearlySaving) + '/yr',
+            title: t('insights.counterfactual.title', { category: getCategoryName(cat) }),
+            desc: t('insights.counterfactual.desc', { avg: formatCurrency(avg), yearly: formatCurrency(yearlySaving) }),
+            amount: formatCurrency(yearlySaving) + t('insights.perYr'),
             amountClass: 'savings',
             data: {
                 kind: 'counterfactual',
