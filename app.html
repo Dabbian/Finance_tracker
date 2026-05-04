@@ -3889,7 +3889,19 @@ const translations = {
             monthly: 'Monthly',
             yearly: 'Yearly',
             quarterly: 'Quarterly',
-            weekly: 'Weekly'
+            weekly: 'Weekly',
+            active: 'Active',
+            perMonth: 'Per month',
+            perYear: 'Per year',
+            autoDetected: 'Auto-detected · {n} new',
+            detectedMeta: '{amount}/mo · seen in {months} months',
+            ignore: 'Ignore',
+            auto: 'Auto',
+            noActive: 'No active subscriptions.',
+            cancelled: 'Cancelled',
+            cancelledStatus: 'Cancelled',
+            activeStatus: 'Active',
+            cycleShort: { weekly: 'wk', monthly: 'mo', quarterly: 'qt', yearly: 'yr' }
         },
         categories: {
             keywordsHelp: 'Add keywords that will automatically categorize expenses based on description',
@@ -3952,7 +3964,18 @@ const translations = {
             noMonths: 'No months tracked yet.',
             monthByMonth: 'Month by month',
             inProgress: 'in progress',
-            spentVs: 'Spent {actual} vs {baseline} baseline'
+            spentVs: 'Spent {actual} vs {baseline} baseline',
+            tracking: 'Tracking',
+            baseline: 'Baseline',
+            perMonth: '/month',
+            overOneMonth: 'over {n} month',
+            overMonths: 'over {n} months',
+            editNote: 'Progress is computed from your real spending. Edit name, target, deadline, color, or icon — the tracking rules stay locked.'
+        },
+        imports: {
+            someone: 'Someone',
+            swishFrom: '↩ Swish from {sender}',
+            skip: "— Skip (don't import) —"
         },
         currency: { sek: 'SEK (kr)', usd: 'USD ($)' },
         hero: {
@@ -4348,7 +4371,19 @@ const translations = {
             monthly: 'Månadsvis',
             yearly: 'Årsvis',
             quarterly: 'Kvartalsvis',
-            weekly: 'Veckovis'
+            weekly: 'Veckovis',
+            active: 'Aktiva',
+            perMonth: 'Per månad',
+            perYear: 'Per år',
+            autoDetected: 'Automatiskt upptäckta · {n} nya',
+            detectedMeta: '{amount}/mån · setts i {months} månader',
+            ignore: 'Ignorera',
+            auto: 'Auto',
+            noActive: 'Inga aktiva prenumerationer.',
+            cancelled: 'Avslutade',
+            cancelledStatus: 'Avslutad',
+            activeStatus: 'Aktiv',
+            cycleShort: { weekly: 'v', monthly: 'mån', quarterly: 'kv', yearly: 'år' }
         },
         categories: {
             keywordsHelp: 'Lägg till sökord som automatiskt kategoriserar utgifter utifrån beskrivningen',
@@ -4411,7 +4446,18 @@ const translations = {
             noMonths: 'Inga månader spårade än.',
             monthByMonth: 'Månad för månad',
             inProgress: 'pågår',
-            spentVs: 'Spenderat {actual} mot baslinje {baseline}'
+            spentVs: 'Spenderat {actual} mot baslinje {baseline}',
+            tracking: 'Spårar',
+            baseline: 'Baslinje',
+            perMonth: '/månad',
+            overOneMonth: 'över {n} månad',
+            overMonths: 'över {n} månader',
+            editNote: 'Framsteg beräknas från dina faktiska utgifter. Du kan redigera namn, mål, deadline, färg eller ikon — spårningsreglerna är låsta.'
+        },
+        imports: {
+            someone: 'Någon',
+            swishFrom: '↩ Swish från {sender}',
+            skip: '— Hoppa över (importera ej) —'
         },
         currency: { sek: 'SEK (kr)', usd: 'USD ($)' },
         hero: {
@@ -6624,7 +6670,7 @@ function renderExpenseImportRow(item, idx) {
 }
 
 function renderSwishImportRow(item, idx) {
-    const sender = extractSwishSender(item.description) || 'Someone';
+    const sender = extractSwishSender(item.description) || t('imports.someone');
     const candidates = findSwishCandidateExpenses(item, idx);
 
     const candidateOptions = candidates.map(c => {
@@ -6638,14 +6684,14 @@ function renderSwishImportRow(item, idx) {
 
     return `
         <div class="import-row import-row-swish">
-            <div class="swish-tag">↩ Swish from ${sender}</div>
+            <div class="swish-tag">${t('imports.swishFrom', { sender })}</div>
             <div style="flex: 1; min-width: 0;">
                 <strong>${item.description}</strong><br>
                 <small style="color: var(--text-light);">${formatDate(item.date)}</small>
             </div>
             <div class="import-amount" style="color: var(--success);">+${formatCurrency(item.amount)}</div>
             <select style="padding: 0.5rem; width: 260px;" onchange="setSwishAttachment(${idx}, this.value)">
-                <option value="" ${!item.attachToExpenseId ? 'selected' : ''}>— Skip (don't import) —</option>
+                <option value="" ${!item.attachToExpenseId ? 'selected' : ''}>${t('imports.skip')}</option>
                 ${candidateOptions}
             </select>
             <button class="delete-btn" onclick="removePendingImport(${idx})">×</button>
@@ -7646,11 +7692,11 @@ function openGoalModal(id) {
             const m = g.meta || {};
             const p = computeCutGoalProgress(g);
             cutInfo.innerHTML = `
-                <div>Tracking: <strong>${m.categoryName || 'category'}</strong></div>
-                <div style="margin-top: 0.4rem;">Baseline: <strong>${formatCurrency(m.baselineMonthlyAvg || 0)}</strong>/month</div>
-                <div style="margin-top: 0.4rem;">Saved so far: <strong style="color: var(--success);">${formatCurrency(p.saved)}</strong> over ${p.monthsElapsed} month${p.monthsElapsed === 1 ? '' : 's'}</div>
+                <div>${t('cutGoal.tracking')}: <strong>${m.categoryName || t('labels.category').toLowerCase()}</strong></div>
+                <div style="margin-top: 0.4rem;">${t('cutGoal.baseline')}: <strong>${formatCurrency(m.baselineMonthlyAvg || 0)}</strong>${t('cutGoal.perMonth')}</div>
+                <div style="margin-top: 0.4rem;">${t('cutGoal.savedSoFar')}: <strong style="color: var(--success);">${formatCurrency(p.saved)}</strong> ${t(p.monthsElapsed === 1 ? 'cutGoal.overOneMonth' : 'cutGoal.overMonths', { n: p.monthsElapsed })}</div>
                 <div style="margin-top: 0.6rem; font-size: 0.8rem; color: var(--text-light);">
-                    Progress is computed from your real spending. Edit name, target, deadline, color, or icon — the tracking rules stay locked.
+                    ${t('cutGoal.editNote')}
                 </div>
             `;
         } else {
@@ -8001,15 +8047,15 @@ function renderSubsSummary() {
 
     container.innerHTML = `
         <div class="subs-summary-cell">
-            <div class="subs-summary-label">Active</div>
+            <div class="subs-summary-label">${t('subs.active')}</div>
             <div class="subs-summary-value">${active.length}</div>
         </div>
         <div class="subs-summary-cell">
-            <div class="subs-summary-label">Per month</div>
+            <div class="subs-summary-label">${t('subs.perMonth')}</div>
             <div class="subs-summary-value">${formatCurrency(monthlyTotal)}</div>
         </div>
         <div class="subs-summary-cell">
-            <div class="subs-summary-label">Per year</div>
+            <div class="subs-summary-label">${t('subs.perYear')}</div>
             <div class="subs-summary-value">${formatCurrency(yearlyTotal)}</div>
         </div>
     `;
@@ -8028,16 +8074,16 @@ function renderSubsDetected() {
 
     container.style.display = '';
     container.innerHTML = `
-        <div class="subs-section-title">Auto-detected · ${detected.length} new</div>
+        <div class="subs-section-title">${t('subs.autoDetected', { n: detected.length })}</div>
         ${detected.map((d, idx) => `
             <div class="subs-detected-row">
                 <div class="subs-detected-info">
                     <div class="subs-detected-name">${capitalize(d.desc)}</div>
-                    <div class="subs-detected-meta">${formatCurrency(d.avg)}/mo · seen in ${d.months} months</div>
+                    <div class="subs-detected-meta">${t('subs.detectedMeta', { amount: formatCurrency(d.avg), months: d.months })}</div>
                 </div>
                 <div class="subs-detected-actions">
-                    <button onclick="confirmDetectedSubscription(${idx})">Add</button>
-                    <button class="btn-secondary" onclick="ignoreDetectedSubscription(${idx})">Ignore</button>
+                    <button onclick="confirmDetectedSubscription(${idx})">${t('common.add')}</button>
+                    <button class="btn-secondary" onclick="ignoreDetectedSubscription(${idx})">${t('subs.ignore')}</button>
                 </div>
             </div>
         `).join('')}
@@ -8094,24 +8140,26 @@ function renderSubsLists() {
 
     activeContainer.innerHTML = active.length > 0
         ? active.map(s => renderSubItem(s)).join('')
-        : `<div class="subs-empty">No active subscriptions.</div>`;
+        : `<div class="subs-empty">${t('subs.noActive')}</div>`;
 
     cancelledContainer.innerHTML = cancelled.length > 0
-        ? `<div class="subs-list-heading">Cancelled</div>` + cancelled.map(s => renderSubItem(s)).join('')
+        ? `<div class="subs-list-heading">${t('subs.cancelled')}</div>` + cancelled.map(s => renderSubItem(s)).join('')
         : '';
 }
 
 function renderSubItem(s) {
     const monthlyCost = subscriptionMonthlyCost(s);
-    const cycleLabel = ({ weekly: 'wk', monthly: 'mo', quarterly: 'qt', yearly: 'yr' })[s.cycle] || s.cycle;
+    const cycleLabel = t('subs.cycleShort.' + (s.cycle || 'monthly'));
     const cancelled = s.status === 'cancelled';
-    const sourceBadge = s.source === 'detected' ? '<span class="subs-source-badge">Auto</span>' : '';
+    const sourceBadge = s.source === 'detected' ? `<span class="subs-source-badge">${t('subs.auto')}</span>` : '';
+    const statusLabel = cancelled ? t('subs.cancelledStatus') : t('subs.activeStatus');
+    const monthlyPrefix = s.cycle === 'monthly' ? '' : `${formatCurrency(monthlyCost)}${t('insights.perMo')} · `;
 
     return `
         <div class="subs-item ${cancelled ? 'cancelled' : ''}" onclick="openSubscriptionModal(${s.id})">
             <div class="subs-item-left">
                 <div class="subs-item-name">${s.name} ${sourceBadge}</div>
-                <div class="subs-item-meta">${s.cycle === 'monthly' ? '' : `${formatCurrency(monthlyCost)}/mo · `}${s.note ? s.note + ' · ' : ''}${cancelled ? 'Cancelled' : 'Active'}</div>
+                <div class="subs-item-meta">${monthlyPrefix}${s.note ? s.note + ' · ' : ''}${statusLabel}</div>
             </div>
             <div class="subs-item-amount">${formatCurrency(s.amount)}<span style="font-weight: 400; color: var(--text-light); font-size: 0.75rem;"> / ${cycleLabel}</span></div>
         </div>
