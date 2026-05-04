@@ -3911,6 +3911,19 @@ const translations = {
             savingsRate: 'Savings rate · {n}%',
             streak: '{n}-day streak'
         },
+        wins: {
+            daysWithout: '{n} days without {category}',
+            lowestWeek: 'Lowest spending week in 2 months',
+            newBest: 'New best streak: {n} days'
+        },
+        milestones: {
+            savingsRateTitle: '{n}% Savings Rate!',
+            savingsRateMsg: 'You kept {n}% of your income this cycle',
+            streakTitle: '{n}-Day Streak!',
+            streakMsg: "Keep it going — you're building real habits",
+            savedTitle: '{amount} saved!',
+            savedMsg: 'Your future self thanks you'
+        },
         currency: { sek: 'SEK (kr)', usd: 'USD ($)' },
         hero: {
             savingsRate: 'Savings Rate',
@@ -4062,7 +4075,12 @@ const translations = {
             optNone: 'No adjustment',
             optWeekend: 'Weekend → previous Friday',
             optSweden: 'Swedish payday rule (weekends + röda dagar)',
-            preview: 'Current cycle: <strong>{from} – {to}</strong>'
+            preview: 'Current cycle: <strong>{from} – {to}</strong>',
+            currentCycle: 'Current cycle',
+            days: '{n} days',
+            perDay: '{amount}/day',
+            shiftedFrom: 'Shifted earlier from {label}',
+            weekendReason: 'weekend'
         },
         db: {
             help: 'Your data is stored in a SQLite database. Download backup or load from a previous backup.',
@@ -4337,6 +4355,19 @@ const translations = {
             savingsRate: 'Sparkvot · {n}%',
             streak: '{n} dagar i rad'
         },
+        wins: {
+            daysWithout: '{n} dagar utan {category}',
+            lowestWeek: 'Lägsta utgiftsvecka på 2 månader',
+            newBest: 'Nytt rekord i rad: {n} dagar'
+        },
+        milestones: {
+            savingsRateTitle: '{n} % sparkvot!',
+            savingsRateMsg: 'Du behöll {n} % av din inkomst denna cykel',
+            streakTitle: '{n} dagar i rad!',
+            streakMsg: 'Fortsätt så — du bygger riktiga vanor',
+            savedTitle: '{amount} sparat!',
+            savedMsg: 'Ditt framtida jag tackar dig'
+        },
         currency: { sek: 'SEK (kr)', usd: 'USD ($)' },
         hero: {
             savingsRate: 'Sparkvot',
@@ -4488,7 +4519,12 @@ const translations = {
             optNone: 'Ingen justering',
             optWeekend: 'Helg → föregående fredag',
             optSweden: 'Svensk lönedagsregel (helger + röda dagar)',
-            preview: 'Nuvarande cykel: <strong>{from} – {to}</strong>'
+            preview: 'Nuvarande cykel: <strong>{from} – {to}</strong>',
+            currentCycle: 'Nuvarande cykel',
+            days: '{n} dagar',
+            perDay: '{amount}/dag',
+            shiftedFrom: 'Tidigarelagd från {label}',
+            weekendReason: 'helg'
         },
         db: {
             help: 'Dina data lagras i en SQLite-databas. Ladda ner en backup eller läs in en tidigare backup.',
@@ -6938,7 +6974,7 @@ function computeAvoidanceWins() {
             else break;
         }
         if (daysWithout >= 3) {
-            wins.push({ text: `${daysWithout} days without ${cat.name.toLowerCase()}` });
+            wins.push({ text: t('wins.daysWithout', { n: daysWithout, category: localizedCategoryName(cat).toLowerCase() }) });
         }
     });
 
@@ -6965,7 +7001,7 @@ function computeAvoidanceWins() {
         if (others.length > 0) {
             const minOther = Math.min(...others);
             if (recent < minOther) {
-                wins.push({ text: 'Lowest spending week in 2 months' });
+                wins.push({ text: t('wins.lowestWeek') });
             }
         }
     }
@@ -6973,7 +7009,7 @@ function computeAvoidanceWins() {
     // Streak milestone reached today
     const streak = computeStreak();
     if (streak.current >= 7 && streak.current === streak.best) {
-        wins.push({ text: `New best streak: ${streak.current} days` });
+        wins.push({ text: t('wins.newBest', { n: streak.current }) });
     }
 
     return wins;
@@ -6985,13 +7021,13 @@ function computeAvoidanceWins() {
 function checkSavingsRateMilestone(rate) {
     const tiers = [10, 20, 30, 40, 50];
     const cycleKey = isoDate(getCycleBounds(currentViewMonth).start);
-    tiers.forEach(t => {
-        if (rate >= t) {
-            const key = `savingsRate:${cycleKey}:${t}`;
+    tiers.forEach(tier => {
+        if (rate >= tier) {
+            const key = `savingsRate:${cycleKey}:${tier}`;
             if (!achievedMilestones.find(m => m.key === key)) {
                 achievedMilestones.push({ type: 'savingsRate', key });
                 persistMilestones();
-                celebrate('💰', `${t}% Savings Rate!`, 'You kept ' + t + '% of your income this cycle');
+                celebrate('💰', t('milestones.savingsRateTitle', { n: tier }), t('milestones.savingsRateMsg', { n: tier }));
             }
         }
     });
@@ -6999,13 +7035,13 @@ function checkSavingsRateMilestone(rate) {
 
 function checkStreakMilestone(streak) {
     const tiers = [3, 7, 14, 30, 60, 100];
-    tiers.forEach(t => {
-        if (streak === t) {
-            const key = `streak:${t}`;
+    tiers.forEach(tier => {
+        if (streak === tier) {
+            const key = `streak:${tier}`;
             if (!achievedMilestones.find(m => m.key === key)) {
                 achievedMilestones.push({ type: 'streak', key });
                 persistMilestones();
-                celebrate('🔥', `${t}-Day Streak!`, "Keep it going — you're building real habits");
+                celebrate('🔥', t('milestones.streakTitle', { n: tier }), t('milestones.streakMsg'));
             }
         }
     });
@@ -7013,13 +7049,13 @@ function checkStreakMilestone(streak) {
 
 function checkSavingsAmountMilestone(amount) {
     const tiers = [1000, 5000, 10000, 25000, 50000, 100000];
-    tiers.forEach(t => {
-        if (amount >= t) {
-            const key = `saved:${t}`;
+    tiers.forEach(tier => {
+        if (amount >= tier) {
+            const key = `saved:${tier}`;
             if (!achievedMilestones.find(m => m.key === key)) {
                 achievedMilestones.push({ type: 'saved', key });
                 persistMilestones();
-                celebrate('💎', `${formatCurrency(t)} saved!`, 'Your future self thanks you');
+                celebrate('💎', t('milestones.savedTitle', { amount: formatCurrency(tier) }), t('milestones.savedMsg'));
             }
         }
     });
@@ -7182,17 +7218,16 @@ function renderCyclePreview() {
         const anchorYear  = bounds.start.getDate() <= cycleStartDay ? bounds.start.getFullYear() : bounds.start.getFullYear() + (anchorMonth > 11 ? 1 : 0);
         const intended = new Date(anchorYear, ((anchorMonth % 12) + 12) % 12, cycleStartDay);
         if (intended.getTime() !== bounds.start.getTime()) {
-            const dow = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-            const intendedLabel = `${dow[intended.getDay()]} the ${cycleStartDay}${ordinal(cycleStartDay)}`;
+            const intendedLabel = intended.toLocaleDateString(activeLocale(), { weekday: 'long', day: 'numeric', month: 'long' });
             const holiday = holidayName(intended);
-            const reason = holiday ? holiday : (intended.getDay() === 0 || intended.getDay() === 6 ? 'weekend' : '');
-            adjustmentNote = `<div style="margin-top: 0.5rem; color: var(--text-light); font-size: 0.8rem;">Shifted earlier from ${intendedLabel}${reason ? ' (' + reason + ')' : ''}</div>`;
+            const reason = holiday ? holiday : (intended.getDay() === 0 || intended.getDay() === 6 ? t('cycle.weekendReason') : '');
+            adjustmentNote = `<div style="margin-top: 0.5rem; color: var(--text-light); font-size: 0.8rem;">${t('cycle.shiftedFrom', { label: intendedLabel })}${reason ? ' (' + reason + ')' : ''}</div>`;
         }
     }
 
     preview.innerHTML = `
-        <div style="font-weight: 600; margin-bottom: 0.25rem;">Current cycle</div>
-        <div style="color: var(--text-light);">${bounds.label} · ${days} days${dailyBudget > 0 ? ` · ${formatCurrency(dailyBudget)}/day` : ''}</div>
+        <div style="font-weight: 600; margin-bottom: 0.25rem;">${t('cycle.currentCycle')}</div>
+        <div style="color: var(--text-light);">${bounds.label} · ${t('cycle.days', { n: days })}${dailyBudget > 0 ? ` · ${t('cycle.perDay', { amount: formatCurrency(dailyBudget) })}` : ''}</div>
         ${adjustmentNote}
     `;
 }
