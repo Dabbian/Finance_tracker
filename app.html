@@ -3849,6 +3849,7 @@ const translations = {
             editExpense: 'Edit Expense',
             newSubscription: 'New Subscription',
             editSubscription: 'Edit Subscription',
+            editCancelledSub: 'Edit Cancelled Subscription',
             editCategory: 'Edit Category',
             expenses: 'Expenses',
             expensesLower: 'expenses',
@@ -3923,6 +3924,17 @@ const translations = {
             streakMsg: "Keep it going — you're building real habits",
             savedTitle: '{amount} saved!',
             savedMsg: 'Your future self thanks you'
+        },
+        cutGoal: {
+            headerNote: 'Auto-tracked: every kr below your {baseline}/month baseline in <strong>{category}</strong> counts toward this goal.',
+            thisCategory: 'this category',
+            savedSoFar: 'Saved so far',
+            monthsElapsed: 'Months elapsed',
+            avgPerMonth: 'Avg / month',
+            noMonths: 'No months tracked yet.',
+            monthByMonth: 'Month by month',
+            inProgress: 'in progress',
+            spentVs: 'Spent {actual} vs {baseline} baseline'
         },
         currency: { sek: 'SEK (kr)', usd: 'USD ($)' },
         hero: {
@@ -4012,7 +4024,8 @@ const translations = {
             snapshotHelp: 'Add up your accounts (checking, savings, investments) and subtract debts. Track this monthly.',
             totalKr: 'Total Net Worth (kr)',
             totalUsd: 'Total Net Worth ($)',
-            allSnapshots: 'All snapshots'
+            allSnapshots: 'All snapshots',
+            noSnapshots: 'No snapshots yet'
         },
         insights: {
             empty: 'No insights yet — add a few expenses to see trends.',
@@ -4085,6 +4098,7 @@ const translations = {
         db: {
             help: 'Your data is stored in a SQLite database. Download backup or load from a previous backup.',
             downloaded: 'Database downloaded.',
+            downloadedAt: 'Database downloaded: {time}',
             loaded: 'Database loaded.',
             loadError: 'Could not read that database file.'
         },
@@ -4207,6 +4221,7 @@ const translations = {
             newSavingsGoal: 'New Savings Goal',
             newGoal: 'New Goal',
             editGoal: 'Edit goal',
+            editCutGoal: 'Edit Cut Goal',
             addContribution: 'Add a contribution',
             takeSnapshotTitle: 'Take a snapshot',
             netWorthIntro: 'A quick log of where you stand. No accounts to link.',
@@ -4293,6 +4308,7 @@ const translations = {
             editExpense: 'Redigera utgift',
             newSubscription: 'Ny prenumeration',
             editSubscription: 'Redigera prenumeration',
+            editCancelledSub: 'Redigera avslutad prenumeration',
             editCategory: 'Redigera kategori',
             expenses: 'Utgifter',
             expensesLower: 'utgifter',
@@ -4367,6 +4383,17 @@ const translations = {
             streakMsg: 'Fortsätt så — du bygger riktiga vanor',
             savedTitle: '{amount} sparat!',
             savedMsg: 'Ditt framtida jag tackar dig'
+        },
+        cutGoal: {
+            headerNote: 'Spåras automatiskt: varje krona under din baslinje på {baseline}/månad i <strong>{category}</strong> räknas mot detta mål.',
+            thisCategory: 'denna kategori',
+            savedSoFar: 'Sparat hittills',
+            monthsElapsed: 'Månader gått',
+            avgPerMonth: 'Snitt/månad',
+            noMonths: 'Inga månader spårade än.',
+            monthByMonth: 'Månad för månad',
+            inProgress: 'pågår',
+            spentVs: 'Spenderat {actual} mot baslinje {baseline}'
         },
         currency: { sek: 'SEK (kr)', usd: 'USD ($)' },
         hero: {
@@ -4456,7 +4483,8 @@ const translations = {
             snapshotHelp: 'Summera dina konton (lönekonto, sparkonto, investeringar) och dra av skulder. Logga detta varje månad.',
             totalKr: 'Total nettoförmögenhet (kr)',
             totalUsd: 'Total nettoförmögenhet ($)',
-            allSnapshots: 'Alla ögonblicksbilder'
+            allSnapshots: 'Alla ögonblicksbilder',
+            noSnapshots: 'Inga ögonblicksbilder än'
         },
         insights: {
             empty: 'Inga insikter än — lägg till några utgifter för att se trender.',
@@ -4529,6 +4557,7 @@ const translations = {
         db: {
             help: 'Dina data lagras i en SQLite-databas. Ladda ner en backup eller läs in en tidigare backup.',
             downloaded: 'Databasen har laddats ner.',
+            downloadedAt: 'Databasen laddades ner: {time}',
             loaded: 'Databasen har lästs in.',
             loadError: 'Kunde inte läsa den databasfilen.'
         },
@@ -4651,6 +4680,7 @@ const translations = {
             newSavingsGoal: 'Nytt sparmål',
             newGoal: 'Nytt mål',
             editGoal: 'Redigera mål',
+            editCutGoal: 'Redigera utgiftsminskningsmål',
             addContribution: 'Lägg till ett bidrag',
             takeSnapshotTitle: 'Ta en ögonblicksbild',
             netWorthIntro: 'En snabb logg över var du står. Inga konton att koppla.',
@@ -6760,7 +6790,7 @@ function downloadDatabase() {
     URL.revokeObjectURL(url);
     
     const status = document.getElementById('dbStatus');
-    status.textContent = `Database downloaded: ${new Date().toLocaleString()}`;
+    status.textContent = t('db.downloadedAt', { time: new Date().toLocaleString(activeLocale()) });
     setTimeout(() => {
         status.textContent = '';
     }, 5000);
@@ -7367,9 +7397,11 @@ function openCutGoalDetail(goalId) {
                 ${svgIcon(iconName)}
             </div>
             <div style="flex: 1;">
-                <div style="font-size: 0.875rem; color: var(--text-light); margin-bottom: 0.5rem;">
-                    Auto-tracked: every kr below your ${formatCurrency(m.baselineMonthlyAvg || 0)}/month baseline
-                    in <strong>${m.categoryName || 'this category'}</strong> counts toward this goal.
+                <div style="font-size: 0.875rem; color: var(--text-light); margin-bottom: 0.5rem;" data-i18n-html="true">
+                    ${t('cutGoal.headerNote', {
+                        baseline: formatCurrency(m.baselineMonthlyAvg || 0),
+                        category: m.categoryName || t('cutGoal.thisCategory')
+                    })}
                 </div>
             </div>
         </div>
@@ -7377,12 +7409,12 @@ function openCutGoalDetail(goalId) {
 
     // Stat row
     const stats = [
-        { label: 'Saved so far', value: formatCurrency(p.saved), cls: 'savings' },
-        { label: 'Target', value: formatCurrency(p.target) },
-        { label: 'Months elapsed', value: `${p.monthsElapsed} / ${p.totalMonths}` },
-        { label: 'Avg / month', value: p.monthsElapsed > 0 ? formatCurrency(p.rate) : '—' },
-        { label: 'Projected', value: formatCurrency(p.projected), cls: p.onTrack ? 'savings' : 'warning' },
-        { label: 'Status', value: p.onTrack ? 'On track' : `Behind by ${formatCurrency(p.target - p.projected)}`, cls: p.onTrack ? 'savings' : 'warning' }
+        { label: t('cutGoal.savedSoFar'), value: formatCurrency(p.saved), cls: 'savings' },
+        { label: t('labels.target'), value: formatCurrency(p.target) },
+        { label: t('cutGoal.monthsElapsed'), value: `${p.monthsElapsed} / ${p.totalMonths}` },
+        { label: t('cutGoal.avgPerMonth'), value: p.monthsElapsed > 0 ? formatCurrency(p.rate) : '—' },
+        { label: t('goals.projected'), value: formatCurrency(p.projected), cls: p.onTrack ? 'savings' : 'warning' },
+        { label: t('goals.status'), value: p.onTrack ? t('goals.onTrack') : t('goals.behindBy', { amount: formatCurrency(p.target - p.projected) }), cls: p.onTrack ? 'savings' : 'warning' }
     ];
     document.getElementById('cutGoalDetailStats').innerHTML = stats.map(s => `
         <div class="insight-stat">
@@ -7394,7 +7426,7 @@ function openCutGoalDetail(goalId) {
     // Month-by-month breakdown
     const baseline = m.baselineMonthlyAvg || 0;
     const breakdownHtml = p.breakdown.length === 0
-        ? '<p style="text-align: center; color: var(--text-light); padding: 1rem;">No months tracked yet.</p>'
+        ? `<p style="text-align: center; color: var(--text-light); padding: 1rem;">${t('cutGoal.noMonths')}</p>`
         : p.breakdown.map(b => {
             const overspent = b.saved === 0 && b.actual > b.baseline;
             const sign = b.saved > 0 ? '+' : (overspent ? '−' : '');
@@ -7403,8 +7435,8 @@ function openCutGoalDetail(goalId) {
             return `
                 <div class="insight-detail-list-item">
                     <div>
-                        <strong>${b.label}${b.isPartial ? ' <span style="color: var(--text-light); font-weight: 400;">· in progress</span>' : ''}</strong>
-                        <small>Spent ${formatCurrency(b.actual)} vs ${formatCurrency(baseline)} baseline</small>
+                        <strong>${b.label}${b.isPartial ? ` <span style="color: var(--text-light); font-weight: 400;">· ${t('cutGoal.inProgress')}</span>` : ''}</strong>
+                        <small>${t('cutGoal.spentVs', { actual: formatCurrency(b.actual), baseline: formatCurrency(baseline) })}</small>
                     </div>
                     <div class="insight-stat-value ${cls}" style="font-size: 0.95rem;">${sign}${formatCurrency(amt)}</div>
                 </div>
@@ -7412,7 +7444,7 @@ function openCutGoalDetail(goalId) {
         }).join('');
 
     document.getElementById('cutGoalDetailBreakdown').innerHTML = `
-        <div class="insight-section-title" style="margin-top: 0; margin-bottom: 0.5rem;">Month by month</div>
+        <div class="insight-section-title" style="margin-top: 0; margin-bottom: 0.5rem;">${t('cutGoal.monthByMonth')}</div>
         <div class="insight-detail-list" style="background: var(--bg-alt); padding: 0.5rem 1rem; border-radius: 10px;">
             ${breakdownHtml}
         </div>
@@ -7581,7 +7613,7 @@ function openGoalModal(id) {
     if (id) {
         const g = goals.find(x => x.id === id);
         if (!g) return;
-        titleEl.textContent = g.kind === 'cut' ? 'Edit Cut Goal' : 'Edit Goal';
+        titleEl.textContent = g.kind === 'cut' ? t('goals.editCutGoal') : t('goals.editGoal');
         document.getElementById('goalId').value = g.id;
         document.getElementById('goalName').value = g.name;
         document.getElementById('goalEmoji').value = resolveGoalIcon(g.emoji);
@@ -7609,7 +7641,7 @@ function openGoalModal(id) {
         }
         deleteBtn.style.display = 'block';
     } else {
-        titleEl.textContent = 'New Savings Goal';
+        titleEl.textContent = t('goals.newSavingsGoal');
         document.getElementById('goalForm').reset();
         document.getElementById('goalId').value = '';
         document.getElementById('goalEmoji').value = 'target';
@@ -7793,7 +7825,7 @@ function renderNetWorth() {
 
     if (snapshots.length === 0) {
         latestEl.textContent = '—';
-        dateEl.textContent = 'No snapshots yet';
+        dateEl.textContent = t('netWorth.noSnapshots');
         changeWrap.innerHTML = '';
         list.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: 1rem;">' + t('empty.firstSnapshot') + '</p>';
         if (netWorthChart) {
@@ -8078,7 +8110,7 @@ function openSubscriptionModal(id) {
     if (id) {
         const s = subscriptions.find(x => x.id === id);
         if (!s) return;
-        titleEl.textContent = s.status === 'cancelled' ? 'Edit Cancelled Subscription' : 'Edit Subscription';
+        titleEl.textContent = s.status === 'cancelled' ? t('modals.editCancelledSub') : t('modals.editSubscription');
         document.getElementById('subId').value = s.id;
         document.getElementById('subName').value = s.name;
         document.getElementById('subAmount').value = s.amount;
@@ -8100,7 +8132,7 @@ function openSubscriptionModal(id) {
         toggleBtn.onclick = () => toggleSubscriptionStatus(s.id);
         deleteBtn.parentNode.insertBefore(toggleBtn, deleteBtn);
     } else {
-        titleEl.textContent = 'New Subscription';
+        titleEl.textContent = t('modals.newSubscription');
         document.getElementById('subscriptionForm').reset();
         document.getElementById('subId').value = '';
         document.getElementById('subCycle').value = 'monthly';
