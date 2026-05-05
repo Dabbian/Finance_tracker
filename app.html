@@ -2881,7 +2881,7 @@
 <body data-theme="dark" data-palette="sunset">
     <div class="app-shell">
         <!-- Slim icon sidebar -->
-        <aside class="app-sidebar" aria-label="Primary navigation">
+        <aside class="app-sidebar" data-i18n-aria-label="topbar.primaryNav" aria-label="Primary navigation">
             <div class="app-logo" title="Personal Finance">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <path d="M12 2v20M17 5H9.5a3.5 3.5 0 1 0 0 7h5a3.5 3.5 0 1 1 0 7H6"/>
@@ -3825,7 +3825,8 @@ const translations = {
             add: 'Add',
             previousMonth: 'Previous month',
             nextMonth: 'Next month',
-            currency: 'Currency'
+            currency: 'Currency',
+            primaryNav: 'Primary navigation'
         },
         common: {
             save: 'Save',
@@ -3967,7 +3968,10 @@ const translations = {
             oneSwishSkipped: '{n} Swish row skipped',
             swishSkipped: '{n} Swish rows skipped',
             nothingImported: 'Nothing imported.',
-            failedSuffix: '{n} failed — see browser console.'
+            failedSuffix: '{n} failed — see browser console.',
+            importedFallback: 'Imported',
+            noHeaderRow: 'No header row found and no rows match a (date, description, amount) layout.',
+            headerNoRows: 'Found a header row at line {line}, but no valid expense rows below it.\n\nDate column: {dateCol}, Amount column: {amountCol}\nSkipped: {empty} empty, {badDate} bad date, {zeroAmount} zero amount.'
         },
         db: {
             loadOk: 'Database loaded successfully!',
@@ -4032,7 +4036,8 @@ const translations = {
             countLabel: '{n} expenses',
             swishOne: '{n} Swish repayment',
             swishMany: '{n} Swish repayments',
-            noDescription: 'No description'
+            noDescription: 'No description',
+            onDate: 'Expenses on {date}'
         },
         empty: {
             fixed: 'No fixed expenses',
@@ -4363,7 +4368,8 @@ const translations = {
             add: 'Lägg till',
             previousMonth: 'Föregående månad',
             nextMonth: 'Nästa månad',
-            currency: 'Valuta'
+            currency: 'Valuta',
+            primaryNav: 'Huvudnavigering'
         },
         common: {
             save: 'Spara',
@@ -4505,7 +4511,10 @@ const translations = {
             oneSwishSkipped: '{n} Swish-rad hoppades över',
             swishSkipped: '{n} Swish-rader hoppades över',
             nothingImported: 'Inget importerat.',
-            failedSuffix: '{n} misslyckades — se webbläsarkonsolen.'
+            failedSuffix: '{n} misslyckades — se webbläsarkonsolen.',
+            importedFallback: 'Importerad',
+            noHeaderRow: 'Ingen rubrikrad hittades och inga rader matchar formatet (datum, beskrivning, belopp).',
+            headerNoRows: 'Hittade en rubrikrad på rad {line}, men inga giltiga utgiftsrader under den.\n\nDatumkolumn: {dateCol}, Beloppskolumn: {amountCol}\nÖverhoppade: {empty} tomma, {badDate} dåligt datum, {zeroAmount} noll-belopp.'
         },
         db: {
             loadOk: 'Databasen laddades!',
@@ -4570,7 +4579,8 @@ const translations = {
             countLabel: '{n} utgifter',
             swishOne: '{n} Swish-återbetalning',
             swishMany: '{n} Swish-återbetalningar',
-            noDescription: 'Ingen beskrivning'
+            noDescription: 'Ingen beskrivning',
+            onDate: 'Utgifter den {date}'
         },
         empty: {
             fixed: 'Inga fasta utgifter',
@@ -6455,7 +6465,7 @@ function showExpensesByDate(dateStr) {
     const filteredExpenses = expenses.filter(exp => exp.date === dateStr);
     const date = new Date(dateStr + 'T00:00:00');
     const formattedDate = date.toLocaleDateString(activeLocale(), { month: 'long', day: 'numeric', year: 'numeric' });
-    showExpenseDetailsModal(filteredExpenses, `Expenses on ${formattedDate}`);
+    showExpenseDetailsModal(filteredExpenses, t('expenses.onDate', { date: formattedDate }));
 }
 
 function showExpenseDetailsModal(expensesList, title) {
@@ -6611,7 +6621,7 @@ function processExcelData(rows) {
 
         // Normalize description text: NFC handles bank exports that use decomposed Unicode (O + ¨ → Ö).
         // Without NFC, Å Ä Ö can search/compare incorrectly even though they look right on screen.
-        const description = normalizeImportText(beskrivning) || 'Imported';
+        const description = normalizeImportText(beskrivning) || t('imports.importedFallback');
 
         // Detect Swish repayments (incoming money from a friend, e.g., paying you back for shared dinner).
         // Pattern: positive amount AND description starts with "Swish från" (case-insensitive, accent-insensitive).
@@ -6630,8 +6640,15 @@ function processExcelData(rows) {
 
     if (pendingImports.length === 0) {
         const detail = headerIdx === -1
-            ? 'No header row found and no rows match a (date, description, amount) layout.'
-            : `Found a header row at line ${headerIdx + 1}, but no valid expense rows below it.\n\nDate column: ${dateCol + 1}, Amount column: ${amountCol + 1}\nSkipped: ${skippedReasons.empty} empty, ${skippedReasons.badDate} bad date, ${skippedReasons.zeroAmount} zero amount.`;
+            ? t('imports.noHeaderRow')
+            : t('imports.headerNoRows', {
+                line: headerIdx + 1,
+                dateCol: dateCol + 1,
+                amountCol: amountCol + 1,
+                empty: skippedReasons.empty,
+                badDate: skippedReasons.badDate,
+                zeroAmount: skippedReasons.zeroAmount
+            });
         alert(t('errors.noExpensesFound') + '\n\n' + detail);
         return;
     }
