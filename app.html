@@ -3977,6 +3977,29 @@ const translations = {
             swishFrom: '↩ Swish from {sender}',
             skip: "— Skip (don't import) —"
         },
+        insightExtras: {
+            monthlyAvg: 'Your monthly avg',
+            savePerMonth: 'Save / month',
+            savePerYear: 'Save / year',
+            setAsGoalHint: 'Tap "Set as goal" to track this saving as a goal you can fund over the next 12 months.',
+            spentSoFar: 'Spent so far',
+            daysIntoCycle: 'Days into cycle',
+            projectedTotal: 'Projected total',
+            thisCycle: 'This cycle',
+            average: 'Average',
+            overspend: 'Overspend',
+            history: 'History',
+            oneCycleAgo: '{n} cycle ago',
+            cyclesAgo: '{n} cycles ago',
+            count: 'Count',
+            monthsTracked: '{n} months tracked',
+            monthsTrackedLabel: 'Months tracked',
+            daysAgoShort: '{n}d ago',
+            lastDaysAgo: 'last {n} days ago',
+            last30Days: 'Last 30 days',
+            perOccurrence: 'Per occurrence',
+            yearlyPace: 'Yearly pace'
+        },
         currency: { sek: 'SEK (kr)', usd: 'USD ($)' },
         hero: {
             savingsRate: 'Savings Rate',
@@ -4458,6 +4481,29 @@ const translations = {
             someone: 'Någon',
             swishFrom: '↩ Swish från {sender}',
             skip: '— Hoppa över (importera ej) —'
+        },
+        insightExtras: {
+            monthlyAvg: 'Ditt månadssnitt',
+            savePerMonth: 'Spar/månad',
+            savePerYear: 'Spar/år',
+            setAsGoalHint: 'Tryck på "Sätt som mål" för att spåra detta sparande som ett mål du kan finansiera över de kommande 12 månaderna.',
+            spentSoFar: 'Spenderat hittills',
+            daysIntoCycle: 'Dagar in i cykeln',
+            projectedTotal: 'Prognostiserad summa',
+            thisCycle: 'Denna cykel',
+            average: 'Snitt',
+            overspend: 'Översk.',
+            history: 'Historik',
+            oneCycleAgo: 'för {n} cykel sedan',
+            cyclesAgo: 'för {n} cykler sedan',
+            count: 'Antal',
+            monthsTracked: '{n} månader spårade',
+            monthsTrackedLabel: 'Månader spårade',
+            daysAgoShort: 'för {n}d sedan',
+            lastDaysAgo: 'senast för {n} dagar sedan',
+            last30Days: 'Senaste 30 dagarna',
+            perOccurrence: 'Per gång',
+            yearlyPace: 'Årstakt'
         },
         currency: { sek: 'SEK (kr)', usd: 'USD ($)' },
         hero: {
@@ -8441,20 +8487,20 @@ function renderInsightExtras(item) {
         return `
             <div class="insight-stat-row">
                 <div class="insight-stat">
-                    <div class="insight-stat-label">Your monthly avg</div>
+                    <div class="insight-stat-label">${t('insightExtras.monthlyAvg')}</div>
                     <div class="insight-stat-value">${formatCurrency(d.monthlyAverage)}</div>
                 </div>
                 <div class="insight-stat">
-                    <div class="insight-stat-label">Save / month</div>
+                    <div class="insight-stat-label">${t('insightExtras.savePerMonth')}</div>
                     <div class="insight-stat-value savings">${formatCurrency(d.monthlySavings)}</div>
                 </div>
                 <div class="insight-stat">
-                    <div class="insight-stat-label">Save / year</div>
+                    <div class="insight-stat-label">${t('insightExtras.savePerYear')}</div>
                     <div class="insight-stat-value savings">${formatCurrency(d.annualSavings)}</div>
                 </div>
             </div>
             <p style="margin-top: 0.75rem; font-size: 0.85rem; color: var(--text-light);">
-                Tap "Set as goal" to track this saving as a goal you can fund over the next 12 months.
+                ${t('insightExtras.setAsGoalHint')}
             </p>
         `;
     }
@@ -8463,15 +8509,15 @@ function renderInsightExtras(item) {
         return `
             <div class="insight-stat-row">
                 <div class="insight-stat">
-                    <div class="insight-stat-label">Spent so far</div>
+                    <div class="insight-stat-label">${t('insightExtras.spentSoFar')}</div>
                     <div class="insight-stat-value">${formatCurrency(d.spentSoFar)}</div>
                 </div>
                 <div class="insight-stat">
-                    <div class="insight-stat-label">Days into cycle</div>
+                    <div class="insight-stat-label">${t('insightExtras.daysIntoCycle')}</div>
                     <div class="insight-stat-value">${d.dayElapsed} / ${d.totalDays}</div>
                 </div>
                 <div class="insight-stat">
-                    <div class="insight-stat-label">Projected total</div>
+                    <div class="insight-stat-label">${t('insightExtras.projectedTotal')}</div>
                     <div class="insight-stat-value ${d.overUnder > 0 ? 'warning' : 'savings'}">${formatCurrency(d.projectedTotal)}</div>
                 </div>
             </div>
@@ -8481,27 +8527,27 @@ function renderInsightExtras(item) {
     if (d.kind === 'anomaly') {
         const trailingHtml = d.trailingTotals.map((amt, i) => `
             <div class="insight-detail-list-item">
-                <span>${i + 1} cycle${i ? 's' : ''} ago</span>
+                <span>${t(i === 0 ? 'insightExtras.oneCycleAgo' : 'insightExtras.cyclesAgo', { n: i + 1 })}</span>
                 <strong>${formatCurrency(amt)}</strong>
             </div>
         `).join('');
         return `
             <div class="insight-stat-row">
                 <div class="insight-stat">
-                    <div class="insight-stat-label">This cycle</div>
+                    <div class="insight-stat-label">${t('insightExtras.thisCycle')}</div>
                     <div class="insight-stat-value warning">${formatCurrency(d.currentAmount)}</div>
                 </div>
                 <div class="insight-stat">
-                    <div class="insight-stat-label">Average</div>
+                    <div class="insight-stat-label">${t('insightExtras.average')}</div>
                     <div class="insight-stat-value">${formatCurrency(d.averageAmount)}</div>
                 </div>
                 <div class="insight-stat">
-                    <div class="insight-stat-label">Overspend</div>
+                    <div class="insight-stat-label">${t('insightExtras.overspend')}</div>
                     <div class="insight-stat-value warning">+${formatCurrency(d.overspend)}</div>
                 </div>
             </div>
             <div class="insight-detail-list">
-                <div class="insight-stat-label" style="margin-top: 0.75rem;">History</div>
+                <div class="insight-stat-label" style="margin-top: 0.75rem;">${t('insightExtras.history')}</div>
                 ${trailingHtml}
             </div>
         `;
@@ -8512,7 +8558,7 @@ function renderInsightExtras(item) {
             <div class="insight-detail-list-item">
                 <div>
                     <strong>${capitalize(s.desc)}</strong>
-                    <small>${s.months} months tracked${s.daysSince > 30 ? ` · ${s.daysSince}d ago` : ''}</small>
+                    <small>${t('insightExtras.monthsTracked', { n: s.months })}${s.daysSince > 30 ? ` · ${t('insightExtras.daysAgoShort', { n: s.daysSince })}` : ''}</small>
                 </div>
                 <strong>${formatCurrency(s.avg)}</strong>
             </div>
@@ -8520,15 +8566,15 @@ function renderInsightExtras(item) {
         return `
             <div class="insight-stat-row">
                 <div class="insight-stat">
-                    <div class="insight-stat-label">Count</div>
+                    <div class="insight-stat-label">${t('insightExtras.count')}</div>
                     <div class="insight-stat-value">${d.count}</div>
                 </div>
                 <div class="insight-stat">
-                    <div class="insight-stat-label">Per month</div>
+                    <div class="insight-stat-label">${t('subs.perMonth')}</div>
                     <div class="insight-stat-value warning">${formatCurrency(d.totalMonthly)}</div>
                 </div>
                 <div class="insight-stat">
-                    <div class="insight-stat-label">Per year</div>
+                    <div class="insight-stat-label">${t('subs.perYear')}</div>
                     <div class="insight-stat-value warning">${formatCurrency(d.totalYearly)}</div>
                 </div>
             </div>
@@ -8541,7 +8587,7 @@ function renderInsightExtras(item) {
             <div class="insight-detail-list-item">
                 <div>
                     <strong>${capitalize(s.desc)}</strong>
-                    <small>${formatCurrency(s.avg)}/mo · last ${s.daysSince} days ago</small>
+                    <small>${formatCurrency(s.avg)}${t('insights.perMo')} · ${t('insightExtras.lastDaysAgo', { n: s.daysSince })}</small>
                 </div>
             </div>
         `).join('');
@@ -8552,15 +8598,15 @@ function renderInsightExtras(item) {
         return `
             <div class="insight-stat-row">
                 <div class="insight-stat">
-                    <div class="insight-stat-label">Per month</div>
+                    <div class="insight-stat-label">${t('subs.perMonth')}</div>
                     <div class="insight-stat-value">${formatCurrency(d.monthlyAverage)}</div>
                 </div>
                 <div class="insight-stat">
-                    <div class="insight-stat-label">Per year</div>
+                    <div class="insight-stat-label">${t('subs.perYear')}</div>
                     <div class="insight-stat-value warning">${formatCurrency(d.annualCost)}</div>
                 </div>
                 <div class="insight-stat">
-                    <div class="insight-stat-label">Months tracked</div>
+                    <div class="insight-stat-label">${t('insightExtras.monthsTrackedLabel')}</div>
                     <div class="insight-stat-value">${d.monthsTracked}</div>
                 </div>
             </div>
@@ -8571,15 +8617,15 @@ function renderInsightExtras(item) {
         return `
             <div class="insight-stat-row">
                 <div class="insight-stat">
-                    <div class="insight-stat-label">Last 30 days</div>
+                    <div class="insight-stat-label">${t('insightExtras.last30Days')}</div>
                     <div class="insight-stat-value warning">${formatCurrency(d.monthlyTotal)}</div>
                 </div>
                 <div class="insight-stat">
-                    <div class="insight-stat-label">Per occurrence</div>
+                    <div class="insight-stat-label">${t('insightExtras.perOccurrence')}</div>
                     <div class="insight-stat-value">${formatCurrency(d.avgPerOccurrence)}</div>
                 </div>
                 <div class="insight-stat">
-                    <div class="insight-stat-label">Yearly pace</div>
+                    <div class="insight-stat-label">${t('insightExtras.yearlyPace')}</div>
                     <div class="insight-stat-value warning">${formatCurrency(d.annualProjection)}</div>
                 </div>
             </div>
