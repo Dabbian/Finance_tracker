@@ -3060,17 +3060,17 @@
                         </div>
 
                         <div class="card">
-                            <h2 class="card-title">Configure Categories</h2>
+                            <h2 class="card-title" data-i18n="cards.configureCategories">Configure Categories</h2>
                             <form id="addCategoryForm">
                                 <div class="form-group">
-                                    <label for="newCategoryName">Category Name</label>
-                                    <input type="text" id="newCategoryName" required placeholder="e.g., Groceries">
+                                    <label for="newCategoryName" data-i18n="labels.categoryName">Category Name</label>
+                                    <input type="text" id="newCategoryName" required placeholder="e.g., Groceries" data-i18n-placeholder="placeholders.categoryExample">
                                 </div>
                                 <div class="form-group">
-                                    <label for="newCategoryColor">Color</label>
+                                    <label for="newCategoryColor" data-i18n="labels.color">Color</label>
                                     <input type="color" id="newCategoryColor" value="#3b82f6">
                                 </div>
-                                <button type="submit">Add Category</button>
+                                <button type="submit" data-i18n="buttons.addCategory">Add Category</button>
                             </form>
                             <div style="margin-top: 1.5rem;" id="categoriesList"></div>
                         </div>
@@ -3276,26 +3276,8 @@
                         </div>
 
                         <div class="card">
-                            <h2 class="card-title" data-i18n="cards.configureCategories">Configure Categories</h2>
-                            <form id="addCategoryForm">
-                                <div class="form-group">
-                                    <label for="newCategoryName" data-i18n="labels.categoryName">Category Name</label>
-                                    <input type="text" id="newCategoryName" required placeholder="e.g., Groceries" data-i18n-placeholder="placeholders.categoryExample">
-                                </div>
-                                <div class="form-group">
-                                    <label for="newCategoryColor" data-i18n="labels.color">Color</label>
-                                    <input type="color" id="newCategoryColor" value="#3b82f6">
-                                </div>
-                                <button type="submit" data-i18n="buttons.addCategory">Add Category</button>
-                            </form>
-                            <div style="margin-top: 1.5rem;" id="categoriesList"></div>
-                        </div>
-
-                        <div class="card">
                             <h2 class="card-title" data-i18n="cards.subscriptions">Subscriptions</h2>
                             <p style="color: var(--text-light); margin-bottom: 1rem; font-size: 0.875rem;" data-i18n="subs.help">
-                            <h2 class="card-title">Subscriptions</h2>
-                            <p style="color: var(--text-light); margin-bottom: 1rem; font-size: 0.875rem;">
                                 Track your recurring subscriptions and see what they cost. Auto-detected from import data and any you add manually.
                             </p>
                             <div id="subsSummary" class="subs-summary"></div>
@@ -3316,7 +3298,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title" data-i18n="modals.editExpense">Edit Expense</h3>
-                <button class="modal-close" onclick="closeEditModal()" aria-label="Close">×</button>
+                <button class="modal-close" onclick="closeEditModal()" data-i18n-aria-label="common.close" aria-label="Close">×</button>
             </div>
 
             <div class="form-group">
@@ -3355,7 +3337,7 @@
         <div class="modal-content" style="max-width: 480px;">
             <div class="modal-header">
                 <h3 class="modal-title" id="subModalTitle" data-i18n="modals.newSubscription">New Subscription</h3>
-                <button class="modal-close" onclick="closeSubscriptionModal()" aria-label="Close">×</button>
+                <button class="modal-close" onclick="closeSubscriptionModal()" data-i18n-aria-label="common.close" aria-label="Close">×</button>
             </div>
             <form id="subscriptionForm">
                 <input type="hidden" id="subId">
@@ -3400,7 +3382,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title" data-i18n="modals.editCategory">Edit Category</h3>
-                <button class="modal-close" onclick="closeEditCategoryModal()" aria-label="Close">×</button>
+                <button class="modal-close" onclick="closeEditCategoryModal()" data-i18n-aria-label="common.close" aria-label="Close">×</button>
             </div>
 
             <div class="form-group">
@@ -3437,7 +3419,7 @@
         <div class="modal-content" style="max-width: 700px;">
             <div class="modal-header">
                 <h3 class="modal-title" id="expenseDetailsTitle" data-i18n="modals.expenses">Expenses</h3>
-                <button class="modal-close" onclick="closeExpenseDetailsModal()" aria-label="Close">×</button>
+                <button class="modal-close" onclick="closeExpenseDetailsModal()" data-i18n-aria-label="common.close" aria-label="Close">×</button>
             </div>
             <div style="background: var(--bg-alt); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
                 <strong id="expenseDetailsCount">0</strong> <span data-i18n="modals.expensesLower">expenses</span> •
@@ -3455,7 +3437,7 @@
         <div class="modal-content" style="max-width: 900px;">
             <div class="modal-header">
                 <h3 class="modal-title" data-i18n="modals.reviewImport">Review Imported Expenses</h3>
-                <button class="modal-close" onclick="closeImportModal()" aria-label="Close">×</button>
+                <button class="modal-close" onclick="closeImportModal()" data-i18n-aria-label="common.close" aria-label="Close">×</button>
             </div>
             <div style="background: var(--bg-alt); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
                 <strong id="importCount">0</strong> <span data-i18n="modals.expensesFound">expenses found</span>
@@ -3476,7 +3458,7 @@
         <div class="modal-content" style="max-width: 480px;">
             <div class="modal-header">
                 <h3 class="modal-title" data-i18n="cards.addExpense">Add Expense</h3>
-                <button class="modal-close" onclick="closeQuickAdd()" aria-label="Close">×</button>
+                <button class="modal-close" onclick="closeQuickAdd()" data-i18n-aria-label="common.close" aria-label="Close">×</button>
             </div>
             <form id="quickAddForm">
                 <div class="form-group">
@@ -3505,7 +3487,7 @@
         <div class="modal-content" style="max-width: 500px;">
             <div class="modal-header">
                 <h3 class="modal-title" id="goalModalTitle" data-i18n="goals.newSavingsGoal">New Savings Goal</h3>
-                <button class="modal-close" onclick="closeGoalModal()" aria-label="Close">×</button>
+                <button class="modal-close" onclick="closeGoalModal()" data-i18n-aria-label="common.close" aria-label="Close">×</button>
             </div>
             <form id="goalForm">
                 <input type="hidden" id="goalId">
@@ -3552,7 +3534,7 @@
         <div class="modal-content" style="max-width: 420px;">
             <div class="modal-header">
                 <h3 class="modal-title" data-i18n="modals.addToGoal">Add to Goal</h3>
-                <button class="modal-close" onclick="closeGoalContribModal()" aria-label="Close">×</button>
+                <button class="modal-close" onclick="closeGoalContribModal()" data-i18n-aria-label="common.close" aria-label="Close">×</button>
             </div>
             <div id="goalContribInfo" style="background: var(--bg-alt); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;"></div>
             <div class="form-group">
@@ -3571,7 +3553,7 @@
         <div class="modal-content" style="max-width: 420px;">
             <div class="modal-header">
                 <h3 class="modal-title" data-i18n="modals.netWorthSnapshot">Net Worth Snapshot</h3>
-                <button class="modal-close" onclick="closeSnapshotModal()" aria-label="Close">×</button>
+                <button class="modal-close" onclick="closeSnapshotModal()" data-i18n-aria-label="common.close" aria-label="Close">×</button>
             </div>
             <p style="color: var(--text-light); margin-bottom: 1rem; font-size: 0.875rem;" data-i18n="netWorth.snapshotHelp">
                 Add up your accounts (checking, savings, investments) and subtract debts. Track this monthly.
@@ -3600,7 +3582,7 @@
         <div class="modal-content" style="max-width: 600px;">
             <div class="modal-header">
                 <h3 class="modal-title" id="cutGoalDetailTitle" data-i18n="modals.cutGoalProgress">Cut Goal Progress</h3>
-                <button class="modal-close" onclick="closeCutGoalDetail()" aria-label="Close">×</button>
+                <button class="modal-close" onclick="closeCutGoalDetail()" data-i18n-aria-label="common.close" aria-label="Close">×</button>
             </div>
             <div id="cutGoalDetailHeader"></div>
             <div id="cutGoalDetailStats" class="insight-stat-row" style="margin-bottom: 1rem;"></div>
@@ -3617,7 +3599,7 @@
         <div class="modal-content" style="max-width: 560px;">
             <div class="modal-header">
                 <h3 class="modal-title" data-i18n="modals.insight">Insight</h3>
-                <button class="modal-close" onclick="closeInsightDetail()" aria-label="Close">×</button>
+                <button class="modal-close" onclick="closeInsightDetail()" data-i18n-aria-label="common.close" aria-label="Close">×</button>
             </div>
             <div id="insightDetailHeader" class="insight-detail-header"></div>
             <div id="insightDetailBody" class="insight-detail-body"></div>
@@ -4332,7 +4314,10 @@ const translations = {
             viewProgress: 'View progress'
         },
         insights: {
-            empty: 'No insights yet — add a few expenses to see trends.'
+            empty: 'No insights yet — add a few expenses to see trends.',
+            setAsGoal: 'Set as goal',
+            gotIt: 'Got it',
+            markAsNew: 'Mark as new'
         },
         signIn: {
             title: 'Welcome back',
@@ -4867,7 +4852,10 @@ const translations = {
             viewProgress: 'Visa framsteg'
         },
         insights: {
-            empty: 'Inga insikter än — lägg till några utgifter för att se trender.'
+            empty: 'Inga insikter än — lägg till några utgifter för att se trender.',
+            setAsGoal: 'Sätt som mål',
+            gotIt: 'Uppfattat',
+            markAsNew: 'Markera som ny'
         },
         signIn: {
             title: 'Välkommen tillbaka',
@@ -8510,16 +8498,16 @@ function openInsightDetail(idx) {
 
     if (isForecast) {
         // Forecasts are live status info — no acknowledge action; clicking just shows details
-        buttons.push(`<button onclick="closeInsightDetail()">Close</button>`);
+        buttons.push(`<button onclick="closeInsightDetail()">${t('common.close')}</button>`);
     } else if (item.data && item.data.kind === 'counterfactual' && !acknowledged) {
-        buttons.push(`<button onclick="createGoalFromCurrentInsight()">Set as goal</button>`);
-        buttons.push(`<button class="btn-secondary" onclick="acknowledgeCurrentInsight()">Got it</button>`);
+        buttons.push(`<button onclick="createGoalFromCurrentInsight()">${t('insights.setAsGoal')}</button>`);
+        buttons.push(`<button class="btn-secondary" onclick="acknowledgeCurrentInsight()">${t('insights.gotIt')}</button>`);
     } else if (acknowledged) {
-        buttons.push(`<button class="btn-secondary" onclick="unacknowledgeCurrentInsight()">Mark as new</button>`);
-        buttons.push(`<button onclick="closeInsightDetail()">Close</button>`);
+        buttons.push(`<button class="btn-secondary" onclick="unacknowledgeCurrentInsight()">${t('insights.markAsNew')}</button>`);
+        buttons.push(`<button onclick="closeInsightDetail()">${t('common.close')}</button>`);
     } else {
-        buttons.push(`<button onclick="acknowledgeCurrentInsight()">Got it</button>`);
-        buttons.push(`<button class="btn-secondary" onclick="closeInsightDetail()">Cancel</button>`);
+        buttons.push(`<button onclick="acknowledgeCurrentInsight()">${t('insights.gotIt')}</button>`);
+        buttons.push(`<button class="btn-secondary" onclick="closeInsightDetail()">${t('common.cancel')}</button>`);
     }
 
     actions.innerHTML = buttons.join('');
