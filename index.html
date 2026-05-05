@@ -376,9 +376,49 @@
         @media (max-width: 480px) {
             .auth-card { padding: 1.5rem; }
         }
+
+        /* Language switcher pill — top-right of the page */
+        .lang-switch {
+            position: fixed;
+            top: 18px;
+            right: 18px;
+            z-index: 10;
+            display: inline-flex;
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 3px;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        .lang-switch button {
+            appearance: none;
+            background: transparent;
+            color: var(--text-light);
+            border: none;
+            border-radius: 999px;
+            padding: 0.35rem 0.8rem;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s ease, color 0.15s ease;
+        }
+        .lang-switch button.active {
+            background: var(--accent);
+            color: #2a0907;
+        }
+        .lang-switch button:hover:not(.active) {
+            color: var(--text);
+        }
     </style>
 </head>
 <body>
+    <div class="lang-switch" role="group" aria-label="Language">
+        <button type="button" data-lang="en" onclick="setLoginLanguage('en')">EN</button>
+        <button type="button" data-lang="sv" onclick="setLoginLanguage('sv')">SV</button>
+    </div>
+
     <div class="auth-shell">
         <!-- Brand -->
         <div class="brand">
@@ -611,6 +651,16 @@
         document.querySelectorAll('[data-i18n-aria-label]').forEach(el => {
             el.setAttribute('aria-label', tr(el.dataset.i18nAriaLabel));
         });
+        // Highlight active language pill
+        document.querySelectorAll('.lang-switch button').forEach(b => {
+            b.classList.toggle('active', b.dataset.lang === language);
+        });
+    }
+    function setLoginLanguage(newLang) {
+        if (newLang !== 'en' && newLang !== 'sv') return;
+        language = newLang;
+        try { localStorage.setItem('language', language); } catch (e) {}
+        applyLanguage();
     }
     document.addEventListener('DOMContentLoaded', applyLanguage);
 

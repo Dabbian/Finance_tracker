@@ -5581,6 +5581,8 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     document.body.setAttribute('data-theme', theme);
     document.body.setAttribute('data-palette', palette);
+    // Mirror DB-stored language to localStorage so the login page picks it up.
+    try { localStorage.setItem('language', language); } catch (e) {}
     renderThemeButtons();
     renderPaletteMenu();
     renderLanguageOptions();
