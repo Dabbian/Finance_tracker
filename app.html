@@ -2881,7 +2881,7 @@
 <body data-theme="dark" data-palette="sunset">
     <div class="app-shell">
         <!-- Slim icon sidebar -->
-        <aside class="app-sidebar" aria-label="Primary navigation">
+        <aside class="app-sidebar" data-i18n-aria-label="topbar.primaryNav" aria-label="Primary navigation">
             <div class="app-logo" title="Personal Finance">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <path d="M12 2v20M17 5H9.5a3.5 3.5 0 1 0 0 7h5a3.5 3.5 0 1 1 0 7H6"/>
@@ -3060,17 +3060,17 @@
                         </div>
 
                         <div class="card">
-                            <h2 class="card-title">Configure Categories</h2>
+                            <h2 class="card-title" data-i18n="cards.configureCategories">Configure Categories</h2>
                             <form id="addCategoryForm">
                                 <div class="form-group">
-                                    <label for="newCategoryName">Category Name</label>
-                                    <input type="text" id="newCategoryName" required placeholder="e.g., Groceries">
+                                    <label for="newCategoryName" data-i18n="labels.categoryName">Category Name</label>
+                                    <input type="text" id="newCategoryName" required placeholder="e.g., Groceries" data-i18n-placeholder="placeholders.categoryExample">
                                 </div>
                                 <div class="form-group">
-                                    <label for="newCategoryColor">Color</label>
+                                    <label for="newCategoryColor" data-i18n="labels.color">Color</label>
                                     <input type="color" id="newCategoryColor" value="#3b82f6">
                                 </div>
-                                <button type="submit">Add Category</button>
+                                <button type="submit" data-i18n="buttons.addCategory">Add Category</button>
                             </form>
                             <div style="margin-top: 1.5rem;" id="categoriesList"></div>
                         </div>
@@ -3276,26 +3276,8 @@
                         </div>
 
                         <div class="card">
-                            <h2 class="card-title" data-i18n="cards.configureCategories">Configure Categories</h2>
-                            <form id="addCategoryForm">
-                                <div class="form-group">
-                                    <label for="newCategoryName" data-i18n="labels.categoryName">Category Name</label>
-                                    <input type="text" id="newCategoryName" required placeholder="e.g., Groceries" data-i18n-placeholder="placeholders.categoryExample">
-                                </div>
-                                <div class="form-group">
-                                    <label for="newCategoryColor" data-i18n="labels.color">Color</label>
-                                    <input type="color" id="newCategoryColor" value="#3b82f6">
-                                </div>
-                                <button type="submit" data-i18n="buttons.addCategory">Add Category</button>
-                            </form>
-                            <div style="margin-top: 1.5rem;" id="categoriesList"></div>
-                        </div>
-
-                        <div class="card">
                             <h2 class="card-title" data-i18n="cards.subscriptions">Subscriptions</h2>
                             <p style="color: var(--text-light); margin-bottom: 1rem; font-size: 0.875rem;" data-i18n="subs.help">
-                            <h2 class="card-title">Subscriptions</h2>
-                            <p style="color: var(--text-light); margin-bottom: 1rem; font-size: 0.875rem;">
                                 Track your recurring subscriptions and see what they cost. Auto-detected from import data and any you add manually.
                             </p>
                             <div id="subsSummary" class="subs-summary"></div>
@@ -3316,7 +3298,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title" data-i18n="modals.editExpense">Edit Expense</h3>
-                <button class="modal-close" onclick="closeEditModal()" aria-label="Close">×</button>
+                <button class="modal-close" onclick="closeEditModal()" data-i18n-aria-label="common.close" aria-label="Close">×</button>
             </div>
 
             <div class="form-group">
@@ -3355,7 +3337,7 @@
         <div class="modal-content" style="max-width: 480px;">
             <div class="modal-header">
                 <h3 class="modal-title" id="subModalTitle" data-i18n="modals.newSubscription">New Subscription</h3>
-                <button class="modal-close" onclick="closeSubscriptionModal()" aria-label="Close">×</button>
+                <button class="modal-close" onclick="closeSubscriptionModal()" data-i18n-aria-label="common.close" aria-label="Close">×</button>
             </div>
             <form id="subscriptionForm">
                 <input type="hidden" id="subId">
@@ -3400,7 +3382,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title" data-i18n="modals.editCategory">Edit Category</h3>
-                <button class="modal-close" onclick="closeEditCategoryModal()" aria-label="Close">×</button>
+                <button class="modal-close" onclick="closeEditCategoryModal()" data-i18n-aria-label="common.close" aria-label="Close">×</button>
             </div>
 
             <div class="form-group">
@@ -3437,7 +3419,7 @@
         <div class="modal-content" style="max-width: 700px;">
             <div class="modal-header">
                 <h3 class="modal-title" id="expenseDetailsTitle" data-i18n="modals.expenses">Expenses</h3>
-                <button class="modal-close" onclick="closeExpenseDetailsModal()" aria-label="Close">×</button>
+                <button class="modal-close" onclick="closeExpenseDetailsModal()" data-i18n-aria-label="common.close" aria-label="Close">×</button>
             </div>
             <div style="background: var(--bg-alt); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
                 <strong id="expenseDetailsCount">0</strong> <span data-i18n="modals.expensesLower">expenses</span> •
@@ -3455,7 +3437,7 @@
         <div class="modal-content" style="max-width: 900px;">
             <div class="modal-header">
                 <h3 class="modal-title" data-i18n="modals.reviewImport">Review Imported Expenses</h3>
-                <button class="modal-close" onclick="closeImportModal()" aria-label="Close">×</button>
+                <button class="modal-close" onclick="closeImportModal()" data-i18n-aria-label="common.close" aria-label="Close">×</button>
             </div>
             <div style="background: var(--bg-alt); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
                 <strong id="importCount">0</strong> <span data-i18n="modals.expensesFound">expenses found</span>
@@ -3476,7 +3458,7 @@
         <div class="modal-content" style="max-width: 480px;">
             <div class="modal-header">
                 <h3 class="modal-title" data-i18n="cards.addExpense">Add Expense</h3>
-                <button class="modal-close" onclick="closeQuickAdd()" aria-label="Close">×</button>
+                <button class="modal-close" onclick="closeQuickAdd()" data-i18n-aria-label="common.close" aria-label="Close">×</button>
             </div>
             <form id="quickAddForm">
                 <div class="form-group">
@@ -3505,7 +3487,7 @@
         <div class="modal-content" style="max-width: 500px;">
             <div class="modal-header">
                 <h3 class="modal-title" id="goalModalTitle" data-i18n="goals.newSavingsGoal">New Savings Goal</h3>
-                <button class="modal-close" onclick="closeGoalModal()" aria-label="Close">×</button>
+                <button class="modal-close" onclick="closeGoalModal()" data-i18n-aria-label="common.close" aria-label="Close">×</button>
             </div>
             <form id="goalForm">
                 <input type="hidden" id="goalId">
@@ -3552,7 +3534,7 @@
         <div class="modal-content" style="max-width: 420px;">
             <div class="modal-header">
                 <h3 class="modal-title" data-i18n="modals.addToGoal">Add to Goal</h3>
-                <button class="modal-close" onclick="closeGoalContribModal()" aria-label="Close">×</button>
+                <button class="modal-close" onclick="closeGoalContribModal()" data-i18n-aria-label="common.close" aria-label="Close">×</button>
             </div>
             <div id="goalContribInfo" style="background: var(--bg-alt); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;"></div>
             <div class="form-group">
@@ -3571,7 +3553,7 @@
         <div class="modal-content" style="max-width: 420px;">
             <div class="modal-header">
                 <h3 class="modal-title" data-i18n="modals.netWorthSnapshot">Net Worth Snapshot</h3>
-                <button class="modal-close" onclick="closeSnapshotModal()" aria-label="Close">×</button>
+                <button class="modal-close" onclick="closeSnapshotModal()" data-i18n-aria-label="common.close" aria-label="Close">×</button>
             </div>
             <p style="color: var(--text-light); margin-bottom: 1rem; font-size: 0.875rem;" data-i18n="netWorth.snapshotHelp">
                 Add up your accounts (checking, savings, investments) and subtract debts. Track this monthly.
@@ -3600,7 +3582,7 @@
         <div class="modal-content" style="max-width: 600px;">
             <div class="modal-header">
                 <h3 class="modal-title" id="cutGoalDetailTitle" data-i18n="modals.cutGoalProgress">Cut Goal Progress</h3>
-                <button class="modal-close" onclick="closeCutGoalDetail()" aria-label="Close">×</button>
+                <button class="modal-close" onclick="closeCutGoalDetail()" data-i18n-aria-label="common.close" aria-label="Close">×</button>
             </div>
             <div id="cutGoalDetailHeader"></div>
             <div id="cutGoalDetailStats" class="insight-stat-row" style="margin-bottom: 1rem;"></div>
@@ -3617,7 +3599,7 @@
         <div class="modal-content" style="max-width: 560px;">
             <div class="modal-header">
                 <h3 class="modal-title" data-i18n="modals.insight">Insight</h3>
-                <button class="modal-close" onclick="closeInsightDetail()" aria-label="Close">×</button>
+                <button class="modal-close" onclick="closeInsightDetail()" data-i18n-aria-label="common.close" aria-label="Close">×</button>
             </div>
             <div id="insightDetailHeader" class="insight-detail-header"></div>
             <div id="insightDetailBody" class="insight-detail-body"></div>
@@ -3738,29 +3720,29 @@ function populateAccountCard() {
     setText('accountAvatar', email.charAt(0).toUpperCase());
 
     // Method label
-    const method = user.method === 'passkey' ? 'Passkey' : 'Email & password';
+    const method = user.method === 'passkey' ? t('account.passkey') : t('account.emailPassword');
     setText('accountMethod', method);
 
     // Signed-in time (relative if recent, otherwise short date+time)
     if (user.signedInAt) {
-        const t = new Date(user.signedInAt);
+        const date = new Date(user.signedInAt);
         const diff = Date.now() - user.signedInAt;
         let label;
-        if (diff < 60_000)         label = 'Just now';
-        else if (diff < 3_600_000) label = `${Math.floor(diff / 60_000)} min ago`;
-        else if (diff < 86_400_000) label = `${Math.floor(diff / 3_600_000)} hr ago`;
-        else                       label = t.toLocaleString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+        if (diff < 60_000)         label = t('time.justNow');
+        else if (diff < 3_600_000) label = t('time.minAgo', { n: Math.floor(diff / 60_000) });
+        else if (diff < 86_400_000) label = t('time.hrAgo', { n: Math.floor(diff / 3_600_000) });
+        else                       label = date.toLocaleString(activeLocale(), { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
         setText('accountSignedIn', label);
     } else {
         setText('accountSignedIn', '—');
     }
 
     // Account type — currently always demo, but ready for real backend
-    setText('accountType', 'Demo (local only)');
+    setText('accountType', t('account.demoLocalOnly'));
 
     // Subline under the email
     const sublineParts = [];
-    if (user.isNewAccount) sublineParts.push('New account');
+    if (user.isNewAccount) sublineParts.push(t('account.newAccount'));
     sublineParts.push(method);
     setText('accountMeta', sublineParts.join(' · '));
 }
@@ -3843,7 +3825,8 @@ const translations = {
             add: 'Add',
             previousMonth: 'Previous month',
             nextMonth: 'Next month',
-            currency: 'Currency'
+            currency: 'Currency',
+            primaryNav: 'Primary navigation'
         },
         common: {
             save: 'Save',
@@ -3901,6 +3884,8 @@ const translations = {
             cancelled: 'Cancelled',
             cancelledStatus: 'Cancelled',
             activeStatus: 'Active',
+            markCancelled: 'Mark as cancelled',
+            reactivate: 'Reactivate',
             cycleShort: { weekly: 'wk', monthly: 'mo', quarterly: 'qt', yearly: 'yr' }
         },
         categories: {
@@ -3975,7 +3960,48 @@ const translations = {
         imports: {
             someone: 'Someone',
             swishFrom: '↩ Swish from {sender}',
-            skip: "— Skip (don't import) —"
+            skip: "— Skip (don't import) —",
+            oneExpenseImported: '{n} expense imported',
+            expensesImported: '{n} expenses imported',
+            oneSwishAttached: '{n} Swish repayment attached',
+            swishAttached: '{n} Swish repayments attached',
+            oneSwishSkipped: '{n} Swish row skipped',
+            swishSkipped: '{n} Swish rows skipped',
+            nothingImported: 'Nothing imported.',
+            failedSuffix: '{n} failed — see browser console.',
+            importedFallback: 'Imported',
+            noHeaderRow: 'No header row found and no rows match a (date, description, amount) layout.',
+            headerNoRows: 'Found a header row at line {line}, but no valid expense rows below it.\n\nDate column: {dateCol}, Amount column: {amountCol}\nSkipped: {empty} empty, {badDate} bad date, {zeroAmount} zero amount.'
+        },
+        db: {
+            loadOk: 'Database loaded successfully!',
+            loadError: 'Error loading database: {msg}'
+        },
+        snapshot: {
+            amountAndDateRequired: 'Please enter an amount and date'
+        },
+        insightExtras: {
+            monthlyAvg: 'Your monthly avg',
+            savePerMonth: 'Save / month',
+            savePerYear: 'Save / year',
+            setAsGoalHint: 'Tap "Set as goal" to track this saving as a goal you can fund over the next 12 months.',
+            spentSoFar: 'Spent so far',
+            daysIntoCycle: 'Days into cycle',
+            projectedTotal: 'Projected total',
+            thisCycle: 'This cycle',
+            average: 'Average',
+            overspend: 'Overspend',
+            history: 'History',
+            oneCycleAgo: '{n} cycle ago',
+            cyclesAgo: '{n} cycles ago',
+            count: 'Count',
+            monthsTracked: '{n} months tracked',
+            monthsTrackedLabel: 'Months tracked',
+            daysAgoShort: '{n}d ago',
+            lastDaysAgo: 'last {n} days ago',
+            last30Days: 'Last 30 days',
+            perOccurrence: 'Per occurrence',
+            yearlyPace: 'Yearly pace'
         },
         currency: { sek: 'SEK (kr)', usd: 'USD ($)' },
         hero: {
@@ -4009,7 +4035,9 @@ const translations = {
             recurringNote: 'Recurring monthly subscriptions are auto-categorized as "Fixed Expenses" and excluded from your daily budget.',
             countLabel: '{n} expenses',
             swishOne: '{n} Swish repayment',
-            swishMany: '{n} Swish repayments'
+            swishMany: '{n} Swish repayments',
+            noDescription: 'No description',
+            onDate: 'Expenses on {date}'
         },
         empty: {
             fixed: 'No fixed expenses',
@@ -4115,7 +4143,16 @@ const translations = {
             note: 'Real account management (change email, change password, delete account) will appear here once a backend is connected.',
             demoLocalOnly: 'Demo (local only)',
             emailPassword: 'Email & password',
-            passkey: 'Passkey'
+            passkey: 'Passkey',
+            newAccount: 'New account'
+        },
+        time: {
+            justNow: 'Just now',
+            minAgo: '{n} min ago',
+            hrAgo: '{n} hr ago'
+        },
+        charts: {
+            dailySpending: 'Daily Spending'
         },
         incomeBudget: {
             incomeHelp: 'Used to calculate your savings rate. Stored locally, never sent anywhere.',
@@ -4246,6 +4283,9 @@ const translations = {
         },
         goals: {
             intro: "Name what you're saving for. Watch the jar fill up.",
+            completeTitle: 'Goal Complete!',
+            reached: 'You reached {name}',
+            cutByPercent: 'Cut {category} by {percent}%',
             whatSavingFor: 'What are you saving for?',
             targetAmount: 'Target Amount',
             targetAmountKr: 'Target Amount (kr)',
@@ -4279,7 +4319,10 @@ const translations = {
             viewProgress: 'View progress'
         },
         insights: {
-            empty: 'No insights yet — add a few expenses to see trends.'
+            empty: 'No insights yet — add a few expenses to see trends.',
+            setAsGoal: 'Set as goal',
+            gotIt: 'Got it',
+            markAsNew: 'Mark as new'
         },
         signIn: {
             title: 'Welcome back',
@@ -4325,7 +4368,8 @@ const translations = {
             add: 'Lägg till',
             previousMonth: 'Föregående månad',
             nextMonth: 'Nästa månad',
-            currency: 'Valuta'
+            currency: 'Valuta',
+            primaryNav: 'Huvudnavigering'
         },
         common: {
             save: 'Spara',
@@ -4383,6 +4427,8 @@ const translations = {
             cancelled: 'Avslutade',
             cancelledStatus: 'Avslutad',
             activeStatus: 'Aktiv',
+            markCancelled: 'Markera som avslutad',
+            reactivate: 'Återaktivera',
             cycleShort: { weekly: 'v', monthly: 'mån', quarterly: 'kv', yearly: 'år' }
         },
         categories: {
@@ -4457,7 +4503,48 @@ const translations = {
         imports: {
             someone: 'Någon',
             swishFrom: '↩ Swish från {sender}',
-            skip: '— Hoppa över (importera ej) —'
+            skip: '— Hoppa över (importera ej) —',
+            oneExpenseImported: '{n} utgift importerad',
+            expensesImported: '{n} utgifter importerade',
+            oneSwishAttached: '{n} Swish-återbetalning kopplad',
+            swishAttached: '{n} Swish-återbetalningar kopplade',
+            oneSwishSkipped: '{n} Swish-rad hoppades över',
+            swishSkipped: '{n} Swish-rader hoppades över',
+            nothingImported: 'Inget importerat.',
+            failedSuffix: '{n} misslyckades — se webbläsarkonsolen.',
+            importedFallback: 'Importerad',
+            noHeaderRow: 'Ingen rubrikrad hittades och inga rader matchar formatet (datum, beskrivning, belopp).',
+            headerNoRows: 'Hittade en rubrikrad på rad {line}, men inga giltiga utgiftsrader under den.\n\nDatumkolumn: {dateCol}, Beloppskolumn: {amountCol}\nÖverhoppade: {empty} tomma, {badDate} dåligt datum, {zeroAmount} noll-belopp.'
+        },
+        db: {
+            loadOk: 'Databasen laddades!',
+            loadError: 'Fel vid inläsning av databas: {msg}'
+        },
+        snapshot: {
+            amountAndDateRequired: 'Ange ett belopp och datum'
+        },
+        insightExtras: {
+            monthlyAvg: 'Ditt månadssnitt',
+            savePerMonth: 'Spar/månad',
+            savePerYear: 'Spar/år',
+            setAsGoalHint: 'Tryck på "Sätt som mål" för att spåra detta sparande som ett mål du kan finansiera över de kommande 12 månaderna.',
+            spentSoFar: 'Spenderat hittills',
+            daysIntoCycle: 'Dagar in i cykeln',
+            projectedTotal: 'Prognostiserad summa',
+            thisCycle: 'Denna cykel',
+            average: 'Snitt',
+            overspend: 'Översk.',
+            history: 'Historik',
+            oneCycleAgo: 'för {n} cykel sedan',
+            cyclesAgo: 'för {n} cykler sedan',
+            count: 'Antal',
+            monthsTracked: '{n} månader spårade',
+            monthsTrackedLabel: 'Månader spårade',
+            daysAgoShort: 'för {n}d sedan',
+            lastDaysAgo: 'senast för {n} dagar sedan',
+            last30Days: 'Senaste 30 dagarna',
+            perOccurrence: 'Per gång',
+            yearlyPace: 'Årstakt'
         },
         currency: { sek: 'SEK (kr)', usd: 'USD ($)' },
         hero: {
@@ -4491,7 +4578,9 @@ const translations = {
             recurringNote: 'Återkommande månadsprenumerationer kategoriseras automatiskt som "Fasta utgifter" och räknas inte mot din dagliga budget.',
             countLabel: '{n} utgifter',
             swishOne: '{n} Swish-återbetalning',
-            swishMany: '{n} Swish-återbetalningar'
+            swishMany: '{n} Swish-återbetalningar',
+            noDescription: 'Ingen beskrivning',
+            onDate: 'Utgifter den {date}'
         },
         empty: {
             fixed: 'Inga fasta utgifter',
@@ -4597,7 +4686,16 @@ const translations = {
             note: 'Riktig kontohantering (byta e-post, byta lösenord, ta bort konto) visas här när en backend är kopplad.',
             demoLocalOnly: 'Demo (endast lokalt)',
             emailPassword: 'E-post & lösenord',
-            passkey: 'Passkey'
+            passkey: 'Passkey',
+            newAccount: 'Nytt konto'
+        },
+        time: {
+            justNow: 'Just nu',
+            minAgo: 'för {n} min sedan',
+            hrAgo: 'för {n} tim sedan'
+        },
+        charts: {
+            dailySpending: 'Dagliga utgifter'
         },
         incomeBudget: {
             incomeHelp: 'Används för att beräkna din sparkvot. Lagras lokalt, skickas aldrig någonstans.',
@@ -4728,6 +4826,9 @@ const translations = {
         },
         goals: {
             intro: 'Namnge det du sparar till. Se burken fyllas på.',
+            completeTitle: 'Mål klart!',
+            reached: 'Du nådde {name}',
+            cutByPercent: 'Minska {category} med {percent} %',
             whatSavingFor: 'Vad sparar du till?',
             targetAmount: 'Målbelopp',
             targetAmountKr: 'Målbelopp (kr)',
@@ -4761,7 +4862,10 @@ const translations = {
             viewProgress: 'Visa framsteg'
         },
         insights: {
-            empty: 'Inga insikter än — lägg till några utgifter för att se trender.'
+            empty: 'Inga insikter än — lägg till några utgifter för att se trender.',
+            setAsGoal: 'Sätt som mål',
+            gotIt: 'Uppfattat',
+            markAsNew: 'Markera som ny'
         },
         signIn: {
             title: 'Välkommen tillbaka',
@@ -5487,6 +5591,8 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     document.body.setAttribute('data-theme', theme);
     document.body.setAttribute('data-palette', palette);
+    // Mirror DB-stored language to localStorage so the login page picks it up.
+    try { localStorage.setItem('language', language); } catch (e) {}
     renderThemeButtons();
     renderPaletteMenu();
     renderLanguageOptions();
@@ -5917,12 +6023,12 @@ function addExpense(e) {
     const id = Date.now();
 
     db.run('INSERT INTO expenses (id, amount, category, description, date, swish_repayments) VALUES (?, ?, ?, ?, ?, ?)',
-        [id, amount, category, description || 'No description', date, '[]']);
+        [id, amount, category, description || t('expenses.noDescription'), date, '[]']);
     saveDatabase();
 
     expenses.unshift({
         id, amount, category,
-        description: description || 'No description',
+        description: description || t('expenses.noDescription'),
         date, swishRepayments: []
     });
 
@@ -6193,7 +6299,7 @@ function initCharts() {
         data: {
             labels: [],
             datasets: [
-                { label: 'Daily Spending', data: [], borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.1)', tension: 0.4, fill: true }
+                { label: t('charts.dailySpending'), data: [], borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.1)', tension: 0.4, fill: true }
             ]
         },
         options: {
@@ -6359,7 +6465,7 @@ function showExpensesByDate(dateStr) {
     const filteredExpenses = expenses.filter(exp => exp.date === dateStr);
     const date = new Date(dateStr + 'T00:00:00');
     const formattedDate = date.toLocaleDateString(activeLocale(), { month: 'long', day: 'numeric', year: 'numeric' });
-    showExpenseDetailsModal(filteredExpenses, `Expenses on ${formattedDate}`);
+    showExpenseDetailsModal(filteredExpenses, t('expenses.onDate', { date: formattedDate }));
 }
 
 function showExpenseDetailsModal(expensesList, title) {
@@ -6515,7 +6621,7 @@ function processExcelData(rows) {
 
         // Normalize description text: NFC handles bank exports that use decomposed Unicode (O + ¨ → Ö).
         // Without NFC, Å Ä Ö can search/compare incorrectly even though they look right on screen.
-        const description = normalizeImportText(beskrivning) || 'Imported';
+        const description = normalizeImportText(beskrivning) || t('imports.importedFallback');
 
         // Detect Swish repayments (incoming money from a friend, e.g., paying you back for shared dinner).
         // Pattern: positive amount AND description starts with "Swish från" (case-insensitive, accent-insensitive).
@@ -6534,8 +6640,15 @@ function processExcelData(rows) {
 
     if (pendingImports.length === 0) {
         const detail = headerIdx === -1
-            ? 'No header row found and no rows match a (date, description, amount) layout.'
-            : `Found a header row at line ${headerIdx + 1}, but no valid expense rows below it.\n\nDate column: ${dateCol + 1}, Amount column: ${amountCol + 1}\nSkipped: ${skippedReasons.empty} empty, ${skippedReasons.badDate} bad date, ${skippedReasons.zeroAmount} zero amount.`;
+            ? t('imports.noHeaderRow')
+            : t('imports.headerNoRows', {
+                line: headerIdx + 1,
+                dateCol: dateCol + 1,
+                amountCol: amountCol + 1,
+                empty: skippedReasons.empty,
+                badDate: skippedReasons.badDate,
+                zeroAmount: skippedReasons.zeroAmount
+            });
         alert(t('errors.noExpensesFound') + '\n\n' + detail);
         return;
     }
@@ -6832,11 +6945,11 @@ function confirmImport() {
 
     // Build a friendly summary
     const parts = [];
-    if (insertedExpenses > 0) parts.push(`${insertedExpenses} expense${insertedExpenses === 1 ? '' : 's'} imported`);
-    if (attachedRepayments > 0) parts.push(`${attachedRepayments} Swish repayment${attachedRepayments === 1 ? '' : 's'} attached`);
-    if (skippedSwish > 0) parts.push(`${skippedSwish} Swish row${skippedSwish === 1 ? '' : 's'} skipped`);
-    let msg = parts.length > 0 ? parts.join(' · ') : 'Nothing imported.';
-    if (failed.length > 0) msg += `\n\n${failed.length} failed — see browser console.`;
+    if (insertedExpenses > 0) parts.push(t(insertedExpenses === 1 ? 'imports.oneExpenseImported' : 'imports.expensesImported', { n: insertedExpenses }));
+    if (attachedRepayments > 0) parts.push(t(attachedRepayments === 1 ? 'imports.oneSwishAttached' : 'imports.swishAttached', { n: attachedRepayments }));
+    if (skippedSwish > 0) parts.push(t(skippedSwish === 1 ? 'imports.oneSwishSkipped' : 'imports.swishSkipped', { n: skippedSwish }));
+    let msg = parts.length > 0 ? parts.join(' · ') : t('imports.nothingImported');
+    if (failed.length > 0) msg += '\n\n' + t('imports.failedSuffix', { n: failed.length });
     alert(msg);
 }
 
@@ -6899,10 +7012,10 @@ function loadDatabase(event) {
             renderSubscriptionsCard();
             renderCyclePreview();
 
-            alert('Database loaded successfully!');
+            alert(t('db.loadOk'));
             
         } catch (error) {
-            alert('Error loading database: ' + error.message);
+            alert(t('db.loadError', { msg: error.message }));
         }
     };
     reader.readAsArrayBuffer(file);
@@ -7251,10 +7364,10 @@ function addExpenseFromQuick(e) {
     const id = Date.now();
 
     db.run('INSERT INTO expenses (id, amount, category, description, date, swish_repayments) VALUES (?, ?, ?, ?, ?, ?)',
-        [id, amount, category, description || 'No description', date, '[]']);
+        [id, amount, category, description || t('expenses.noDescription'), date, '[]']);
     saveDatabase();
 
-    expenses.unshift({ id, amount, category, description: description || 'No description', date, swishRepayments: [] });
+    expenses.unshift({ id, amount, category, description: description || t('expenses.noDescription'), date, swishRepayments: [] });
     closeQuickAdd();
     updateDashboard();
     updateCharts();
@@ -7833,7 +7946,7 @@ function confirmGoalContribution() {
 
     // Celebrate on completion
     if (!wasComplete && nowComplete) {
-        celebrate('🎯', 'Goal Complete!', `You reached ${g.name}`);
+        celebrate('🎯', t('goals.completeTitle'), t('goals.reached', { name: g.name }));
     } else {
         // Mini cumulative milestone check across all goals
         const totalSaved = goals.reduce((s, x) => s + x.currentAmount, 0);
@@ -7861,7 +7974,7 @@ function saveSnapshot() {
     const date = document.getElementById('snapshotDate').value;
     const note = document.getElementById('snapshotNote').value || null;
     if (isNaN(amount) || !date) {
-        alert('Please enter an amount and date');
+        alert(t('snapshot.amountAndDateRequired'));
         return;
     }
     const id = Date.now();
@@ -8194,7 +8307,7 @@ function openSubscriptionModal(id) {
         toggleBtn.className = 'btn-secondary';
         toggleBtn.style.marginTop = '0.5rem';
         toggleBtn.style.color = s.status === 'cancelled' ? 'var(--success)' : 'var(--warning)';
-        toggleBtn.textContent = s.status === 'cancelled' ? 'Reactivate' : 'Mark as cancelled';
+        toggleBtn.textContent = s.status === 'cancelled' ? t('subs.reactivate') : t('subs.markCancelled');
         toggleBtn.onclick = () => toggleSubscriptionStatus(s.id);
         deleteBtn.parentNode.insertBefore(toggleBtn, deleteBtn);
     } else {
@@ -8404,16 +8517,16 @@ function openInsightDetail(idx) {
 
     if (isForecast) {
         // Forecasts are live status info — no acknowledge action; clicking just shows details
-        buttons.push(`<button onclick="closeInsightDetail()">Close</button>`);
+        buttons.push(`<button onclick="closeInsightDetail()">${t('common.close')}</button>`);
     } else if (item.data && item.data.kind === 'counterfactual' && !acknowledged) {
-        buttons.push(`<button onclick="createGoalFromCurrentInsight()">Set as goal</button>`);
-        buttons.push(`<button class="btn-secondary" onclick="acknowledgeCurrentInsight()">Got it</button>`);
+        buttons.push(`<button onclick="createGoalFromCurrentInsight()">${t('insights.setAsGoal')}</button>`);
+        buttons.push(`<button class="btn-secondary" onclick="acknowledgeCurrentInsight()">${t('insights.gotIt')}</button>`);
     } else if (acknowledged) {
-        buttons.push(`<button class="btn-secondary" onclick="unacknowledgeCurrentInsight()">Mark as new</button>`);
-        buttons.push(`<button onclick="closeInsightDetail()">Close</button>`);
+        buttons.push(`<button class="btn-secondary" onclick="unacknowledgeCurrentInsight()">${t('insights.markAsNew')}</button>`);
+        buttons.push(`<button onclick="closeInsightDetail()">${t('common.close')}</button>`);
     } else {
-        buttons.push(`<button onclick="acknowledgeCurrentInsight()">Got it</button>`);
-        buttons.push(`<button class="btn-secondary" onclick="closeInsightDetail()">Cancel</button>`);
+        buttons.push(`<button onclick="acknowledgeCurrentInsight()">${t('insights.gotIt')}</button>`);
+        buttons.push(`<button class="btn-secondary" onclick="closeInsightDetail()">${t('common.cancel')}</button>`);
     }
 
     actions.innerHTML = buttons.join('');
@@ -8441,20 +8554,20 @@ function renderInsightExtras(item) {
         return `
             <div class="insight-stat-row">
                 <div class="insight-stat">
-                    <div class="insight-stat-label">Your monthly avg</div>
+                    <div class="insight-stat-label">${t('insightExtras.monthlyAvg')}</div>
                     <div class="insight-stat-value">${formatCurrency(d.monthlyAverage)}</div>
                 </div>
                 <div class="insight-stat">
-                    <div class="insight-stat-label">Save / month</div>
+                    <div class="insight-stat-label">${t('insightExtras.savePerMonth')}</div>
                     <div class="insight-stat-value savings">${formatCurrency(d.monthlySavings)}</div>
                 </div>
                 <div class="insight-stat">
-                    <div class="insight-stat-label">Save / year</div>
+                    <div class="insight-stat-label">${t('insightExtras.savePerYear')}</div>
                     <div class="insight-stat-value savings">${formatCurrency(d.annualSavings)}</div>
                 </div>
             </div>
             <p style="margin-top: 0.75rem; font-size: 0.85rem; color: var(--text-light);">
-                Tap "Set as goal" to track this saving as a goal you can fund over the next 12 months.
+                ${t('insightExtras.setAsGoalHint')}
             </p>
         `;
     }
@@ -8463,15 +8576,15 @@ function renderInsightExtras(item) {
         return `
             <div class="insight-stat-row">
                 <div class="insight-stat">
-                    <div class="insight-stat-label">Spent so far</div>
+                    <div class="insight-stat-label">${t('insightExtras.spentSoFar')}</div>
                     <div class="insight-stat-value">${formatCurrency(d.spentSoFar)}</div>
                 </div>
                 <div class="insight-stat">
-                    <div class="insight-stat-label">Days into cycle</div>
+                    <div class="insight-stat-label">${t('insightExtras.daysIntoCycle')}</div>
                     <div class="insight-stat-value">${d.dayElapsed} / ${d.totalDays}</div>
                 </div>
                 <div class="insight-stat">
-                    <div class="insight-stat-label">Projected total</div>
+                    <div class="insight-stat-label">${t('insightExtras.projectedTotal')}</div>
                     <div class="insight-stat-value ${d.overUnder > 0 ? 'warning' : 'savings'}">${formatCurrency(d.projectedTotal)}</div>
                 </div>
             </div>
@@ -8481,27 +8594,27 @@ function renderInsightExtras(item) {
     if (d.kind === 'anomaly') {
         const trailingHtml = d.trailingTotals.map((amt, i) => `
             <div class="insight-detail-list-item">
-                <span>${i + 1} cycle${i ? 's' : ''} ago</span>
+                <span>${t(i === 0 ? 'insightExtras.oneCycleAgo' : 'insightExtras.cyclesAgo', { n: i + 1 })}</span>
                 <strong>${formatCurrency(amt)}</strong>
             </div>
         `).join('');
         return `
             <div class="insight-stat-row">
                 <div class="insight-stat">
-                    <div class="insight-stat-label">This cycle</div>
+                    <div class="insight-stat-label">${t('insightExtras.thisCycle')}</div>
                     <div class="insight-stat-value warning">${formatCurrency(d.currentAmount)}</div>
                 </div>
                 <div class="insight-stat">
-                    <div class="insight-stat-label">Average</div>
+                    <div class="insight-stat-label">${t('insightExtras.average')}</div>
                     <div class="insight-stat-value">${formatCurrency(d.averageAmount)}</div>
                 </div>
                 <div class="insight-stat">
-                    <div class="insight-stat-label">Overspend</div>
+                    <div class="insight-stat-label">${t('insightExtras.overspend')}</div>
                     <div class="insight-stat-value warning">+${formatCurrency(d.overspend)}</div>
                 </div>
             </div>
             <div class="insight-detail-list">
-                <div class="insight-stat-label" style="margin-top: 0.75rem;">History</div>
+                <div class="insight-stat-label" style="margin-top: 0.75rem;">${t('insightExtras.history')}</div>
                 ${trailingHtml}
             </div>
         `;
@@ -8512,7 +8625,7 @@ function renderInsightExtras(item) {
             <div class="insight-detail-list-item">
                 <div>
                     <strong>${capitalize(s.desc)}</strong>
-                    <small>${s.months} months tracked${s.daysSince > 30 ? ` · ${s.daysSince}d ago` : ''}</small>
+                    <small>${t('insightExtras.monthsTracked', { n: s.months })}${s.daysSince > 30 ? ` · ${t('insightExtras.daysAgoShort', { n: s.daysSince })}` : ''}</small>
                 </div>
                 <strong>${formatCurrency(s.avg)}</strong>
             </div>
@@ -8520,15 +8633,15 @@ function renderInsightExtras(item) {
         return `
             <div class="insight-stat-row">
                 <div class="insight-stat">
-                    <div class="insight-stat-label">Count</div>
+                    <div class="insight-stat-label">${t('insightExtras.count')}</div>
                     <div class="insight-stat-value">${d.count}</div>
                 </div>
                 <div class="insight-stat">
-                    <div class="insight-stat-label">Per month</div>
+                    <div class="insight-stat-label">${t('subs.perMonth')}</div>
                     <div class="insight-stat-value warning">${formatCurrency(d.totalMonthly)}</div>
                 </div>
                 <div class="insight-stat">
-                    <div class="insight-stat-label">Per year</div>
+                    <div class="insight-stat-label">${t('subs.perYear')}</div>
                     <div class="insight-stat-value warning">${formatCurrency(d.totalYearly)}</div>
                 </div>
             </div>
@@ -8541,7 +8654,7 @@ function renderInsightExtras(item) {
             <div class="insight-detail-list-item">
                 <div>
                     <strong>${capitalize(s.desc)}</strong>
-                    <small>${formatCurrency(s.avg)}/mo · last ${s.daysSince} days ago</small>
+                    <small>${formatCurrency(s.avg)}${t('insights.perMo')} · ${t('insightExtras.lastDaysAgo', { n: s.daysSince })}</small>
                 </div>
             </div>
         `).join('');
@@ -8552,15 +8665,15 @@ function renderInsightExtras(item) {
         return `
             <div class="insight-stat-row">
                 <div class="insight-stat">
-                    <div class="insight-stat-label">Per month</div>
+                    <div class="insight-stat-label">${t('subs.perMonth')}</div>
                     <div class="insight-stat-value">${formatCurrency(d.monthlyAverage)}</div>
                 </div>
                 <div class="insight-stat">
-                    <div class="insight-stat-label">Per year</div>
+                    <div class="insight-stat-label">${t('subs.perYear')}</div>
                     <div class="insight-stat-value warning">${formatCurrency(d.annualCost)}</div>
                 </div>
                 <div class="insight-stat">
-                    <div class="insight-stat-label">Months tracked</div>
+                    <div class="insight-stat-label">${t('insightExtras.monthsTrackedLabel')}</div>
                     <div class="insight-stat-value">${d.monthsTracked}</div>
                 </div>
             </div>
@@ -8571,15 +8684,15 @@ function renderInsightExtras(item) {
         return `
             <div class="insight-stat-row">
                 <div class="insight-stat">
-                    <div class="insight-stat-label">Last 30 days</div>
+                    <div class="insight-stat-label">${t('insightExtras.last30Days')}</div>
                     <div class="insight-stat-value warning">${formatCurrency(d.monthlyTotal)}</div>
                 </div>
                 <div class="insight-stat">
-                    <div class="insight-stat-label">Per occurrence</div>
+                    <div class="insight-stat-label">${t('insightExtras.perOccurrence')}</div>
                     <div class="insight-stat-value">${formatCurrency(d.avgPerOccurrence)}</div>
                 </div>
                 <div class="insight-stat">
-                    <div class="insight-stat-label">Yearly pace</div>
+                    <div class="insight-stat-label">${t('insightExtras.yearlyPace')}</div>
                     <div class="insight-stat-value warning">${formatCurrency(d.annualProjection)}</div>
                 </div>
             </div>
@@ -8640,7 +8753,7 @@ function createGoalFromCurrentInsight() {
     };
 
     const newId = Date.now();
-    const goalName = `Cut ${d.categoryName} by ${d.cutPercent}%`;
+    const goalName = t('goals.cutByPercent', { category: d.categoryName, percent: d.cutPercent });
 
     db.run(
         'INSERT INTO goals (id, name, emoji, target_amount, current_amount, color, deadline, created_date, completed, kind, meta) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
