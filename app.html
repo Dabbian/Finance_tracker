@@ -3738,29 +3738,29 @@ function populateAccountCard() {
     setText('accountAvatar', email.charAt(0).toUpperCase());
 
     // Method label
-    const method = user.method === 'passkey' ? 'Passkey' : 'Email & password';
+    const method = user.method === 'passkey' ? t('account.passkey') : t('account.emailPassword');
     setText('accountMethod', method);
 
     // Signed-in time (relative if recent, otherwise short date+time)
     if (user.signedInAt) {
-        const t = new Date(user.signedInAt);
+        const date = new Date(user.signedInAt);
         const diff = Date.now() - user.signedInAt;
         let label;
-        if (diff < 60_000)         label = 'Just now';
-        else if (diff < 3_600_000) label = `${Math.floor(diff / 60_000)} min ago`;
-        else if (diff < 86_400_000) label = `${Math.floor(diff / 3_600_000)} hr ago`;
-        else                       label = t.toLocaleString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+        if (diff < 60_000)         label = t('time.justNow');
+        else if (diff < 3_600_000) label = t('time.minAgo', { n: Math.floor(diff / 60_000) });
+        else if (diff < 86_400_000) label = t('time.hrAgo', { n: Math.floor(diff / 3_600_000) });
+        else                       label = date.toLocaleString(activeLocale(), { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
         setText('accountSignedIn', label);
     } else {
         setText('accountSignedIn', '—');
     }
 
     // Account type — currently always demo, but ready for real backend
-    setText('accountType', 'Demo (local only)');
+    setText('accountType', t('account.demoLocalOnly'));
 
     // Subline under the email
     const sublineParts = [];
-    if (user.isNewAccount) sublineParts.push('New account');
+    if (user.isNewAccount) sublineParts.push(t('account.newAccount'));
     sublineParts.push(method);
     setText('accountMeta', sublineParts.join(' · '));
 }
@@ -3901,6 +3901,8 @@ const translations = {
             cancelled: 'Cancelled',
             cancelledStatus: 'Cancelled',
             activeStatus: 'Active',
+            markCancelled: 'Mark as cancelled',
+            reactivate: 'Reactivate',
             cycleShort: { weekly: 'wk', monthly: 'mo', quarterly: 'qt', yearly: 'yr' }
         },
         categories: {
@@ -3975,7 +3977,22 @@ const translations = {
         imports: {
             someone: 'Someone',
             swishFrom: '↩ Swish from {sender}',
-            skip: "— Skip (don't import) —"
+            skip: "— Skip (don't import) —",
+            oneExpenseImported: '{n} expense imported',
+            expensesImported: '{n} expenses imported',
+            oneSwishAttached: '{n} Swish repayment attached',
+            swishAttached: '{n} Swish repayments attached',
+            oneSwishSkipped: '{n} Swish row skipped',
+            swishSkipped: '{n} Swish rows skipped',
+            nothingImported: 'Nothing imported.',
+            failedSuffix: '{n} failed — see browser console.'
+        },
+        db: {
+            loadOk: 'Database loaded successfully!',
+            loadError: 'Error loading database: {msg}'
+        },
+        snapshot: {
+            amountAndDateRequired: 'Please enter an amount and date'
         },
         insightExtras: {
             monthlyAvg: 'Your monthly avg',
@@ -4032,7 +4049,8 @@ const translations = {
             recurringNote: 'Recurring monthly subscriptions are auto-categorized as "Fixed Expenses" and excluded from your daily budget.',
             countLabel: '{n} expenses',
             swishOne: '{n} Swish repayment',
-            swishMany: '{n} Swish repayments'
+            swishMany: '{n} Swish repayments',
+            noDescription: 'No description'
         },
         empty: {
             fixed: 'No fixed expenses',
@@ -4138,7 +4156,16 @@ const translations = {
             note: 'Real account management (change email, change password, delete account) will appear here once a backend is connected.',
             demoLocalOnly: 'Demo (local only)',
             emailPassword: 'Email & password',
-            passkey: 'Passkey'
+            passkey: 'Passkey',
+            newAccount: 'New account'
+        },
+        time: {
+            justNow: 'Just now',
+            minAgo: '{n} min ago',
+            hrAgo: '{n} hr ago'
+        },
+        charts: {
+            dailySpending: 'Daily Spending'
         },
         incomeBudget: {
             incomeHelp: 'Used to calculate your savings rate. Stored locally, never sent anywhere.',
@@ -4269,6 +4296,9 @@ const translations = {
         },
         goals: {
             intro: "Name what you're saving for. Watch the jar fill up.",
+            completeTitle: 'Goal Complete!',
+            reached: 'You reached {name}',
+            cutByPercent: 'Cut {category} by {percent}%',
             whatSavingFor: 'What are you saving for?',
             targetAmount: 'Target Amount',
             targetAmountKr: 'Target Amount (kr)',
@@ -4406,6 +4436,8 @@ const translations = {
             cancelled: 'Avslutade',
             cancelledStatus: 'Avslutad',
             activeStatus: 'Aktiv',
+            markCancelled: 'Markera som avslutad',
+            reactivate: 'Återaktivera',
             cycleShort: { weekly: 'v', monthly: 'mån', quarterly: 'kv', yearly: 'år' }
         },
         categories: {
@@ -4480,7 +4512,22 @@ const translations = {
         imports: {
             someone: 'Någon',
             swishFrom: '↩ Swish från {sender}',
-            skip: '— Hoppa över (importera ej) —'
+            skip: '— Hoppa över (importera ej) —',
+            oneExpenseImported: '{n} utgift importerad',
+            expensesImported: '{n} utgifter importerade',
+            oneSwishAttached: '{n} Swish-återbetalning kopplad',
+            swishAttached: '{n} Swish-återbetalningar kopplade',
+            oneSwishSkipped: '{n} Swish-rad hoppades över',
+            swishSkipped: '{n} Swish-rader hoppades över',
+            nothingImported: 'Inget importerat.',
+            failedSuffix: '{n} misslyckades — se webbläsarkonsolen.'
+        },
+        db: {
+            loadOk: 'Databasen laddades!',
+            loadError: 'Fel vid inläsning av databas: {msg}'
+        },
+        snapshot: {
+            amountAndDateRequired: 'Ange ett belopp och datum'
         },
         insightExtras: {
             monthlyAvg: 'Ditt månadssnitt',
@@ -4537,7 +4584,8 @@ const translations = {
             recurringNote: 'Återkommande månadsprenumerationer kategoriseras automatiskt som "Fasta utgifter" och räknas inte mot din dagliga budget.',
             countLabel: '{n} utgifter',
             swishOne: '{n} Swish-återbetalning',
-            swishMany: '{n} Swish-återbetalningar'
+            swishMany: '{n} Swish-återbetalningar',
+            noDescription: 'Ingen beskrivning'
         },
         empty: {
             fixed: 'Inga fasta utgifter',
@@ -4643,7 +4691,16 @@ const translations = {
             note: 'Riktig kontohantering (byta e-post, byta lösenord, ta bort konto) visas här när en backend är kopplad.',
             demoLocalOnly: 'Demo (endast lokalt)',
             emailPassword: 'E-post & lösenord',
-            passkey: 'Passkey'
+            passkey: 'Passkey',
+            newAccount: 'Nytt konto'
+        },
+        time: {
+            justNow: 'Just nu',
+            minAgo: 'för {n} min sedan',
+            hrAgo: 'för {n} tim sedan'
+        },
+        charts: {
+            dailySpending: 'Dagliga utgifter'
         },
         incomeBudget: {
             incomeHelp: 'Används för att beräkna din sparkvot. Lagras lokalt, skickas aldrig någonstans.',
@@ -4774,6 +4831,9 @@ const translations = {
         },
         goals: {
             intro: 'Namnge det du sparar till. Se burken fyllas på.',
+            completeTitle: 'Mål klart!',
+            reached: 'Du nådde {name}',
+            cutByPercent: 'Minska {category} med {percent} %',
             whatSavingFor: 'Vad sparar du till?',
             targetAmount: 'Målbelopp',
             targetAmountKr: 'Målbelopp (kr)',
@@ -5963,12 +6023,12 @@ function addExpense(e) {
     const id = Date.now();
 
     db.run('INSERT INTO expenses (id, amount, category, description, date, swish_repayments) VALUES (?, ?, ?, ?, ?, ?)',
-        [id, amount, category, description || 'No description', date, '[]']);
+        [id, amount, category, description || t('expenses.noDescription'), date, '[]']);
     saveDatabase();
 
     expenses.unshift({
         id, amount, category,
-        description: description || 'No description',
+        description: description || t('expenses.noDescription'),
         date, swishRepayments: []
     });
 
@@ -6239,7 +6299,7 @@ function initCharts() {
         data: {
             labels: [],
             datasets: [
-                { label: 'Daily Spending', data: [], borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.1)', tension: 0.4, fill: true }
+                { label: t('charts.dailySpending'), data: [], borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.1)', tension: 0.4, fill: true }
             ]
         },
         options: {
@@ -6878,11 +6938,11 @@ function confirmImport() {
 
     // Build a friendly summary
     const parts = [];
-    if (insertedExpenses > 0) parts.push(`${insertedExpenses} expense${insertedExpenses === 1 ? '' : 's'} imported`);
-    if (attachedRepayments > 0) parts.push(`${attachedRepayments} Swish repayment${attachedRepayments === 1 ? '' : 's'} attached`);
-    if (skippedSwish > 0) parts.push(`${skippedSwish} Swish row${skippedSwish === 1 ? '' : 's'} skipped`);
-    let msg = parts.length > 0 ? parts.join(' · ') : 'Nothing imported.';
-    if (failed.length > 0) msg += `\n\n${failed.length} failed — see browser console.`;
+    if (insertedExpenses > 0) parts.push(t(insertedExpenses === 1 ? 'imports.oneExpenseImported' : 'imports.expensesImported', { n: insertedExpenses }));
+    if (attachedRepayments > 0) parts.push(t(attachedRepayments === 1 ? 'imports.oneSwishAttached' : 'imports.swishAttached', { n: attachedRepayments }));
+    if (skippedSwish > 0) parts.push(t(skippedSwish === 1 ? 'imports.oneSwishSkipped' : 'imports.swishSkipped', { n: skippedSwish }));
+    let msg = parts.length > 0 ? parts.join(' · ') : t('imports.nothingImported');
+    if (failed.length > 0) msg += '\n\n' + t('imports.failedSuffix', { n: failed.length });
     alert(msg);
 }
 
@@ -6945,10 +7005,10 @@ function loadDatabase(event) {
             renderSubscriptionsCard();
             renderCyclePreview();
 
-            alert('Database loaded successfully!');
+            alert(t('db.loadOk'));
             
         } catch (error) {
-            alert('Error loading database: ' + error.message);
+            alert(t('db.loadError', { msg: error.message }));
         }
     };
     reader.readAsArrayBuffer(file);
@@ -7297,10 +7357,10 @@ function addExpenseFromQuick(e) {
     const id = Date.now();
 
     db.run('INSERT INTO expenses (id, amount, category, description, date, swish_repayments) VALUES (?, ?, ?, ?, ?, ?)',
-        [id, amount, category, description || 'No description', date, '[]']);
+        [id, amount, category, description || t('expenses.noDescription'), date, '[]']);
     saveDatabase();
 
-    expenses.unshift({ id, amount, category, description: description || 'No description', date, swishRepayments: [] });
+    expenses.unshift({ id, amount, category, description: description || t('expenses.noDescription'), date, swishRepayments: [] });
     closeQuickAdd();
     updateDashboard();
     updateCharts();
@@ -7879,7 +7939,7 @@ function confirmGoalContribution() {
 
     // Celebrate on completion
     if (!wasComplete && nowComplete) {
-        celebrate('🎯', 'Goal Complete!', `You reached ${g.name}`);
+        celebrate('🎯', t('goals.completeTitle'), t('goals.reached', { name: g.name }));
     } else {
         // Mini cumulative milestone check across all goals
         const totalSaved = goals.reduce((s, x) => s + x.currentAmount, 0);
@@ -7907,7 +7967,7 @@ function saveSnapshot() {
     const date = document.getElementById('snapshotDate').value;
     const note = document.getElementById('snapshotNote').value || null;
     if (isNaN(amount) || !date) {
-        alert('Please enter an amount and date');
+        alert(t('snapshot.amountAndDateRequired'));
         return;
     }
     const id = Date.now();
@@ -8240,7 +8300,7 @@ function openSubscriptionModal(id) {
         toggleBtn.className = 'btn-secondary';
         toggleBtn.style.marginTop = '0.5rem';
         toggleBtn.style.color = s.status === 'cancelled' ? 'var(--success)' : 'var(--warning)';
-        toggleBtn.textContent = s.status === 'cancelled' ? 'Reactivate' : 'Mark as cancelled';
+        toggleBtn.textContent = s.status === 'cancelled' ? t('subs.reactivate') : t('subs.markCancelled');
         toggleBtn.onclick = () => toggleSubscriptionStatus(s.id);
         deleteBtn.parentNode.insertBefore(toggleBtn, deleteBtn);
     } else {
@@ -8686,7 +8746,7 @@ function createGoalFromCurrentInsight() {
     };
 
     const newId = Date.now();
-    const goalName = `Cut ${d.categoryName} by ${d.cutPercent}%`;
+    const goalName = t('goals.cutByPercent', { category: d.categoryName, percent: d.cutPercent });
 
     db.run(
         'INSERT INTO goals (id, name, emoji, target_amount, current_amount, color, deadline, created_date, completed, kind, meta) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
