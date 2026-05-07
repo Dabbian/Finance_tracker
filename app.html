@@ -2088,6 +2088,103 @@
             gap: 1.5rem;
         }
 
+        /* New horizontal goal rows */
+        .goals-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .goal-row {
+            background: linear-gradient(180deg,
+                color-mix(in srgb, var(--text) 7%, transparent) 0%,
+                color-mix(in srgb, var(--text) 3%, transparent) 100%);
+            border: 1px solid color-mix(in srgb, var(--text) 14%, transparent);
+            backdrop-filter: blur(20px) saturate(140%);
+            -webkit-backdrop-filter: blur(20px) saturate(140%);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.10),
+                0 10px 32px rgba(0, 0, 0, 0.18);
+            border-radius: 16px;
+            padding: 1.25rem 1.5rem;
+            cursor: pointer;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+        .goal-row:hover {
+            transform: translateY(-1px);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.12),
+                0 14px 40px rgba(0, 0, 0, 0.22);
+        }
+        .goal-row.complete {
+            opacity: 0.85;
+        }
+        .goal-row-head {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .goal-row-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: color-mix(in srgb, var(--goal-color, var(--accent)) 22%, transparent);
+            color: var(--goal-color, var(--accent));
+            flex-shrink: 0;
+        }
+        .goal-row-icon svg { width: 22px; height: 22px; }
+        .goal-row-text {
+            flex: 1;
+            min-width: 0;
+        }
+        .goal-row-name {
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: var(--text);
+            line-height: 1.25;
+        }
+        .goal-row-deadline {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            margin-top: 0.15rem;
+        }
+        .goal-row-amount {
+            text-align: right;
+            flex-shrink: 0;
+        }
+        .goal-row-current {
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: var(--text);
+        }
+        .goal-row-target {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            margin-top: 0.15rem;
+        }
+        .goal-row-bar {
+            margin-top: 0.85rem;
+            height: 6px;
+            background: color-mix(in srgb, var(--text) 12%, transparent);
+            border-radius: 999px;
+            overflow: hidden;
+        }
+        .goal-row-bar-fill {
+            height: 100%;
+            background: var(--goal-color, var(--success));
+            border-radius: 999px;
+            transition: width 0.3s ease;
+        }
+
+        @media (max-width: 540px) {
+            .goal-row { padding: 1rem 1.1rem; }
+            .goal-row-name, .goal-row-current { font-size: 0.95rem; }
+        }
+
         .goal-card {
             background: var(--bg);
             border: 1px solid var(--border);
@@ -3112,35 +3209,7 @@
 
             <!-- Goals Tab -->
             <div class="tab-content" id="goals-tab">
-                <div class="card">
-                    <h2 class="card-title" data-i18n="cards.savingsGoals">Savings Goals</h2>
-                    <p style="color: var(--text-light); margin-bottom: 1.5rem;" data-i18n="goals.intro">
-                        Name what you're saving for. Watch the jar fill up.
-                    </p>
-                    <div class="goals-grid" id="goalsGrid"></div>
-                </div>
-
-                <div class="card net-worth-section">
-                    <h2 class="card-title" data-i18n="cards.netWorth">Net Worth</h2>
-                    <p style="color: var(--text-light); margin-bottom: 1rem;" data-i18n="netWorth.intro">
-                        Take a monthly snapshot. Watch the line go up over time.
-                    </p>
-                    <div class="net-worth-current">
-                        <div>
-                            <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-light); margin-bottom: 0.25rem; font-family: 'IBM Plex Mono', monospace;" data-i18n="netWorth.latestSnapshot">Latest snapshot</div>
-                            <div class="net-worth-value" id="netWorthLatest">—</div>
-                            <div style="font-size: 0.875rem; color: var(--text-light); margin-top: 0.25rem;" id="netWorthDate"></div>
-                        </div>
-                        <div id="netWorthChangeWrap"></div>
-                    </div>
-                    <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
-                        <button onclick="openSnapshotModal()" style="flex: 1; min-width: 200px;" data-i18n="netWorth.addSnapshot">+ Add Snapshot</button>
-                    </div>
-                    <div class="chart-container" style="height: 240px;">
-                        <canvas id="netWorthChart"></canvas>
-                    </div>
-                    <div id="snapshotsList" style="margin-top: 1rem;"></div>
-                </div>
+                <div class="goals-list" id="goalsGrid"></div>
             </div>
 
             <!-- Insights Tab -->
@@ -4343,6 +4412,8 @@ const translations = {
         },
         goals: {
             intro: "Name what you're saving for. Watch the jar fill up.",
+            empty: 'No goals yet — tap "+ Add" to create your first one.',
+            targetSuffix: '{amount} target',
             completeTitle: 'Goal Complete!',
             reached: 'You reached {name}',
             cutByPercent: 'Cut {category} by {percent}%',
@@ -4883,6 +4954,8 @@ const translations = {
         },
         goals: {
             intro: 'Namnge det du sparar till. Se burken fyllas på.',
+            empty: 'Inga mål än — tryck på "+ Lägg till" för att skapa ditt första.',
+            targetSuffix: 'mål {amount}',
             completeTitle: 'Mål klart!',
             reached: 'Du nådde {name}',
             cutByPercent: 'Minska {category} med {percent} %',
@@ -5791,7 +5864,6 @@ function switchTab(tabName, btnEl) {
     // Render contextual content when activating these tabs
     if (tabName === 'goals') {
         renderGoals();
-        renderNetWorth();
     } else if (tabName === 'insights') {
         renderInsights();
     }
@@ -7692,114 +7764,54 @@ function closeCutGoalDetail() {
 function renderGoals() {
     const grid = document.getElementById('goalsGrid');
     if (!grid) return;
+
+    const monthYear = (iso) => {
+        const d = new Date(iso);
+        if (isNaN(d.getTime())) return '';
+        const s = d.toLocaleDateString(activeLocale(), { month: 'short', year: 'numeric' });
+        // Capitalize first letter so Swedish "maj 2026" reads "Maj 2026"
+        return s.charAt(0).toUpperCase() + s.slice(1);
+    };
+
     let html = goals.map(g => {
         const isCut = g.kind === 'cut';
         const current = effectiveCurrentAmount(g);
-        const pct = Math.min(100, (current / g.targetAmount) * 100);
+        const pct = Math.min(100, (current / Math.max(1, g.targetAmount)) * 100);
         const isComplete = current >= g.targetAmount;
-        const remaining = Math.max(0, g.targetAmount - current);
         const iconName = resolveGoalIcon(g.emoji);
-
-        let deadlineHtml = '';
-        if (g.deadline) {
-            const dl = new Date(g.deadline);
-            const today = new Date();
-            const days = Math.ceil((dl - today) / 86400000);
-            deadlineHtml = days > 0
-                ? `<div class="goal-deadline">${t('goals.daysLeft', { n: days })}</div>`
-                : days === 0
-                ? `<div class="goal-deadline" style="color: var(--warning);">${t('goals.dueToday')}</div>`
-                : `<div class="goal-deadline" style="color: var(--danger);">${t('goals.daysOverdue', { n: Math.abs(days) })}</div>`;
-        }
-
-        // Cut-goal-specific: projection footer + "Auto-tracked" badge instead of "+ Add"
-        let footerHtml = '';
-        let actionsHtml = '';
-        if (isCut) {
-            const p = computeCutGoalProgress(g);
-            let projHtml;
-            if (p.monthsElapsed === 0) {
-                projHtml = `<div style="color: var(--text-light);">${t('goals.trackingStarts')}</div>`;
-            } else if (isComplete) {
-                projHtml = `<div style="color: var(--success); font-weight: 600;">${t('goals.targetReached')}</div>`;
-            } else {
-                const status = p.onTrack
-                    ? `<span style="color: var(--success); font-weight: 600;">${t('goals.onTrack')}</span>`
-                    : `<span style="color: var(--warning); font-weight: 600;">${t('goals.behindBy', { amount: formatCurrency(p.target - p.projected) })}</span>`;
-                projHtml = `
-                    <div style="display: flex; justify-content: space-between; gap: 0.5rem;">
-                        <div>
-                            <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-light); font-family: 'IBM Plex Mono', monospace;">${t('goals.projected')}</div>
-                            <div style="font-weight: 700;">${formatCurrency(p.projected)}</div>
-                        </div>
-                        <div style="text-align: right;">
-                            <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-light); font-family: 'IBM Plex Mono', monospace;">${t('goals.status')}</div>
-                            <div>${status}</div>
-                        </div>
-                    </div>
-                `;
-            }
-            footerHtml = `<div class="goal-projection">${projHtml}</div>`;
-            actionsHtml = `
-                <div class="goal-actions">
-                    <button onclick="openCutGoalDetail(${g.id})">${t('goals.viewProgress')}</button>
-                    <button class="btn-secondary" onclick="openGoalModal(${g.id})">${t('common.edit')}</button>
-                </div>
-            `;
-        } else {
-            actionsHtml = `
-                <div class="goal-actions">
-                    <button onclick="openGoalContribModal(${g.id})" ${isComplete ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''}>
-                        ${isComplete ? '✓ ' + t('common.done') : '+ ' + t('common.add')}
-                    </button>
-                    <button class="btn-secondary" onclick="openGoalModal(${g.id})">${t('common.edit')}</button>
-                </div>
-            `;
-        }
-
-        const kindBadge = isCut
-            ? `<div class="goal-kind-badge"><span>${t('goals.autoTrackedShort')}</span></div>`
-            : '';
+        const dateLabel = g.deadline ? monthYear(g.deadline) : '';
+        const clickHandler = isCut
+            ? `openCutGoalDetail(${g.id})`
+            : (isComplete ? `openGoalModal(${g.id})` : `openGoalContribModal(${g.id})`);
 
         return `
-            <div class="goal-card ${isComplete ? 'complete' : ''} ${isCut ? 'cut-goal' : ''}">
-                <div class="goal-header">
-                    <div class="goal-title-row">
-                        <div class="goal-icon-badge" style="--goal-color: ${g.color};">${svgIcon(iconName)}</div>
-                        <div>
-                            <div class="goal-name">${g.name}</div>
-                            ${deadlineHtml}
-                            ${kindBadge}
-                        </div>
+            <div class="goal-row ${isComplete ? 'complete' : ''}" style="--goal-color: ${g.color};" onclick="${clickHandler}" role="button" tabindex="0">
+                <div class="goal-row-head">
+                    <div class="goal-row-icon">${svgIcon(iconName)}</div>
+                    <div class="goal-row-text">
+                        <div class="goal-row-name">${g.name}</div>
+                        ${dateLabel ? `<div class="goal-row-deadline">${dateLabel}</div>` : ''}
                     </div>
-                    <div class="goal-percent">${pct.toFixed(0)}%</div>
-                </div>
-                <div class="goal-jar">
-                    ${jarSvg(pct, g.color)}
-                </div>
-                <div class="goal-amounts">
-                    <div>
-                        <div class="goal-current">${formatCurrency(current)}</div>
-                        <div class="goal-target">${t('goals.of', { amount: formatCurrency(g.targetAmount) })}</div>
-                    </div>
-                    <div style="text-align: right;">
-                        <div style="font-size: 0.75rem; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.05em;">${t('labels.remaining')}</div>
-                        <div style="font-weight: 700;">${formatCurrency(remaining)}</div>
+                    <div class="goal-row-amount">
+                        <div class="goal-row-current">${formatCurrency(current)}</div>
+                        <div class="goal-row-target">${t('goals.targetSuffix', { amount: formatCurrency(g.targetAmount) })}</div>
                     </div>
                 </div>
-                ${footerHtml}
-                ${actionsHtml}
+                <div class="goal-row-bar"><div class="goal-row-bar-fill" style="width: ${pct.toFixed(1)}%;"></div></div>
             </div>
         `;
     }).join('');
 
-    html += `
-        <div class="add-goal-card" onclick="openGoalModal(null)">
-            <div class="add-goal-icon">+</div>
-            <div style="font-weight: 600;">${t('goals.newGoal')}</div>
-            <div style="font-size: 0.875rem; color: var(--text-light); margin-top: 0.5rem;">${t('goals.whatSavingFor')}</div>
-        </div>
-    `;
+    if (goals.length === 0) {
+        html = `
+            <div class="empty-state">
+                <div class="empty-state-icon-svg">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 48px; height: 48px;"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>
+                </div>
+                <div data-i18n="goals.empty">No goals yet — tap "+ Add" to create your first one.</div>
+            </div>
+        `;
+    }
 
     grid.innerHTML = html;
 }
@@ -8053,6 +8065,10 @@ function renderNetWorth() {
     const dateEl = document.getElementById('netWorthDate');
     const changeWrap = document.getElementById('netWorthChangeWrap');
     const list = document.getElementById('snapshotsList');
+    // Net Worth UI was removed from the Goals tab. Bail safely if the
+    // section isn't in the DOM so other flows (e.g. snapshot modal
+    // save/delete) don't crash.
+    if (!latestEl || !dateEl || !changeWrap || !list) return;
 
     if (snapshots.length === 0) {
         latestEl.textContent = '—';
