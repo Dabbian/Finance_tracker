@@ -1178,6 +1178,48 @@
             color: var(--primary);
             margin-right: 1rem;
         }
+        .expense-amount.income {
+            color: var(--success);
+        }
+
+        /* Account / income tags shown next to a transaction's category */
+        .expense-tag {
+            display: inline-block;
+            padding: 0.15rem 0.6rem;
+            border-radius: 999px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            margin-right: 0.4rem;
+            margin-bottom: 0.25rem;
+            vertical-align: middle;
+        }
+        .expense-tag.income {
+            background: color-mix(in srgb, var(--success) 18%, transparent);
+            color: var(--success);
+        }
+        .expense-item.income .expense-description {
+            color: var(--text);
+        }
+
+        .import-tag {
+            display: inline-block;
+            padding: 0.1rem 0.5rem;
+            border-radius: 999px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            vertical-align: middle;
+        }
+        .import-tag.income {
+            background: color-mix(in srgb, var(--success) 18%, transparent);
+            color: var(--success);
+            margin-left: 0.4rem;
+        }
+        .import-amount.income { color: var(--success); }
+        .import-row.income { background: color-mix(in srgb, var(--success) 6%, transparent); }
 
         .expense-date {
             font-family: 'IBM Plex Mono', monospace;
@@ -3248,9 +3290,9 @@
             <!-- Transactions Tab -->
             <div class="tab-content" id="transactions-tab">
                 <div class="card">
-                    <h2 class="card-title" data-i18n="cards.recentExpenses">Recent Expenses</h2>
+                    <h2 class="card-title" data-i18n="cards.transactions">Transactions</h2>
                     <div class="expenses-list" id="expensesList">
-                        <p style="text-align: center; color: var(--text-light); padding: 2rem;" data-i18n="expenses.empty">No expenses yet</p>
+                        <p style="text-align: center; color: var(--text-light); padding: 2rem;" data-i18n="expenses.empty">No transactions yet</p>
                     </div>
                 </div>
 
@@ -3525,6 +3567,11 @@
             </div>
 
             <div class="form-group">
+                <label for="editAccount" data-i18n="labels.account">Account</label>
+                <select id="editAccount"></select>
+            </div>
+
+            <div class="form-group">
                 <label data-i18n="labels.swishRepayments">Swish Repayments</label>
                 <div class="swish-list" id="swishList"></div>
                 <div style="display: flex; gap: 0.5rem;">
@@ -3644,11 +3691,17 @@
     <div class="modal" id="importModal">
         <div class="modal-content" style="max-width: 900px;">
             <div class="modal-header">
-                <h3 class="modal-title" data-i18n="modals.reviewImport">Review Imported Expenses</h3>
+                <h3 class="modal-title" data-i18n="modals.reviewImport">Review Imported Transactions</h3>
                 <button class="modal-close" onclick="closeImportModal()" data-i18n-aria-label="common.close" aria-label="Close">×</button>
             </div>
-            <div style="background: var(--bg-alt); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
-                <strong id="importCount">0</strong> <span data-i18n="modals.expensesFound">expenses found</span>
+            <div style="background: var(--bg-alt); padding: 1rem; border-radius: 8px; margin-bottom: 1rem; display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                <div style="flex: 1; min-width: 200px;">
+                    <strong id="importCount">0</strong>
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <label for="importDefaultAccount" style="font-size: 0.875rem; color: var(--text-light); white-space: nowrap;" data-i18n="imports.applyAccountToAll">Account for all rows:</label>
+                    <select id="importDefaultAccount" style="padding: 0.5rem; min-width: 180px;" onchange="applyImportDefaultAccount()"></select>
+                </div>
             </div>
             <div id="importPreview" style="max-height: 400px; overflow-y: auto;"></div>
             <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
@@ -4240,6 +4293,11 @@ const translations = {
             someone: 'Someone',
             swishFrom: '↩ Swish from {sender}',
             skip: "— Skip (don't import) —",
+            noAccount: '— No account —',
+            applyAccountToAll: 'Account for all rows:',
+            incomeTag: 'Income',
+            incomeOne: '{n} incoming payment',
+            incomeMany: '{n} incoming payments',
             oneExpenseImported: '{n} expense imported',
             expensesImported: '{n} expenses imported',
             oneSwishAttached: '{n} Swish repayment attached',
@@ -4372,6 +4430,7 @@ const translations = {
             addExpense: 'Add Expense',
             importExcel: 'Import from Excel',
             recentExpenses: 'Recent Expenses',
+            transactions: 'Transactions',
             configureCategories: 'Configure Categories',
             savingsGoals: 'Savings Goals',
             netWorth: 'Net Worth',
@@ -4518,6 +4577,7 @@ const translations = {
             light: 'Light',
             dark: 'Dark',
             includeFixed: 'Include Fixed Expenses',
+            account: 'Account',
             accountName: 'Account Name',
             accountType: 'Type',
             startingBalance: 'Starting Balance',
@@ -4814,6 +4874,11 @@ const translations = {
             someone: 'Någon',
             swishFrom: '↩ Swish från {sender}',
             skip: '— Hoppa över (importera ej) —',
+            noAccount: '— Inget konto —',
+            applyAccountToAll: 'Konto för alla rader:',
+            incomeTag: 'Insättning',
+            incomeOne: '{n} insättning',
+            incomeMany: '{n} insättningar',
             oneExpenseImported: '{n} utgift importerad',
             expensesImported: '{n} utgifter importerade',
             oneSwishAttached: '{n} Swish-återbetalning kopplad',
@@ -4946,6 +5011,7 @@ const translations = {
             addExpense: 'Lägg till utgift',
             importExcel: 'Importera från Excel',
             recentExpenses: 'Senaste utgifter',
+            transactions: 'Transaktioner',
             configureCategories: 'Hantera kategorier',
             savingsGoals: 'Sparmål',
             netWorth: 'Nettoförmögenhet',
@@ -5092,6 +5158,7 @@ const translations = {
             light: 'Ljust',
             dark: 'Mörkt',
             includeFixed: 'Inkludera fasta utgifter',
+            account: 'Konto',
             accountName: 'Kontonamn',
             accountType: 'Typ',
             startingBalance: 'Ingående saldo',
@@ -5655,7 +5722,9 @@ function createTables() {
             category TEXT NOT NULL,
             description TEXT,
             date TEXT NOT NULL,
-            swish_repayments TEXT DEFAULT '[]'
+            swish_repayments TEXT DEFAULT '[]',
+            account_id INTEGER,
+            kind TEXT DEFAULT 'expense'
         )
     `);
 
@@ -5778,15 +5847,22 @@ function addColumnIfMissing(tableName, columnName, columnDef) {
 }
 
 function loadDataFromDB() {
-    // Load expenses
-    const expensesResult = db.exec('SELECT * FROM expenses ORDER BY date DESC');
+    // Load expenses (named columns so the new account_id / kind don't
+    // depend on table-creation order).
+    const expensesResult = db.exec(`
+        SELECT id, amount, category, description, date, swish_repayments,
+               account_id, kind
+        FROM expenses ORDER BY date DESC
+    `);
     expenses = expensesResult.length > 0 ? expensesResult[0].values.map(row => ({
         id: row[0],
         amount: row[1],
         category: row[2],
         description: row[3],
         date: row[4],
-        swishRepayments: JSON.parse(row[5] || '[]')
+        swishRepayments: JSON.parse(row[5] || '[]'),
+        accountId: row[6] || null,
+        kind: row[7] || 'expense'
     })) : [];
 
     // Load fixed expenses
@@ -6688,7 +6764,11 @@ function updateDashboard() {
     const startStr = isoDate(bounds.start);
     const endStr = isoDate(bounds.end);
 
-    const monthExpenses = expenses.filter(exp => exp.date >= startStr && exp.date <= endStr);
+    // Income rows (deposits / refunds) sit in the same table but are
+    // tagged kind='income'. They never count toward "spending" totals.
+    const monthExpenses = expenses.filter(exp =>
+        exp.date >= startStr && exp.date <= endStr && exp.kind !== 'income'
+    );
 
     const totalFixed = fixedExpenses.reduce((sum, f) => sum + f.amount, 0);
     const expenseDiscretionary = (exp) => {
@@ -6741,19 +6821,35 @@ function renderExpensesList() {
         return;
     }
 
+    const accountById = new Map(accounts.map(a => [a.id, a]));
+
     container.innerHTML = expenses.slice(0, 50).map(exp => {
         const repayments = (exp.swishRepayments || []).reduce((s, r) => s + r.amount, 0);
         const netAmount = exp.amount - repayments;
+        const isIncome = exp.kind === 'income';
         const color = getCategoryColor(exp.category);
+        const account = exp.accountId != null ? accountById.get(exp.accountId) : null;
+        const accountTag = account
+            ? `<span class="expense-tag account" style="background: color-mix(in srgb, ${account.color || 'var(--accent)'} 22%, transparent); color: ${account.color || 'var(--accent)'};">${account.name}</span>`
+            : '';
+        const incomeTag = isIncome
+            ? `<span class="expense-tag income">${t('imports.incomeTag')}</span>`
+            : '';
+        const sign = isIncome ? '+' : '';
+        const amountClass = isIncome ? 'expense-amount income' : 'expense-amount';
+        const swishTag = repayments > 0 ? '<span class="expense-category" style="background: var(--text-light); color: white;">Swish</span>' : '';
+
         return `
-            <div class="expense-item" onclick="openEditModal(${exp.id})">
+            <div class="expense-item ${isIncome ? 'income' : ''}" onclick="openEditModal(${exp.id})">
                 <div class="expense-info">
-                    <span class="expense-category" style="background: ${color}; color: white;">${getCategoryName(exp.category)}</span>
-                    ${repayments > 0 ? '<span class="expense-category" style="background: var(--text-light); color: white;">Swish</span>' : ''}
+                    ${isIncome ? '' : `<span class="expense-category" style="background: ${color}; color: white;">${getCategoryName(exp.category)}</span>`}
+                    ${swishTag}
+                    ${incomeTag}
+                    ${accountTag}
                     <div class="expense-description">${exp.description}</div>
                     <div class="expense-date">${formatDate(exp.date)}</div>
                 </div>
-                <div class="expense-amount">${formatCurrency(netAmount)}</div>
+                <div class="${amountClass}">${sign}${formatCurrency(netAmount)}</div>
             </div>
         `;
     }).join('');
@@ -6768,7 +6864,13 @@ function openEditModal(id) {
     document.getElementById('editDescription').textContent = exp.description;
     document.getElementById('editAmount').textContent = formatCurrency(exp.amount);
     document.getElementById('editCategory').value = exp.category;
-    
+    // Refresh the account dropdown (accounts may have changed since
+    // last open) and select the linked one (if any).
+    const editAccount = document.getElementById('editAccount');
+    if (editAccount) {
+        editAccount.innerHTML = renderAccountOptions(exp.accountId);
+    }
+
     renderSwishList(exp.swishRepayments || []);
     document.getElementById('editModal').classList.add('active');
 }
@@ -6833,12 +6935,16 @@ function saveExpenseEdit() {
     if (!exp) return;
 
     exp.category = document.getElementById('editCategory').value;
-    
-    db.run('UPDATE expenses SET category = ? WHERE id = ?',
-        [exp.category, currentEditingExpense]);
+    const acctEl = document.getElementById('editAccount');
+    const accountIdRaw = acctEl ? acctEl.value : '';
+    exp.accountId = accountIdRaw ? parseInt(accountIdRaw, 10) : null;
+
+    db.run('UPDATE expenses SET category = ?, account_id = ? WHERE id = ?',
+        [exp.category, exp.accountId, currentEditingExpense]);
     saveDatabase();
-    
+
     closeEditModal();
+    renderExpensesList();
     updateDashboard();
     updateCharts();
 }
@@ -7227,6 +7333,10 @@ function processExcelData(rows) {
         // Detect Swish repayments (incoming money from a friend, e.g., paying you back for shared dinner).
         // Pattern: positive amount AND description starts with "Swish från" (case-insensitive, accent-insensitive).
         const isSwishRepayment = isPositive && isSwishFromText(description);
+        // Anything else that's positive and not a Swish repayment is
+        // treated as income (a deposit / refund / salary). It still
+        // gets a category guess but the user can leave it as "other".
+        const kind = (isPositive && !isSwishRepayment) ? 'income' : 'expense';
 
         pendingImports.push({
             date: dateStr,
@@ -7235,7 +7345,9 @@ function processExcelData(rows) {
             category: guessCategory(description),
             swishRepayments: [],
             isSwishRepayment: isSwishRepayment,
-            attachToExpenseId: null // user picks from preview UI
+            kind,
+            accountId: null,            // user picks from preview UI
+            attachToExpenseId: null     // for Swish repayments
         });
     });
 
@@ -7344,14 +7456,25 @@ function parseFlexibleAmount(value) {
 
 function showImportModal() {
     const swishCount = pendingImports.filter(i => i.isSwishRepayment).length;
-    const expenseCount = pendingImports.length - swishCount;
+    const incomeCount = pendingImports.filter(i => i.kind === 'income' && !i.isSwishRepayment).length;
+    const expenseCount = pendingImports.length - swishCount - incomeCount;
 
     // Update header summary
     const countEl = document.getElementById('importCount');
+    const parts = [t('expenses.countLabel', { n: expenseCount })];
+    if (incomeCount > 0) {
+        parts.push(`<span style="color: var(--success);">${t(incomeCount === 1 ? 'imports.incomeOne' : 'imports.incomeMany', { n: incomeCount })}</span>`);
+    }
     if (swishCount > 0) {
-        countEl.innerHTML = `${t('expenses.countLabel', { n: expenseCount })} · <span style="color: var(--success);">${t(swishCount === 1 ? 'expenses.swishOne' : 'expenses.swishMany', { n: swishCount })}</span>`;
-    } else {
-        countEl.textContent = pendingImports.length;
+        parts.push(`<span style="color: var(--success);">${t(swishCount === 1 ? 'expenses.swishOne' : 'expenses.swishMany', { n: swishCount })}</span>`);
+    }
+    countEl.innerHTML = parts.join(' · ');
+
+    // Default-account picker — applied to every row that doesn't have
+    // a specific override yet.
+    const defaultAccountSelect = document.getElementById('importDefaultAccount');
+    if (defaultAccountSelect) {
+        defaultAccountSelect.innerHTML = renderAccountOptions(null);
     }
 
     const preview = document.getElementById('importPreview');
@@ -7365,18 +7488,50 @@ function showImportModal() {
     document.getElementById('importModal').classList.add('active');
 }
 
+// <option> set for an account picker. Includes a "—" no-account row
+// at the top so users can leave a transaction unlinked.
+function renderAccountOptions(selectedId) {
+    const none = `<option value="" ${selectedId == null ? 'selected' : ''}>${t('imports.noAccount')}</option>`;
+    const list = accounts.map(a =>
+        `<option value="${a.id}" ${String(selectedId) === String(a.id) ? 'selected' : ''}>${a.name}</option>`
+    ).join('');
+    return none + list;
+}
+
+// Apply the default-account dropdown to every pending row that's still
+// unset. Called from the dropdown's onchange handler in the modal.
+function applyImportDefaultAccount() {
+    const sel = document.getElementById('importDefaultAccount');
+    if (!sel) return;
+    const id = sel.value || null;
+    pendingImports.forEach((item, idx) => {
+        item.accountId = id;
+        const rowSel = document.getElementById('import-acct-' + idx);
+        if (rowSel) rowSel.value = id || '';
+    });
+}
+
 function renderExpenseImportRow(item, idx) {
+    const isIncome = item.kind === 'income';
+    const amountClass = isIncome ? 'import-amount income' : 'import-amount';
+    const sign = isIncome ? '+' : '';
+    const kindBadge = isIncome
+        ? `<span class="import-tag income">${t('imports.incomeTag')}</span>`
+        : '';
     return `
-        <div class="import-row">
+        <div class="import-row ${isIncome ? 'income' : ''}">
             <div style="flex: 1; min-width: 0;">
-                <strong>${item.description}</strong><br>
+                <strong>${item.description}</strong> ${kindBadge}<br>
                 <small style="color: var(--text-light);">${formatDate(item.date)}</small>
             </div>
-            <div class="import-amount">${formatCurrency(item.amount)}</div>
+            <div class="${amountClass}">${sign}${formatCurrency(item.amount)}</div>
             <select id="import-cat-${idx}" style="padding: 0.5rem; width: 140px;" onchange="pendingImports[${idx}].category = this.value">
                 ${categories.map(cat =>
                     `<option value="${cat.id}" ${item.category === cat.id ? 'selected' : ''}>${localizedCategoryName(cat)}</option>`
                 ).join('')}
+            </select>
+            <select id="import-acct-${idx}" style="padding: 0.5rem; width: 160px;" onchange="pendingImports[${idx}].accountId = this.value || null">
+                ${renderAccountOptions(item.accountId)}
             </select>
             <button class="delete-btn" onclick="removePendingImport(${idx})">×</button>
         </div>
@@ -7494,9 +7649,15 @@ function confirmImport() {
     pendingImports.forEach((item, idx) => {
         if (item.isSwishRepayment) return;
         const id = baseId + idx;
+        const accountId = (item.accountId != null && item.accountId !== '')
+            ? parseInt(item.accountId, 10)
+            : null;
+        const kind = item.kind === 'income' ? 'income' : 'expense';
         try {
-            db.run('INSERT INTO expenses (id, amount, category, description, date, swish_repayments) VALUES (?, ?, ?, ?, ?, ?)',
-                [id, item.amount, item.category, item.description, item.date, '[]']);
+            db.run(
+                'INSERT INTO expenses (id, amount, category, description, date, swish_repayments, account_id, kind) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+                [id, item.amount, item.category, item.description, item.date, '[]', accountId, kind]
+            );
             insertedExpenses++;
             pendingIdToInsertedId[`pending:${idx}`] = id;
         } catch (err) {
