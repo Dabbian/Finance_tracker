@@ -2888,11 +2888,14 @@
                 </svg>
             </div>
             <nav class="app-nav">
-                <button class="tab active" data-tab="overview" data-label="Overview" onclick="switchTab('overview', this)" aria-label="Overview">
+                <button class="tab active" data-tab="dashboard" data-label="Dashboard" onclick="switchTab('dashboard', this)" aria-label="Dashboard">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12 12 3l9 9"/><path d="M5 10v10h14V10"/></svg>
                 </button>
-                <button class="tab" data-tab="expenses" data-label="Expenses" onclick="switchTab('expenses', this)" aria-label="Expenses">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/></svg>
+                <button class="tab" data-tab="transactions" data-label="Transactions" onclick="switchTab('transactions', this)" aria-label="Transactions">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3l4 4-4 4"/><path d="M3 7h18"/><path d="M7 21l-4-4 4-4"/><path d="M21 17H3"/></svg>
+                </button>
+                <button class="tab" data-tab="accounts" data-label="Accounts" onclick="switchTab('accounts', this)" aria-label="Accounts">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M2 10h20"/><path d="M6 15h2"/><path d="M11 15h2"/></svg>
                 </button>
                 <button class="tab" data-tab="goals" data-label="Goals" onclick="switchTab('goals', this)" aria-label="Goals">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>
@@ -2900,7 +2903,13 @@
                 <button class="tab" data-tab="insights" data-label="Insights" onclick="switchTab('insights', this)" aria-label="Insights">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg>
                 </button>
-                <button class="tab" data-tab="budget" data-label="Settings" onclick="switchTab('budget', this)" aria-label="Settings">
+                <button class="tab" data-tab="reports" data-label="Reports" onclick="switchTab('reports', this)" aria-label="Reports">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8"/><path d="M8 17h8"/><path d="M8 9h2"/></svg>
+                </button>
+                <button class="tab" data-tab="budget" data-label="Budget" onclick="switchTab('budget', this)" aria-label="Budget">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+                </button>
+                <button class="tab" data-tab="settings" data-label="Settings" onclick="switchTab('settings', this)" aria-label="Settings">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3h.1a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8v.1a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
                 </button>
             </nav>
@@ -2910,7 +2919,7 @@
         <div class="app-main">
             <!-- Topbar -->
             <div class="app-topbar">
-                <h1 class="topbar-title" id="topbarTitle" data-i18n="tabs.overview">Overview</h1>
+                <h1 class="topbar-title" id="topbarTitle" data-i18n="tabs.dashboard">Dashboard</h1>
                 <div class="topbar-actions">
                     <button class="topbar-btn" id="topbarAddBtn" onclick="topbarAdd()">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
@@ -2931,7 +2940,7 @@
             <!-- Content -->
             <div class="content">
             <!-- Overview Tab -->
-            <div class="tab-content active" id="overview-tab">
+            <div class="tab-content active" id="dashboard-tab">
                 <!-- Hero: Savings Rate + Streak -->
                 <div class="hero-card">
                     <div class="hero-grid">
@@ -3021,7 +3030,7 @@
             </div>
 
             <!-- Expenses Tab -->
-            <div class="tab-content" id="expenses-tab">
+            <div class="tab-content" id="transactions-tab">
                 <div class="expenses-grid">
                     <div>
                         <div class="card">
@@ -3085,6 +3094,22 @@
                 </div>
             </div>
 
+            <!-- Accounts Tab -->
+            <div class="tab-content" id="accounts-tab">
+                <div class="card">
+                    <h2 class="card-title" data-i18n="cards.accounts">Accounts</h2>
+                    <p style="color: var(--text-light); margin-bottom: 1.5rem;" data-i18n="accounts.intro">
+                        Track balances across your bank accounts, cards, and cash. (Coming soon.)
+                    </p>
+                    <div class="empty-state">
+                        <div class="empty-state-icon-svg">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 48px; height: 48px;"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M2 10h20"/><path d="M6 15h2"/><path d="M11 15h2"/></svg>
+                        </div>
+                        <div data-i18n="accounts.empty">No accounts yet — adding manual + linked accounts is on the roadmap.</div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Goals Tab -->
             <div class="tab-content" id="goals-tab">
                 <div class="card">
@@ -3129,8 +3154,40 @@
                 </div>
             </div>
 
+            <!-- Reports Tab -->
+            <div class="tab-content" id="reports-tab">
+                <div class="card">
+                    <h2 class="card-title" data-i18n="cards.reports">Reports</h2>
+                    <p style="color: var(--text-light); margin-bottom: 1.5rem;" data-i18n="reports.intro">
+                        Custom date-range breakdowns and exports. (Coming soon.)
+                    </p>
+                    <div class="empty-state">
+                        <div class="empty-state-icon-svg">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 48px; height: 48px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8"/><path d="M8 17h8"/><path d="M8 9h2"/></svg>
+                        </div>
+                        <div data-i18n="reports.empty">Spending reports by category, merchant, and time range are on the way.</div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Budget Tab -->
             <div class="tab-content" id="budget-tab">
+                <div class="card">
+                    <h2 class="card-title" data-i18n="cards.budget">Budget</h2>
+                    <p style="color: var(--text-light); margin-bottom: 1.5rem;" data-i18n="budget.intro">
+                        Plan how each kr is supposed to behave before the month starts. (Coming soon.)
+                    </p>
+                    <div class="empty-state">
+                        <div class="empty-state-icon-svg">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 48px; height: 48px;"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+                        </div>
+                        <div data-i18n="budget.empty">Per-category envelope budgeting is in the works.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div class="tab-content" id="settings-tab">
                 <div class="budget-grid">
                     <div>
                         <div class="card">
@@ -3815,10 +3872,13 @@ const languagePresets = [
 const translations = {
     en: {
         tabs: {
-            overview: 'Overview',
-            expenses: 'Expenses',
+            dashboard: 'Dashboard',
+            transactions: 'Transactions',
+            accounts: 'Accounts',
             goals: 'Goals',
             insights: 'Insights',
+            reports: 'Reports',
+            budget: 'Budget',
             settings: 'Settings'
         },
         topbar: {
@@ -3976,6 +4036,18 @@ const translations = {
         snapshot: {
             amountAndDateRequired: 'Please enter an amount and date'
         },
+        accounts: {
+            intro: 'Track balances across your bank accounts, cards, and cash. (Coming soon.)',
+            empty: 'No accounts yet — adding manual + linked accounts is on the roadmap.'
+        },
+        reports: {
+            intro: 'Custom date-range breakdowns and exports. (Coming soon.)',
+            empty: 'Spending reports by category, merchant, and time range are on the way.'
+        },
+        budget: {
+            intro: 'Plan how each kr is supposed to behave before the month starts. (Coming soon.)',
+            empty: 'Per-category envelope budgeting is in the works.'
+        },
         insightExtras: {
             monthlyAvg: 'Your monthly avg',
             savePerMonth: 'Save / month',
@@ -4060,6 +4132,9 @@ const translations = {
             saveFailed: 'Could not save. Try again.'
         },
         cards: {
+            accounts: 'Accounts',
+            reports: 'Reports',
+            budget: 'Budget',
             addExpense: 'Add Expense',
             importExcel: 'Import from Excel',
             recentExpenses: 'Recent Expenses',
@@ -4337,10 +4412,13 @@ const translations = {
     },
     sv: {
         tabs: {
-            overview: 'Översikt',
-            expenses: 'Utgifter',
+            dashboard: 'Översikt',
+            transactions: 'Transaktioner',
+            accounts: 'Konton',
             goals: 'Mål',
             insights: 'Insikter',
+            reports: 'Rapporter',
+            budget: 'Budget',
             settings: 'Inställningar'
         },
         topbar: {
@@ -4498,6 +4576,18 @@ const translations = {
         snapshot: {
             amountAndDateRequired: 'Ange ett belopp och datum'
         },
+        accounts: {
+            intro: 'Håll koll på saldon för bankkonton, kort och kontanter. (Kommer snart.)',
+            empty: 'Inga konton än — manuella och kopplade konton är på vägen.'
+        },
+        reports: {
+            intro: 'Anpassade tidsintervall och export. (Kommer snart.)',
+            empty: 'Utgiftsrapporter per kategori, butik och tidsperiod är på gång.'
+        },
+        budget: {
+            intro: 'Planera hur varje krona ska bete sig innan månaden börjar. (Kommer snart.)',
+            empty: 'Kuvertbudget per kategori är under utveckling.'
+        },
         insightExtras: {
             monthlyAvg: 'Ditt månadssnitt',
             savePerMonth: 'Spar/månad',
@@ -4582,6 +4672,9 @@ const translations = {
             saveFailed: 'Kunde inte spara. Försök igen.'
         },
         cards: {
+            accounts: 'Konton',
+            reports: 'Rapporter',
+            budget: 'Budget',
             addExpense: 'Lägg till utgift',
             importExcel: 'Importera från Excel',
             recentExpenses: 'Senaste utgifter',
@@ -5661,11 +5754,14 @@ function renderLanguageOptions() {
 
 // Tabs
 const TAB_META = {
-    overview: { title: 'Overview', addable: true },
-    expenses: { title: 'Expenses', addable: true },
-    goals:    { title: 'Goals',    addable: true },
-    insights: { title: 'Insights', addable: false },
-    budget:   { title: 'Settings', addable: false }
+    dashboard:    { title: 'Dashboard',    addable: true },
+    transactions: { title: 'Transactions', addable: true },
+    accounts:     { title: 'Accounts',     addable: false },
+    goals:        { title: 'Goals',        addable: true },
+    insights:     { title: 'Insights',     addable: false },
+    reports:      { title: 'Reports',      addable: false },
+    budget:       { title: 'Budget',       addable: false },
+    settings:     { title: 'Settings',     addable: false }
 };
 
 function switchTab(tabName, btnEl) {
@@ -5704,11 +5800,11 @@ function switchTab(tabName, btnEl) {
 // Topbar "+ Add" — routes to the right add flow per active tab
 function topbarAdd() {
     const active = document.querySelector('.tab.active');
-    const tabName = active ? active.dataset.tab : 'expenses';
+    const tabName = active ? active.dataset.tab : 'transactions';
     if (tabName === 'goals') {
         if (typeof openGoalModal === 'function') openGoalModal(null);
     } else {
-        // Overview & Expenses both add an expense
+        // Dashboard & Transactions both add an expense
         if (typeof openQuickAdd === 'function') openQuickAdd();
     }
 }
