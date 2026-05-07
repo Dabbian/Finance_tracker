@@ -2102,6 +2102,103 @@
             box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18);
         }
 
+        /* ============== ACCOUNTS TAB ============== */
+        .account-summary-card {
+            text-align: center;
+        }
+        .account-summary-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-light);
+            font-family: 'IBM Plex Mono', monospace;
+        }
+        .account-summary-value {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 2.75rem;
+            font-weight: 700;
+            line-height: 1.05;
+            margin-top: 0.4rem;
+            color: var(--primary);
+        }
+        .account-summary-meta {
+            margin-top: 0.4rem;
+            font-size: 0.875rem;
+            color: var(--text-light);
+        }
+
+        .accounts-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+        .account-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.1rem;
+            background: color-mix(in srgb, var(--text) 5%, transparent);
+            border: 1px solid color-mix(in srgb, var(--text) 12%, transparent);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.15s ease, border-color 0.15s ease;
+        }
+        .account-row:hover {
+            background: color-mix(in srgb, var(--text) 9%, transparent);
+            border-color: color-mix(in srgb, var(--text) 18%, transparent);
+        }
+        .account-row-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: color-mix(in srgb, var(--account-color, var(--accent)) 22%, transparent);
+            color: var(--account-color, var(--accent));
+            flex-shrink: 0;
+        }
+        .account-row-icon svg { width: 20px; height: 20px; }
+        .account-row-text { flex: 1; min-width: 0; }
+        .account-row-name {
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 700;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .account-row-meta {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-top: 0.15rem;
+        }
+        .account-row-balance {
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 700;
+            color: var(--text);
+            white-space: nowrap;
+        }
+
+        .account-tag {
+            display: inline-block;
+            padding: 0.1rem 0.55rem;
+            border-radius: 999px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+        .account-tag.linked {
+            background: color-mix(in srgb, var(--success) 18%, transparent);
+            color: var(--success);
+        }
+        .account-tag.unlinked {
+            background: color-mix(in srgb, var(--text) 12%, transparent);
+            color: var(--text-light);
+        }
+
         /* ============== GOALS TAB ============== */
         .goals-grid {
             display: grid;
@@ -2171,6 +2268,19 @@
             font-size: 0.875rem;
             color: var(--text-light);
             margin-top: 0.15rem;
+        }
+        .goal-row-auto {
+            display: inline-block;
+            margin-left: 0.5rem;
+            padding: 0.1rem 0.5rem;
+            border-radius: 999px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            background: color-mix(in srgb, var(--accent) 18%, transparent);
+            color: var(--accent);
+            vertical-align: middle;
         }
         .goal-row-amount {
             text-align: right;
@@ -3024,6 +3134,9 @@
                 <button class="tab" data-tab="reports" data-label="Reports" onclick="switchTab('reports', this)" aria-label="Reports">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8"/><path d="M8 17h8"/><path d="M8 9h2"/></svg>
                 </button>
+                <button class="tab" data-tab="recurring" data-label="Recurring" onclick="switchTab('recurring', this)" aria-label="Recurring">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><polyline points="21 4 21 10 15 10"/></svg>
+                </button>
                 <button class="tab" data-tab="budget" data-label="Budget" onclick="switchTab('budget', this)" aria-label="Budget">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
                 </button>
@@ -3102,129 +3215,72 @@
                 </div>
 
                 <div class="dashboard-grid">
-                    <div>
-                        <div class="card">
-                            <h2 class="card-title" data-i18n="cards.categoryBreakdown">Category Breakdown</h2>
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="includeFixed" onchange="updateCharts()">
-                                <span data-i18n="labels.includeFixed">Include Fixed Expenses</span>
-                            </label>
-                            <div class="chart-container">
-                                <canvas id="categoryChart"></canvas>
-                            </div>
-                            <div class="category-list" id="categoryBreakdownList"></div>
+                    <div class="card">
+                        <h2 class="card-title" data-i18n="cards.spendingTrend">Spending Trend</h2>
+                        <div class="chart-container">
+                            <canvas id="trendChart"></canvas>
                         </div>
                     </div>
-                    <div>
-                        <div class="card">
-                            <h2 class="card-title" data-i18n="cards.spendingTrend">Spending Trend</h2>
-                            <div class="chart-container">
-                                <canvas id="trendChart"></canvas>
+                    <div class="card">
+                        <h2 class="card-title" data-i18n="cards.dailySavings">Daily Savings</h2>
+                        <p style="color: var(--text-light); font-size: 0.875rem; margin-bottom: 1rem;" data-i18n="savings.hint">
+                            Hover over a day to see details, click to view expenses
+                        </p>
+                        <div id="savingsGrid" class="savings-grid"></div>
+                        <div style="display: flex; gap: 1.5rem; margin-top: 1.5rem; font-size: 0.875rem; color: var(--text-light); justify-content: center;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <div style="width: 16px; height: 16px; background: var(--success); border-radius: 4px;"></div>
+                                <span data-i18n="savings.underBudget">Under budget</span>
                             </div>
-                        </div>
-                        <div class="card">
-                            <h2 class="card-title" data-i18n="cards.dailySavings">Daily Savings</h2>
-                            <p style="color: var(--text-light); font-size: 0.875rem; margin-bottom: 1rem;" data-i18n="savings.hint">
-                                Hover over a day to see details, click to view expenses
-                            </p>
-                            <div id="savingsGrid" class="savings-grid"></div>
-                            <div style="display: flex; gap: 1.5rem; margin-top: 1.5rem; font-size: 0.875rem; color: var(--text-light); justify-content: center;">
-                                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                    <div style="width: 16px; height: 16px; background: var(--success); border-radius: 4px;"></div>
-                                    <span data-i18n="savings.underBudget">Under budget</span>
-                                </div>
-                                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                    <div style="width: 16px; height: 16px; background: var(--danger); border-radius: 4px;"></div>
-                                    <span data-i18n="savings.overBudget">Over budget</span>
-                                </div>
-                                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                    <div style="width: 16px; height: 16px; background: var(--bg-alt); border: 1px solid var(--border); border-radius: 4px;"></div>
-                                    <span data-i18n="savings.future">Future</span>
-                                </div>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <div style="width: 16px; height: 16px; background: var(--danger); border-radius: 4px;"></div>
+                                <span data-i18n="savings.overBudget">Over budget</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <div style="width: 16px; height: 16px; background: var(--bg-alt); border: 1px solid var(--border); border-radius: 4px;"></div>
+                                <span data-i18n="savings.future">Future</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Expenses Tab -->
+            <!-- Transactions Tab -->
             <div class="tab-content" id="transactions-tab">
-                <div class="expenses-grid">
-                    <div>
-                        <div class="card">
-                            <h2 class="card-title" data-i18n="cards.addExpense">Add Expense</h2>
-                            <form id="expenseForm">
-                                <div class="form-group">
-                                    <label for="amount" id="amountLabel" data-i18n="labels.amountKr">Amount (kr)</label>
-                                    <input type="number" id="amount" step="0.01" min="0" required placeholder="0.00" data-i18n-placeholder="placeholders.amount">
-                                </div>
-                                <div class="form-group">
-                                    <label for="category" data-i18n="labels.category">Category</label>
-                                    <select id="category" required></select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="description" data-i18n="labels.descriptionOptional">Description (Optional)</label>
-                                    <input type="text" id="description" placeholder="Coffee at Starbucks" data-i18n-placeholder="placeholders.descriptionExample">
-                                </div>
-                                <div class="form-group">
-                                    <label for="date" data-i18n="labels.date">Date</label>
-                                    <input type="date" id="date" required>
-                                </div>
-                                <button type="submit" data-i18n="buttons.addExpense">Add Expense</button>
-                            </form>
-                        </div>
-
-                        <div class="card">
-                            <h2 class="card-title" data-i18n="cards.importExcel">Import from Excel</h2>
-                            <div class="file-upload" id="fileUpload">
-                                <div class="upload-icon">📊</div>
-                                <div>
-                                    <strong data-i18n="buttons.uploadClick">Click to upload</strong> <span data-i18n="buttons.dragDrop">or drag and drop</span><br>
-                                    <small data-i18n="buttons.uploadHelp">Support for .xlsx and .xls files</small>
-                                </div>
-                                <input type="file" id="excelFile" accept=".xlsx,.xls">
-                            </div>
-                        </div>
-
-                        <div class="card">
-                            <h2 class="card-title" data-i18n="cards.configureCategories">Configure Categories</h2>
-                            <form id="addCategoryForm">
-                                <div class="form-group">
-                                    <label for="newCategoryName" data-i18n="labels.categoryName">Category Name</label>
-                                    <input type="text" id="newCategoryName" required placeholder="e.g., Groceries" data-i18n-placeholder="placeholders.categoryExample">
-                                </div>
-                                <div class="form-group">
-                                    <label for="newCategoryColor" data-i18n="labels.color">Color</label>
-                                    <input type="color" id="newCategoryColor" value="#3b82f6">
-                                </div>
-                                <button type="submit" data-i18n="buttons.addCategory">Add Category</button>
-                            </form>
-                            <div style="margin-top: 1.5rem;" id="categoriesList"></div>
-                        </div>
+                <div class="card">
+                    <h2 class="card-title" data-i18n="cards.recentExpenses">Recent Expenses</h2>
+                    <div class="expenses-list" id="expensesList">
+                        <p style="text-align: center; color: var(--text-light); padding: 2rem;" data-i18n="expenses.empty">No expenses yet</p>
                     </div>
+                </div>
 
-                    <div class="card">
-                        <h2 class="card-title" data-i18n="cards.recentExpenses">Recent Expenses</h2>
-                        <div class="expenses-list" id="expensesList">
-                            <p style="text-align: center; color: var(--text-light); padding: 2rem;" data-i18n="expenses.empty">No expenses yet</p>
+                <div class="card">
+                    <h2 class="card-title" data-i18n="cards.importExcel">Import from Excel</h2>
+                    <div class="file-upload" id="fileUpload">
+                        <div class="upload-icon">📊</div>
+                        <div>
+                            <strong data-i18n="buttons.uploadClick">Click to upload</strong> <span data-i18n="buttons.dragDrop">or drag and drop</span><br>
+                            <small data-i18n="buttons.uploadHelp">Support for .xlsx and .xls files</small>
                         </div>
+                        <input type="file" id="excelFile" accept=".xlsx,.xls">
                     </div>
                 </div>
             </div>
 
             <!-- Accounts Tab -->
             <div class="tab-content" id="accounts-tab">
+                <!-- Summary card -->
+                <div class="card account-summary-card">
+                    <div class="account-summary-label" data-i18n="accounts.totalBalance">Total balance</div>
+                    <div class="account-summary-value" id="accountsTotalBalance">—</div>
+                    <div class="account-summary-meta" id="accountsTotalMeta"></div>
+                </div>
+
+                <!-- Accounts list -->
                 <div class="card">
-                    <h2 class="card-title" data-i18n="cards.accounts">Accounts</h2>
-                    <p style="color: var(--text-light); margin-bottom: 1.5rem;" data-i18n="accounts.intro">
-                        Track balances across your bank accounts, cards, and cash. (Coming soon.)
-                    </p>
-                    <div class="empty-state">
-                        <div class="empty-state-icon-svg">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 48px; height: 48px;"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M2 10h20"/><path d="M6 15h2"/><path d="M11 15h2"/></svg>
-                        </div>
-                        <div data-i18n="accounts.empty">No accounts yet — adding manual + linked accounts is on the roadmap.</div>
-                    </div>
+                    <h2 class="card-title" data-i18n="cards.yourAccounts">Your Accounts</h2>
+                    <div id="accountsList" class="accounts-list"></div>
+                    <button onclick="openAccountModal(null)" style="margin-top: 1rem;" data-i18n="buttons.addAccount">+ Add Account</button>
                 </div>
             </div>
 
@@ -3247,32 +3303,78 @@
             <!-- Reports Tab -->
             <div class="tab-content" id="reports-tab">
                 <div class="card">
-                    <h2 class="card-title" data-i18n="cards.reports">Reports</h2>
-                    <p style="color: var(--text-light); margin-bottom: 1.5rem;" data-i18n="reports.intro">
-                        Custom date-range breakdowns and exports. (Coming soon.)
-                    </p>
-                    <div class="empty-state">
-                        <div class="empty-state-icon-svg">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 48px; height: 48px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8"/><path d="M8 17h8"/><path d="M8 9h2"/></svg>
-                        </div>
-                        <div data-i18n="reports.empty">Spending reports by category, merchant, and time range are on the way.</div>
+                    <h2 class="card-title" data-i18n="cards.categoryBreakdown">Category Breakdown</h2>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="includeFixed" onchange="updateCharts()">
+                        <span data-i18n="labels.includeFixed">Include Fixed Expenses</span>
+                    </label>
+                    <div class="chart-container">
+                        <canvas id="categoryChart"></canvas>
                     </div>
+                    <div class="category-list" id="categoryBreakdownList"></div>
+                </div>
+            </div>
+
+            <!-- Recurring Tab -->
+            <div class="tab-content" id="recurring-tab">
+                <div class="card">
+                    <h2 class="card-title" data-i18n="cards.subscriptions">Subscriptions</h2>
+                    <p style="color: var(--text-light); margin-bottom: 1rem; font-size: 0.875rem;" data-i18n="subs.help">
+                        Track your recurring subscriptions and see what they cost. Auto-detected from import data and any you add manually.
+                    </p>
+                    <div id="subsSummary" class="subs-summary"></div>
+                    <div id="subsDetected" class="subs-section" style="display:none;"></div>
+                    <div id="subsActiveList" class="subs-list"></div>
+                    <div id="subsCancelledList" class="subs-list"></div>
+                    <button onclick="openSubscriptionModal(null)" style="margin-top: 1rem;" data-i18n="buttons.addSubscription">+ Add Subscription</button>
                 </div>
             </div>
 
             <!-- Budget Tab -->
             <div class="tab-content" id="budget-tab">
                 <div class="card">
-                    <h2 class="card-title" data-i18n="cards.budget">Budget</h2>
-                    <p style="color: var(--text-light); margin-bottom: 1.5rem;" data-i18n="budget.intro">
-                        Plan how each kr is supposed to behave before the month starts. (Coming soon.)
-                    </p>
-                    <div class="empty-state">
-                        <div class="empty-state-icon-svg">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 48px; height: 48px;"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
-                        </div>
-                        <div data-i18n="budget.empty">Per-category envelope budgeting is in the works.</div>
+                    <h2 class="card-title" data-i18n="cards.incomeBudget">Income & Budget</h2>
+                    <div class="form-group">
+                        <label for="monthlyIncome" id="incomeLabel" data-i18n="labels.monthlyIncomeKr">Monthly Income (kr)</label>
+                        <input type="number" id="monthlyIncome" step="1" min="0" placeholder="35000" onchange="updateIncome()" data-i18n-placeholder="placeholders.incomeExample">
+                        <small style="color: var(--text-light); display: block; margin-top: 0.5rem;" data-i18n="incomeBudget.incomeHelp">
+                            Used to calculate your savings rate. Stored locally, never sent anywhere.
+                        </small>
                     </div>
+                    <div class="form-group">
+                        <label for="monthlyBudget" id="budgetLabel" data-i18n="labels.discretionaryBudgetKr">Discretionary Budget (kr)</label>
+                        <input type="number" id="monthlyBudget" step="1" min="0" placeholder="10000" onchange="updateBudget()" data-i18n-placeholder="placeholders.budgetExample">
+                        <small style="color: var(--text-light); display: block; margin-top: 0.5rem;" data-i18n="incomeBudget.budgetHelp">
+                            What you allow yourself to spend each month (excludes fixed expenses).
+                        </small>
+                    </div>
+                    <div class="budget-bar">
+                        <div class="budget-progress" id="budgetProgress">0%</div>
+                    </div>
+                    <div class="budget-info">
+                        <span id="budgetSpent">0 kr</span>
+                        <span id="budgetTotal">of 0 kr</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title" data-i18n="cards.fixedExpenses">Fixed Expenses</h2>
+                    <form id="fixedExpenseForm">
+                        <div class="form-group">
+                            <label for="fixedName" data-i18n="labels.name">Name</label>
+                            <input type="text" id="fixedName" required placeholder="Rent, Internet, etc." data-i18n-placeholder="placeholders.fixedExample">
+                        </div>
+                        <div class="form-group">
+                            <label for="fixedAmount" id="fixedAmountLabel" data-i18n="labels.amountKr">Amount (kr)</label>
+                            <input type="number" id="fixedAmount" step="0.01" min="0" required placeholder="0.00" data-i18n-placeholder="placeholders.amount">
+                        </div>
+                        <div class="form-group">
+                            <label for="fixedCategory" data-i18n="labels.category">Category</label>
+                            <select id="fixedCategory" required></select>
+                        </div>
+                        <button type="submit" data-i18n="buttons.addFixed">Add Fixed Expense</button>
+                    </form>
+                    <div style="margin-top: 1.5rem;" id="fixedExpensesList"></div>
                 </div>
             </div>
 
@@ -3312,28 +3414,19 @@
                         </div>
 
                         <div class="card">
-                            <h2 class="card-title" data-i18n="cards.incomeBudget">Income & Budget</h2>
-                            <div class="form-group">
-                                <label for="monthlyIncome" id="incomeLabel" data-i18n="labels.monthlyIncomeKr">Monthly Income (kr)</label>
-                                <input type="number" id="monthlyIncome" step="1" min="0" placeholder="35000" onchange="updateIncome()" data-i18n-placeholder="placeholders.incomeExample">
-                                <small style="color: var(--text-light); display: block; margin-top: 0.5rem;" data-i18n="incomeBudget.incomeHelp">
-                                    Used to calculate your savings rate. Stored locally, never sent anywhere.
-                                </small>
-                            </div>
-                            <div class="form-group">
-                                <label for="monthlyBudget" id="budgetLabel" data-i18n="labels.discretionaryBudgetKr">Discretionary Budget (kr)</label>
-                                <input type="number" id="monthlyBudget" step="1" min="0" placeholder="10000" onchange="updateBudget()" data-i18n-placeholder="placeholders.budgetExample">
-                                <small style="color: var(--text-light); display: block; margin-top: 0.5rem;" data-i18n="incomeBudget.budgetHelp">
-                                    What you allow yourself to spend each month (excludes fixed expenses).
-                                </small>
-                            </div>
-                            <div class="budget-bar">
-                                <div class="budget-progress" id="budgetProgress">0%</div>
-                            </div>
-                            <div class="budget-info">
-                                <span id="budgetSpent">0 kr</span>
-                                <span id="budgetTotal">of 0 kr</span>
-                            </div>
+                            <h2 class="card-title" data-i18n="cards.configureCategories">Configure Categories</h2>
+                            <form id="addCategoryForm">
+                                <div class="form-group">
+                                    <label for="newCategoryName" data-i18n="labels.categoryName">Category Name</label>
+                                    <input type="text" id="newCategoryName" required placeholder="e.g., Groceries" data-i18n-placeholder="placeholders.categoryExample">
+                                </div>
+                                <div class="form-group">
+                                    <label for="newCategoryColor" data-i18n="labels.color">Color</label>
+                                    <input type="color" id="newCategoryColor" value="#3b82f6">
+                                </div>
+                                <button type="submit" data-i18n="buttons.addCategory">Add Category</button>
+                            </form>
+                            <div style="margin-top: 1.5rem;" id="categoriesList"></div>
                         </div>
 
                         <div class="card">
@@ -3360,26 +3453,6 @@
                                 </small>
                             </div>
                             <div id="cyclePreview" style="background: var(--bg-alt); padding: 1rem; border-radius: 8px; margin-top: 1rem; font-size: 0.875rem;"></div>
-                        </div>
-
-                        <div class="card">
-                            <h2 class="card-title" data-i18n="cards.fixedExpenses">Fixed Expenses</h2>
-                            <form id="fixedExpenseForm">
-                                <div class="form-group">
-                                    <label for="fixedName" data-i18n="labels.name">Name</label>
-                                    <input type="text" id="fixedName" required placeholder="Rent, Internet, etc." data-i18n-placeholder="placeholders.fixedExample">
-                                </div>
-                                <div class="form-group">
-                                    <label for="fixedAmount" id="fixedAmountLabel" data-i18n="labels.amountKr">Amount (kr)</label>
-                                    <input type="number" id="fixedAmount" step="0.01" min="0" required placeholder="0.00" data-i18n-placeholder="placeholders.amount">
-                                </div>
-                                <div class="form-group">
-                                    <label for="fixedCategory" data-i18n="labels.category">Category</label>
-                                    <select id="fixedCategory" required></select>
-                                </div>
-                                <button type="submit" data-i18n="buttons.addFixed">Add Fixed Expense</button>
-                            </form>
-                            <div style="margin-top: 1.5rem;" id="fixedExpensesList"></div>
                         </div>
 
                         <div class="card">
@@ -3420,18 +3493,6 @@
                                 <label data-i18n="labels.language">Language</label>
                                 <div class="theme-buttons" id="languageButtons" role="tablist"></div>
                             </div>
-                        </div>
-
-                        <div class="card">
-                            <h2 class="card-title" data-i18n="cards.subscriptions">Subscriptions</h2>
-                            <p style="color: var(--text-light); margin-bottom: 1rem; font-size: 0.875rem;" data-i18n="subs.help">
-                                Track your recurring subscriptions and see what they cost. Auto-detected from import data and any you add manually.
-                            </p>
-                            <div id="subsSummary" class="subs-summary"></div>
-                            <div id="subsDetected" class="subs-section" style="display:none;"></div>
-                            <div id="subsActiveList" class="subs-list"></div>
-                            <div id="subsCancelledList" class="subs-list"></div>
-                            <button onclick="openSubscriptionModal(null)" style="margin-top: 1rem;" data-i18n="buttons.addSubscription">+ Add Subscription</button>
                         </div>
                     </div>
                 </div>
@@ -3724,6 +3785,53 @@
         </div>
     </div>
 
+    <!-- Account Modal -->
+    <div class="modal" id="accountModal">
+        <div class="modal-content" style="max-width: 480px;">
+            <div class="modal-header">
+                <h3 class="modal-title" id="accountModalTitle" data-i18n="modals.newAccount">New Account</h3>
+                <button class="modal-close" onclick="closeAccountModal()" data-i18n-aria-label="common.close" aria-label="Close">×</button>
+            </div>
+            <input type="hidden" id="accountId">
+            <div class="form-group">
+                <label for="accountName" data-i18n="labels.accountName">Account Name</label>
+                <input type="text" id="accountName" required placeholder="e.g., Chase Checking" data-i18n-placeholder="placeholders.accountName">
+            </div>
+            <div class="form-group">
+                <label for="accountType" data-i18n="labels.accountType">Type</label>
+                <select id="accountType">
+                    <option value="checking" data-i18n="accountTypes.checking">Checking</option>
+                    <option value="savings"  data-i18n="accountTypes.savings">Savings</option>
+                    <option value="cash"     data-i18n="accountTypes.cash">Cash</option>
+                    <option value="credit"   data-i18n="accountTypes.credit">Credit Card</option>
+                    <option value="investment" data-i18n="accountTypes.investment">Investment</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="accountBalance" id="accountBalanceLabel" data-i18n="labels.startingBalanceKr">Starting Balance (kr)</label>
+                <input type="number" id="accountBalance" step="0.01" placeholder="0.00" data-i18n-placeholder="placeholders.amount">
+            </div>
+            <div class="form-group">
+                <label for="accountColor" data-i18n="labels.color">Color</label>
+                <input type="color" id="accountColor" value="#3b82f6">
+            </div>
+            <div class="form-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="accountLinked">
+                    <span data-i18n="labels.linkedToBank">Linked to a bank (auto-synced)</span>
+                </label>
+                <small style="color: var(--text-light); display: block; margin-top: 0.5rem;" data-i18n="accounts.linkedHelp">
+                    Manual accounts you update yourself are "Unlinked". Real bank-link sync is on the roadmap.
+                </small>
+            </div>
+            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                <button class="btn-secondary" id="accountDeleteBtn" onclick="deleteAccount()" style="flex: 0 0 auto; display: none;" data-i18n="common.delete">Delete</button>
+                <button class="btn-secondary" onclick="closeAccountModal()" style="flex: 1;" data-i18n="common.cancel">Cancel</button>
+                <button onclick="saveAccount()" style="flex: 1;" data-i18n="buttons.saveAccount">Save</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Cut Goal Detail Modal -->
     <div class="modal" id="cutGoalDetailModal">
         <div class="modal-content" style="max-width: 600px;">
@@ -3934,6 +4042,7 @@ let categories = [];
 let goals = [];
 let snapshots = [];
 let subscriptions = [];
+let accounts = [];
 let monthlyBudget = 0;
 let monthlyIncome = 0;
 let currency = 'SEK';
@@ -3981,6 +4090,7 @@ const translations = {
             goals: 'Goals',
             insights: 'Insights',
             reports: 'Reports',
+            recurring: 'Recurring',
             budget: 'Budget',
             settings: 'Settings'
         },
@@ -4024,7 +4134,9 @@ const translations = {
             addToGoal: 'Add to Goal',
             netWorthSnapshot: 'Net Worth Snapshot',
             cutGoalProgress: 'Cut Goal Progress',
-            insight: 'Insight'
+            insight: 'Insight',
+            newAccount: 'New Account',
+            editAccount: 'Edit Account'
         },
         subs: {
             help: 'Track your recurring subscriptions and see what they cost. Auto-detected from import data and any you add manually.',
@@ -4144,8 +4256,21 @@ const translations = {
             amountAndDateRequired: 'Please enter an amount and date'
         },
         accounts: {
-            intro: 'Track balances across your bank accounts, cards, and cash. (Coming soon.)',
-            empty: 'No accounts yet — adding manual + linked accounts is on the roadmap.'
+            intro: 'Track balances across your bank accounts, cards, and cash.',
+            empty: 'No accounts yet — tap "+ Add Account" to add your first one.',
+            totalBalance: 'Total balance',
+            summaryEmpty: 'Add an account to see your total here.',
+            summaryMeta: '{total} accounts · {linked} linked',
+            linked: 'Linked',
+            unlinked: 'Unlinked',
+            linkedHelp: 'Manual accounts you update yourself are "Unlinked". Real bank-link sync is on the roadmap.'
+        },
+        accountTypes: {
+            checking: 'Checking',
+            savings: 'Savings',
+            cash: 'Cash',
+            credit: 'Credit Card',
+            investment: 'Investment'
         },
         reports: {
             intro: 'Custom date-range breakdowns and exports. (Coming soon.)',
@@ -4228,6 +4353,7 @@ const translations = {
             deleteGoal: 'Delete this goal? This cannot be undone.',
             deleteSnapshot: 'Delete this snapshot?',
             deleteSubscription: 'Delete this subscription? This only removes it from your tracking — your expense history is unaffected.',
+            deleteAccount: 'Delete this account? This only removes it from your tracking — your expense history is unaffected.',
             loadDb: 'Load database from {name}? This will replace all current data.'
         },
         errors: {
@@ -4240,6 +4366,7 @@ const translations = {
         },
         cards: {
             accounts: 'Accounts',
+            yourAccounts: 'Your Accounts',
             reports: 'Reports',
             budget: 'Budget',
             addExpense: 'Add Expense',
@@ -4391,6 +4518,12 @@ const translations = {
             light: 'Light',
             dark: 'Dark',
             includeFixed: 'Include Fixed Expenses',
+            accountName: 'Account Name',
+            accountType: 'Type',
+            startingBalance: 'Starting Balance',
+            startingBalanceKr: 'Starting Balance (kr)',
+            startingBalanceUsd: 'Starting Balance ($)',
+            linkedToBank: 'Linked to a bank (auto-synced)',
             name: 'Name',
             keyword: 'Keyword',
             keywords: 'Keywords (for auto-categorization)',
@@ -4412,6 +4545,7 @@ const translations = {
             incomeExample: '35000',
             budgetExample: '10000',
             fixedExample: 'Rent, Internet, etc.',
+            accountName: 'e.g., Chase Checking',
             keywordExample: 'e.g., ica, coop, mat',
             goalNameExample: 'Japan trip, emergency fund, new laptop',
             noteExample: 'Bonus, side income, etc.',
@@ -4425,6 +4559,8 @@ const translations = {
             addCategory: 'Add Category',
             addGoal: 'Add Goal',
             addSubscription: '+ Add Subscription',
+            addAccount: '+ Add Account',
+            saveAccount: 'Save Account',
             addRepayment: 'Add Repayment',
             addKeyword: 'Add',
             saveGoal: 'Save Goal',
@@ -4465,7 +4601,8 @@ const translations = {
             amountToAddUsd: 'Amount to Add ($)',
             targetDate: 'Target Date (Optional)',
             autoTracked: 'Auto-tracked progress',
-            autoTrackedShort: 'Auto-tracked',
+            autoTrackedShort: 'Auto',
+            autoTrackedHelp: 'Progress is computed automatically from your spending — no manual contributions.',
             startingBalance: 'Starting balance',
             deadlineOptional: 'Deadline (optional)',
             newSavingsGoal: 'New Savings Goal',
@@ -4527,6 +4664,7 @@ const translations = {
             goals: 'Mål',
             insights: 'Insikter',
             reports: 'Rapporter',
+            recurring: 'Återkommande',
             budget: 'Budget',
             settings: 'Inställningar'
         },
@@ -4570,7 +4708,9 @@ const translations = {
             addToGoal: 'Bidra till mål',
             netWorthSnapshot: 'Ögonblicksbild av nettoförmögenhet',
             cutGoalProgress: 'Sparmål via utgiftsminskning',
-            insight: 'Insikt'
+            insight: 'Insikt',
+            newAccount: 'Nytt konto',
+            editAccount: 'Redigera konto'
         },
         subs: {
             help: 'Håll koll på återkommande prenumerationer och se vad de kostar. Identifieras automatiskt från importerad data, eller läggs till manuellt.',
@@ -4690,8 +4830,21 @@ const translations = {
             amountAndDateRequired: 'Ange ett belopp och datum'
         },
         accounts: {
-            intro: 'Håll koll på saldon för bankkonton, kort och kontanter. (Kommer snart.)',
-            empty: 'Inga konton än — manuella och kopplade konton är på vägen.'
+            intro: 'Håll koll på saldon för bankkonton, kort och kontanter.',
+            empty: 'Inga konton än — tryck på "+ Lägg till konto" för att lägga till ditt första.',
+            totalBalance: 'Totalt saldo',
+            summaryEmpty: 'Lägg till ett konto för att se totalen här.',
+            summaryMeta: '{total} konton · {linked} kopplade',
+            linked: 'Kopplad',
+            unlinked: 'Manuell',
+            linkedHelp: 'Konton du uppdaterar själv är "Manuella". Riktig banklänkning är på vägen.'
+        },
+        accountTypes: {
+            checking: 'Lönekonto',
+            savings: 'Sparkonto',
+            cash: 'Kontanter',
+            credit: 'Kreditkort',
+            investment: 'Investering'
         },
         reports: {
             intro: 'Anpassade tidsintervall och export. (Kommer snart.)',
@@ -4774,6 +4927,7 @@ const translations = {
             deleteGoal: 'Ta bort detta mål? Det går inte att ångra.',
             deleteSnapshot: 'Ta bort denna ögonblicksbild?',
             deleteSubscription: 'Ta bort denna prenumeration? Den tas endast bort från din spårning — din utgiftshistorik påverkas inte.',
+            deleteAccount: 'Ta bort detta konto? Det tas endast bort från din spårning — din utgiftshistorik påverkas inte.',
             loadDb: 'Läs in databas från {name}? All nuvarande data ersätts.'
         },
         errors: {
@@ -4786,6 +4940,7 @@ const translations = {
         },
         cards: {
             accounts: 'Konton',
+            yourAccounts: 'Dina konton',
             reports: 'Rapporter',
             budget: 'Budget',
             addExpense: 'Lägg till utgift',
@@ -4937,6 +5092,12 @@ const translations = {
             light: 'Ljust',
             dark: 'Mörkt',
             includeFixed: 'Inkludera fasta utgifter',
+            accountName: 'Kontonamn',
+            accountType: 'Typ',
+            startingBalance: 'Ingående saldo',
+            startingBalanceKr: 'Ingående saldo (kr)',
+            startingBalanceUsd: 'Ingående saldo ($)',
+            linkedToBank: 'Kopplad till bank (synkas automatiskt)',
             name: 'Namn',
             keyword: 'Sökord',
             keywords: 'Sökord (för autokategorisering)',
@@ -4958,6 +5119,7 @@ const translations = {
             incomeExample: '35000',
             budgetExample: '10000',
             fixedExample: 'Hyra, internet, osv.',
+            accountName: 't.ex. SEB Lönekonto',
             keywordExample: 't.ex. ica, coop, mat',
             goalNameExample: 'Japanresa, sparbuffert, ny laptop',
             noteExample: 'Bonus, sidoinkomst, osv.',
@@ -4971,6 +5133,8 @@ const translations = {
             addCategory: 'Lägg till kategori',
             addGoal: 'Lägg till mål',
             addSubscription: '+ Lägg till prenumeration',
+            addAccount: '+ Lägg till konto',
+            saveAccount: 'Spara konto',
             addRepayment: 'Lägg till återbetalning',
             addKeyword: 'Lägg till',
             saveGoal: 'Spara mål',
@@ -5011,7 +5175,8 @@ const translations = {
             amountToAddUsd: 'Belopp att lägga till ($)',
             targetDate: 'Måldatum (valfritt)',
             autoTracked: 'Autoföljda framsteg',
-            autoTrackedShort: 'Autoföljs',
+            autoTrackedShort: 'Auto',
+            autoTrackedHelp: 'Framstegen räknas automatiskt från dina utgifter — inga manuella bidrag.',
             startingBalance: 'Ingående saldo',
             deadlineOptional: 'Deadline (valfritt)',
             newSavingsGoal: 'Nytt sparmål',
@@ -5126,6 +5291,7 @@ function applyLanguage() {
     if (typeof renderGoals === 'function') renderGoals();
     if (typeof renderInsights === 'function') renderInsights();
     if (typeof renderSubscriptions === 'function') renderSubscriptions();
+    if (typeof renderAccountsCard === 'function') renderAccountsCard();
     if (typeof updateCyclePreview === 'function') updateCyclePreview();
     if (typeof renderLanguageOptions === 'function') renderLanguageOptions();
     // Update tab title in topbar to match the active tab in the new language
@@ -5467,6 +5633,17 @@ function ensureSchema() {
             created_date TEXT NOT NULL
         )
     `);
+    db.run(`
+        CREATE TABLE IF NOT EXISTS accounts (
+            id INTEGER PRIMARY KEY,
+            name TEXT NOT NULL,
+            type TEXT DEFAULT 'checking',
+            balance REAL DEFAULT 0,
+            linked INTEGER DEFAULT 0,
+            color TEXT DEFAULT '#3b82f6',
+            created_date TEXT NOT NULL
+        )
+    `);
     saveDatabase();
 }
 
@@ -5548,12 +5725,20 @@ function createTables() {
         )
     `);
 
-    // Insert default categories. INSERT OR IGNORE preserves any rows
-    // that already exist; the UPDATE that follows force-syncs the
-    // essential flag for built-in seed categories so existing databases
-    // pick up Groceries-as-essential without overwriting custom user
-    // categories.
-    const stmt = db.prepare('INSERT OR IGNORE INTO categories (id, name, color, keywords, essential) VALUES (?, ?, ?, ?, ?)');
+    db.run(`
+        CREATE TABLE IF NOT EXISTS accounts (
+            id INTEGER PRIMARY KEY,
+            name TEXT NOT NULL,
+            type TEXT DEFAULT 'checking',
+            balance REAL DEFAULT 0,
+            linked INTEGER DEFAULT 0,
+            color TEXT DEFAULT '#3b82f6',
+            created_date TEXT NOT NULL
+        )
+    `);
+
+    // Insert default categories
+    const stmt = db.prepare('INSERT OR IGNORE INTO categories (id, name, color, keywords) VALUES (?, ?, ?, ?)');
     defaultCategories.forEach(cat => {
         stmt.run([cat.id, cat.name, cat.color, JSON.stringify(cat.keywords), cat.essential ? 1 : 0]);
     });
@@ -5710,6 +5895,23 @@ function loadDataFromDB() {
             createdDate: row[9]
         })) : [];
     } catch(e) { subscriptions = []; }
+
+    // Load accounts
+    try {
+        const accountsResult = db.exec(`
+            SELECT id, name, type, balance, linked, color, created_date
+            FROM accounts ORDER BY created_date ASC
+        `);
+        accounts = accountsResult.length > 0 ? accountsResult[0].values.map(row => ({
+            id: row[0],
+            name: row[1],
+            type: row[2] || 'checking',
+            balance: row[3] || 0,
+            linked: !!row[4],
+            color: row[5] || '#3b82f6',
+            createdDate: row[6]
+        })) : [];
+    } catch(e) { accounts = []; }
 }
 
 function setSetting(key, value) {
@@ -5777,7 +5979,9 @@ document.addEventListener('DOMContentLoaded', async function() {
     renderPaletteMenu();
     renderLanguageOptions();
     applyLanguage();
-    document.getElementById('date').valueAsDate = new Date();
+    // The in-tab Add Expense form was removed; #date may not exist.
+    const dateInput = document.getElementById('date');
+    if (dateInput) dateInput.valueAsDate = new Date();
     document.getElementById('quickDate').valueAsDate = new Date();
     document.getElementById('snapshotDate').valueAsDate = new Date();
     document.getElementById('currencySelect').value = currency;
@@ -5799,7 +6003,10 @@ document.addEventListener('DOMContentLoaded', async function() {
     renderFixedExpenses();
     renderCyclePreview();
 
-    document.getElementById('expenseForm').addEventListener('submit', addExpense);
+    // The in-tab Add Expense form was removed; the quick-add modal is the
+    // single entry point now. Guard so this is a no-op if absent.
+    const expenseForm = document.getElementById('expenseForm');
+    if (expenseForm) expenseForm.addEventListener('submit', addExpense);
     document.getElementById('quickAddForm').addEventListener('submit', addExpenseFromQuick);
     document.getElementById('fixedExpenseForm').addEventListener('submit', addFixedExpense);
     document.getElementById('addCategoryForm').addEventListener('submit', addCategory);
@@ -5807,7 +6014,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     document.getElementById('subscriptionForm').addEventListener('submit', saveSubscription);
 
     renderSubscriptionsCard();
-    
+    renderAccountsCard();
+
     const fileUpload = document.getElementById('fileUpload');
     const fileInput = document.getElementById('excelFile');
     fileUpload.addEventListener('click', () => fileInput.click());
@@ -5883,13 +6091,14 @@ function renderLanguageOptions() {
 
 // Tabs
 const TAB_META = {
-    dashboard:    { title: 'Dashboard',    addable: true },
-    transactions: { title: 'Transactions', addable: true },
-    accounts:     { title: 'Accounts',     addable: false },
-    goals:        { title: 'Goals',        addable: true },
+    dashboard:    { title: 'Dashboard',    addable: true  },
+    transactions: { title: 'Transactions', addable: true  },
+    accounts:     { title: 'Accounts',     addable: true  },
+    goals:        { title: 'Goals',        addable: true  },
     insights:     { title: 'Insights',     addable: false },
     reports:      { title: 'Reports',      addable: false },
-    budget:       { title: 'Budget',       addable: false },
+    recurring:    { title: 'Recurring',    addable: true  },
+    budget:       { title: 'Budget',       addable: true  },
     settings:     { title: 'Settings',     addable: false }
 };
 
@@ -5922,6 +6131,14 @@ function switchTab(tabName, btnEl) {
         renderGoals();
     } else if (tabName === 'insights') {
         renderInsights();
+    } else if (tabName === 'reports') {
+        // Category Breakdown lives here now; chart needs a re-tick when
+        // the canvas first becomes visible.
+        if (typeof updateCharts === 'function') updateCharts();
+    } else if (tabName === 'recurring') {
+        if (typeof renderSubscriptionsCard === 'function') renderSubscriptionsCard();
+    } else if (tabName === 'accounts') {
+        if (typeof renderAccountsCard === 'function') renderAccountsCard();
     }
 }
 
@@ -5931,6 +6148,19 @@ function topbarAdd() {
     const tabName = active ? active.dataset.tab : 'transactions';
     if (tabName === 'goals') {
         if (typeof openGoalModal === 'function') openGoalModal(null);
+    } else if (tabName === 'accounts') {
+        if (typeof openAccountModal === 'function') openAccountModal(null);
+    } else if (tabName === 'recurring') {
+        if (typeof openSubscriptionModal === 'function') openSubscriptionModal(null);
+    } else if (tabName === 'budget') {
+        // Focus the Add-Fixed form's Name field — the form is inline on the Budget tab
+        const nameInput = document.getElementById('fixedName');
+        if (nameInput) {
+            nameInput.focus();
+            nameInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else if (typeof openQuickAdd === 'function') {
+            openQuickAdd();
+        }
     } else {
         // Dashboard & Transactions both add an expense
         if (typeof openQuickAdd === 'function') openQuickAdd();
@@ -5970,6 +6200,7 @@ function updateLabels() {
     set('goalCurrentLabel',    'goals.alreadySaved' + k);
     set('goalContribLabel',    'goals.amountToAdd' + k);
     set('subAmountLabel',      'subs.amountPerCycle' + k);
+    set('accountBalanceLabel', 'labels.startingBalance' + k);
     set('obBudgetLabel',       'onboarding.monthlyBudget' + (currency === 'SEK' ? 'Kr' : 'Usd'));
     set('obGoalAmountLabel',   'goals.targetAmount' + k);
 }
@@ -6228,8 +6459,10 @@ function addExpense(e) {
         date, swishRepayments: []
     });
 
-    document.getElementById('expenseForm').reset();
-    document.getElementById('date').valueAsDate = new Date();
+    const _form = document.getElementById('expenseForm');
+    if (_form) _form.reset();
+    const _date = document.getElementById('date');
+    if (_date) _date.valueAsDate = new Date();
     updateDashboard();
     updateCharts();
 }
@@ -6264,6 +6497,131 @@ function deleteFixedExpense(id) {
     renderFixedExpenses();
     updateDashboard();
     updateCharts();
+}
+
+// =====================================================
+// ACCOUNTS — manual + (future) linked
+// =====================================================
+let currentEditingAccount = null;
+
+function renderAccountsCard() {
+    renderAccountsSummary();
+    renderAccountsList();
+}
+
+function renderAccountsSummary() {
+    const totalEl = document.getElementById('accountsTotalBalance');
+    const metaEl = document.getElementById('accountsTotalMeta');
+    if (!totalEl || !metaEl) return;
+    const total = accounts.reduce((sum, a) => sum + (a.balance || 0), 0);
+    totalEl.textContent = formatCurrency(total);
+    if (accounts.length === 0) {
+        metaEl.textContent = t('accounts.summaryEmpty');
+    } else {
+        const linked = accounts.filter(a => a.linked).length;
+        metaEl.textContent = t('accounts.summaryMeta', { total: accounts.length, linked });
+    }
+}
+
+function renderAccountsList() {
+    const container = document.getElementById('accountsList');
+    if (!container) return;
+    if (accounts.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state" style="margin-top: 0;">
+                <div class="empty-state-icon-svg">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 40px; height: 40px;"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M2 10h20"/><path d="M6 15h2"/><path d="M11 15h2"/></svg>
+                </div>
+                <div data-i18n="accounts.empty">No accounts yet — tap "+ Add Account" to add your first one.</div>
+            </div>
+        `;
+        applyLanguage();
+        return;
+    }
+    container.innerHTML = accounts.map(a => {
+        const tagKey = a.linked ? 'accounts.linked' : 'accounts.unlinked';
+        const tagClass = a.linked ? 'account-tag linked' : 'account-tag unlinked';
+        const typeLabel = t('accountTypes.' + (a.type || 'checking'));
+        return `
+            <div class="account-row" style="--account-color: ${a.color};" onclick="openAccountModal(${a.id})" role="button" tabindex="0">
+                <div class="account-row-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M2 10h20"/></svg>
+                </div>
+                <div class="account-row-text">
+                    <div class="account-row-name">${a.name} <span class="${tagClass}">${t(tagKey)}</span></div>
+                    <div class="account-row-meta">${typeLabel}</div>
+                </div>
+                <div class="account-row-balance">${formatCurrency(a.balance || 0)}</div>
+            </div>
+        `;
+    }).join('');
+}
+
+function openAccountModal(id) {
+    currentEditingAccount = id;
+    const titleEl = document.getElementById('accountModalTitle');
+    const deleteBtn = document.getElementById('accountDeleteBtn');
+    if (id != null) {
+        const a = accounts.find(x => x.id === id);
+        if (!a) return;
+        titleEl.textContent = t('modals.editAccount');
+        deleteBtn.style.display = '';
+        document.getElementById('accountId').value = a.id;
+        document.getElementById('accountName').value = a.name;
+        document.getElementById('accountType').value = a.type || 'checking';
+        document.getElementById('accountBalance').value = a.balance != null ? a.balance : 0;
+        document.getElementById('accountColor').value = a.color || '#3b82f6';
+        document.getElementById('accountLinked').checked = !!a.linked;
+    } else {
+        titleEl.textContent = t('modals.newAccount');
+        deleteBtn.style.display = 'none';
+        document.getElementById('accountId').value = '';
+        document.getElementById('accountName').value = '';
+        document.getElementById('accountType').value = 'checking';
+        document.getElementById('accountBalance').value = '';
+        document.getElementById('accountColor').value = '#3b82f6';
+        document.getElementById('accountLinked').checked = false;
+    }
+    document.getElementById('accountModal').classList.add('active');
+}
+
+function closeAccountModal() {
+    document.getElementById('accountModal').classList.remove('active');
+    currentEditingAccount = null;
+}
+
+function saveAccount() {
+    const name = document.getElementById('accountName').value.trim();
+    if (!name) return;
+    const type = document.getElementById('accountType').value;
+    const balance = parseFloat(document.getElementById('accountBalance').value || '0') || 0;
+    const color = document.getElementById('accountColor').value;
+    const linked = document.getElementById('accountLinked').checked ? 1 : 0;
+    const idStr = document.getElementById('accountId').value;
+
+    if (idStr) {
+        const id = parseInt(idStr, 10);
+        db.run('UPDATE accounts SET name = ?, type = ?, balance = ?, linked = ?, color = ? WHERE id = ?',
+            [name, type, balance, linked, color, id]);
+    } else {
+        const id = Date.now();
+        db.run('INSERT INTO accounts (id, name, type, balance, linked, color, created_date) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            [id, name, type, balance, linked, color, isoDate(new Date())]);
+    }
+    saveDatabase();
+    loadDataFromDB();
+    renderAccountsCard();
+    closeAccountModal();
+}
+
+function deleteAccount() {
+    if (currentEditingAccount == null) return;
+    if (!confirm(t('confirms.deleteAccount'))) return;
+    db.run('DELETE FROM accounts WHERE id = ?', [currentEditingAccount]);
+    saveDatabase();
+    loadDataFromDB();
+    renderAccountsCard();
+    closeAccountModal();
 }
 
 function renderFixedExpenses() {
@@ -7874,12 +8232,16 @@ function renderGoals() {
             ? `openCutGoalDetail(${g.id})`
             : (isComplete ? `openGoalModal(${g.id})` : `openGoalContribModal(${g.id})`);
 
+        const autoBadge = isCut
+            ? `<span class="goal-row-auto" title="${t('goals.autoTrackedHelp')}">${t('goals.autoTrackedShort')}</span>`
+            : '';
+
         return `
-            <div class="goal-row ${isComplete ? 'complete' : ''}" style="--goal-color: ${g.color};" onclick="${clickHandler}" role="button" tabindex="0">
+            <div class="goal-row ${isComplete ? 'complete' : ''} ${isCut ? 'cut-goal' : ''}" style="--goal-color: ${g.color};" onclick="${clickHandler}" role="button" tabindex="0">
                 <div class="goal-row-head">
                     <div class="goal-row-icon">${svgIcon(iconName)}</div>
                     <div class="goal-row-text">
-                        <div class="goal-row-name">${g.name}</div>
+                        <div class="goal-row-name">${g.name}${autoBadge}</div>
                         ${dateLabel ? `<div class="goal-row-deadline">${dateLabel}</div>` : ''}
                     </div>
                     <div class="goal-row-amount">
@@ -9388,6 +9750,7 @@ function formatDate(dateStr) {
         goalContribModal: closeGoalContribModal,
         snapshotModal: closeSnapshotModal,
         cutGoalDetailModal: closeCutGoalDetail,
+        accountModal: closeAccountModal,
     };
     document.addEventListener('click', function (e) {
         const el = e.target;
