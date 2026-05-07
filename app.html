@@ -2081,6 +2081,103 @@
             box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18);
         }
 
+        /* ============== ACCOUNTS TAB ============== */
+        .account-summary-card {
+            text-align: center;
+        }
+        .account-summary-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-light);
+            font-family: 'IBM Plex Mono', monospace;
+        }
+        .account-summary-value {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 2.75rem;
+            font-weight: 700;
+            line-height: 1.05;
+            margin-top: 0.4rem;
+            color: var(--primary);
+        }
+        .account-summary-meta {
+            margin-top: 0.4rem;
+            font-size: 0.875rem;
+            color: var(--text-light);
+        }
+
+        .accounts-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+        .account-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.1rem;
+            background: color-mix(in srgb, var(--text) 5%, transparent);
+            border: 1px solid color-mix(in srgb, var(--text) 12%, transparent);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.15s ease, border-color 0.15s ease;
+        }
+        .account-row:hover {
+            background: color-mix(in srgb, var(--text) 9%, transparent);
+            border-color: color-mix(in srgb, var(--text) 18%, transparent);
+        }
+        .account-row-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: color-mix(in srgb, var(--account-color, var(--accent)) 22%, transparent);
+            color: var(--account-color, var(--accent));
+            flex-shrink: 0;
+        }
+        .account-row-icon svg { width: 20px; height: 20px; }
+        .account-row-text { flex: 1; min-width: 0; }
+        .account-row-name {
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 700;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .account-row-meta {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-top: 0.15rem;
+        }
+        .account-row-balance {
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 700;
+            color: var(--text);
+            white-space: nowrap;
+        }
+
+        .account-tag {
+            display: inline-block;
+            padding: 0.1rem 0.55rem;
+            border-radius: 999px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+        .account-tag.linked {
+            background: color-mix(in srgb, var(--success) 18%, transparent);
+            color: var(--success);
+        }
+        .account-tag.unlinked {
+            background: color-mix(in srgb, var(--text) 12%, transparent);
+            color: var(--text-light);
+        }
+
         /* ============== GOALS TAB ============== */
         .goals-grid {
             display: grid;
@@ -3151,17 +3248,18 @@
 
             <!-- Accounts Tab -->
             <div class="tab-content" id="accounts-tab">
+                <!-- Summary card -->
+                <div class="card account-summary-card">
+                    <div class="account-summary-label" data-i18n="accounts.totalBalance">Total balance</div>
+                    <div class="account-summary-value" id="accountsTotalBalance">—</div>
+                    <div class="account-summary-meta" id="accountsTotalMeta"></div>
+                </div>
+
+                <!-- Accounts list -->
                 <div class="card">
-                    <h2 class="card-title" data-i18n="cards.accounts">Accounts</h2>
-                    <p style="color: var(--text-light); margin-bottom: 1.5rem;" data-i18n="accounts.intro">
-                        Track balances across your bank accounts, cards, and cash. (Coming soon.)
-                    </p>
-                    <div class="empty-state">
-                        <div class="empty-state-icon-svg">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 48px; height: 48px;"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M2 10h20"/><path d="M6 15h2"/><path d="M11 15h2"/></svg>
-                        </div>
-                        <div data-i18n="accounts.empty">No accounts yet — adding manual + linked accounts is on the roadmap.</div>
-                    </div>
+                    <h2 class="card-title" data-i18n="cards.yourAccounts">Your Accounts</h2>
+                    <div id="accountsList" class="accounts-list"></div>
+                    <button onclick="openAccountModal(null)" style="margin-top: 1rem;" data-i18n="buttons.addAccount">+ Add Account</button>
                 </div>
             </div>
 
@@ -3666,6 +3764,53 @@
         </div>
     </div>
 
+    <!-- Account Modal -->
+    <div class="modal" id="accountModal">
+        <div class="modal-content" style="max-width: 480px;">
+            <div class="modal-header">
+                <h3 class="modal-title" id="accountModalTitle" data-i18n="modals.newAccount">New Account</h3>
+                <button class="modal-close" onclick="closeAccountModal()" data-i18n-aria-label="common.close" aria-label="Close">×</button>
+            </div>
+            <input type="hidden" id="accountId">
+            <div class="form-group">
+                <label for="accountName" data-i18n="labels.accountName">Account Name</label>
+                <input type="text" id="accountName" required placeholder="e.g., Chase Checking" data-i18n-placeholder="placeholders.accountName">
+            </div>
+            <div class="form-group">
+                <label for="accountType" data-i18n="labels.accountType">Type</label>
+                <select id="accountType">
+                    <option value="checking" data-i18n="accountTypes.checking">Checking</option>
+                    <option value="savings"  data-i18n="accountTypes.savings">Savings</option>
+                    <option value="cash"     data-i18n="accountTypes.cash">Cash</option>
+                    <option value="credit"   data-i18n="accountTypes.credit">Credit Card</option>
+                    <option value="investment" data-i18n="accountTypes.investment">Investment</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="accountBalance" id="accountBalanceLabel" data-i18n="labels.startingBalanceKr">Starting Balance (kr)</label>
+                <input type="number" id="accountBalance" step="0.01" placeholder="0.00" data-i18n-placeholder="placeholders.amount">
+            </div>
+            <div class="form-group">
+                <label for="accountColor" data-i18n="labels.color">Color</label>
+                <input type="color" id="accountColor" value="#3b82f6">
+            </div>
+            <div class="form-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="accountLinked">
+                    <span data-i18n="labels.linkedToBank">Linked to a bank (auto-synced)</span>
+                </label>
+                <small style="color: var(--text-light); display: block; margin-top: 0.5rem;" data-i18n="accounts.linkedHelp">
+                    Manual accounts you update yourself are "Unlinked". Real bank-link sync is on the roadmap.
+                </small>
+            </div>
+            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                <button class="btn-secondary" id="accountDeleteBtn" onclick="deleteAccount()" style="flex: 0 0 auto; display: none;" data-i18n="common.delete">Delete</button>
+                <button class="btn-secondary" onclick="closeAccountModal()" style="flex: 1;" data-i18n="common.cancel">Cancel</button>
+                <button onclick="saveAccount()" style="flex: 1;" data-i18n="buttons.saveAccount">Save</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Cut Goal Detail Modal -->
     <div class="modal" id="cutGoalDetailModal">
         <div class="modal-content" style="max-width: 600px;">
@@ -3863,6 +4008,7 @@ let categories = [];
 let goals = [];
 let snapshots = [];
 let subscriptions = [];
+let accounts = [];
 let monthlyBudget = 0;
 let monthlyIncome = 0;
 let currency = 'SEK';
@@ -3954,7 +4100,9 @@ const translations = {
             addToGoal: 'Add to Goal',
             netWorthSnapshot: 'Net Worth Snapshot',
             cutGoalProgress: 'Cut Goal Progress',
-            insight: 'Insight'
+            insight: 'Insight',
+            newAccount: 'New Account',
+            editAccount: 'Edit Account'
         },
         subs: {
             help: 'Track your recurring subscriptions and see what they cost. Auto-detected from import data and any you add manually.',
@@ -4070,8 +4218,21 @@ const translations = {
             amountAndDateRequired: 'Please enter an amount and date'
         },
         accounts: {
-            intro: 'Track balances across your bank accounts, cards, and cash. (Coming soon.)',
-            empty: 'No accounts yet — adding manual + linked accounts is on the roadmap.'
+            intro: 'Track balances across your bank accounts, cards, and cash.',
+            empty: 'No accounts yet — tap "+ Add Account" to add your first one.',
+            totalBalance: 'Total balance',
+            summaryEmpty: 'Add an account to see your total here.',
+            summaryMeta: '{total} accounts · {linked} linked',
+            linked: 'Linked',
+            unlinked: 'Unlinked',
+            linkedHelp: 'Manual accounts you update yourself are "Unlinked". Real bank-link sync is on the roadmap.'
+        },
+        accountTypes: {
+            checking: 'Checking',
+            savings: 'Savings',
+            cash: 'Cash',
+            credit: 'Credit Card',
+            investment: 'Investment'
         },
         reports: {
             intro: 'Custom date-range breakdowns and exports. (Coming soon.)',
@@ -4154,6 +4315,7 @@ const translations = {
             deleteGoal: 'Delete this goal? This cannot be undone.',
             deleteSnapshot: 'Delete this snapshot?',
             deleteSubscription: 'Delete this subscription? This only removes it from your tracking — your expense history is unaffected.',
+            deleteAccount: 'Delete this account? This only removes it from your tracking — your expense history is unaffected.',
             loadDb: 'Load database from {name}? This will replace all current data.'
         },
         errors: {
@@ -4166,6 +4328,7 @@ const translations = {
         },
         cards: {
             accounts: 'Accounts',
+            yourAccounts: 'Your Accounts',
             reports: 'Reports',
             budget: 'Budget',
             addExpense: 'Add Expense',
@@ -4317,6 +4480,12 @@ const translations = {
             light: 'Light',
             dark: 'Dark',
             includeFixed: 'Include Fixed Expenses',
+            accountName: 'Account Name',
+            accountType: 'Type',
+            startingBalance: 'Starting Balance',
+            startingBalanceKr: 'Starting Balance (kr)',
+            startingBalanceUsd: 'Starting Balance ($)',
+            linkedToBank: 'Linked to a bank (auto-synced)',
             name: 'Name',
             keyword: 'Keyword',
             keywords: 'Keywords (for auto-categorization)',
@@ -4338,6 +4507,7 @@ const translations = {
             incomeExample: '35000',
             budgetExample: '10000',
             fixedExample: 'Rent, Internet, etc.',
+            accountName: 'e.g., Chase Checking',
             keywordExample: 'e.g., ica, coop, mat',
             goalNameExample: 'Japan trip, emergency fund, new laptop',
             noteExample: 'Bonus, side income, etc.',
@@ -4351,6 +4521,8 @@ const translations = {
             addCategory: 'Add Category',
             addGoal: 'Add Goal',
             addSubscription: '+ Add Subscription',
+            addAccount: '+ Add Account',
+            saveAccount: 'Save Account',
             addRepayment: 'Add Repayment',
             addKeyword: 'Add',
             saveGoal: 'Save Goal',
@@ -4498,7 +4670,9 @@ const translations = {
             addToGoal: 'Bidra till mål',
             netWorthSnapshot: 'Ögonblicksbild av nettoförmögenhet',
             cutGoalProgress: 'Sparmål via utgiftsminskning',
-            insight: 'Insikt'
+            insight: 'Insikt',
+            newAccount: 'Nytt konto',
+            editAccount: 'Redigera konto'
         },
         subs: {
             help: 'Håll koll på återkommande prenumerationer och se vad de kostar. Identifieras automatiskt från importerad data, eller läggs till manuellt.',
@@ -4614,8 +4788,21 @@ const translations = {
             amountAndDateRequired: 'Ange ett belopp och datum'
         },
         accounts: {
-            intro: 'Håll koll på saldon för bankkonton, kort och kontanter. (Kommer snart.)',
-            empty: 'Inga konton än — manuella och kopplade konton är på vägen.'
+            intro: 'Håll koll på saldon för bankkonton, kort och kontanter.',
+            empty: 'Inga konton än — tryck på "+ Lägg till konto" för att lägga till ditt första.',
+            totalBalance: 'Totalt saldo',
+            summaryEmpty: 'Lägg till ett konto för att se totalen här.',
+            summaryMeta: '{total} konton · {linked} kopplade',
+            linked: 'Kopplad',
+            unlinked: 'Manuell',
+            linkedHelp: 'Konton du uppdaterar själv är "Manuella". Riktig banklänkning är på vägen.'
+        },
+        accountTypes: {
+            checking: 'Lönekonto',
+            savings: 'Sparkonto',
+            cash: 'Kontanter',
+            credit: 'Kreditkort',
+            investment: 'Investering'
         },
         reports: {
             intro: 'Anpassade tidsintervall och export. (Kommer snart.)',
@@ -4698,6 +4885,7 @@ const translations = {
             deleteGoal: 'Ta bort detta mål? Det går inte att ångra.',
             deleteSnapshot: 'Ta bort denna ögonblicksbild?',
             deleteSubscription: 'Ta bort denna prenumeration? Den tas endast bort från din spårning — din utgiftshistorik påverkas inte.',
+            deleteAccount: 'Ta bort detta konto? Det tas endast bort från din spårning — din utgiftshistorik påverkas inte.',
             loadDb: 'Läs in databas från {name}? All nuvarande data ersätts.'
         },
         errors: {
@@ -4710,6 +4898,7 @@ const translations = {
         },
         cards: {
             accounts: 'Konton',
+            yourAccounts: 'Dina konton',
             reports: 'Rapporter',
             budget: 'Budget',
             addExpense: 'Lägg till utgift',
@@ -4861,6 +5050,12 @@ const translations = {
             light: 'Ljust',
             dark: 'Mörkt',
             includeFixed: 'Inkludera fasta utgifter',
+            accountName: 'Kontonamn',
+            accountType: 'Typ',
+            startingBalance: 'Ingående saldo',
+            startingBalanceKr: 'Ingående saldo (kr)',
+            startingBalanceUsd: 'Ingående saldo ($)',
+            linkedToBank: 'Kopplad till bank (synkas automatiskt)',
             name: 'Namn',
             keyword: 'Sökord',
             keywords: 'Sökord (för autokategorisering)',
@@ -4882,6 +5077,7 @@ const translations = {
             incomeExample: '35000',
             budgetExample: '10000',
             fixedExample: 'Hyra, internet, osv.',
+            accountName: 't.ex. SEB Lönekonto',
             keywordExample: 't.ex. ica, coop, mat',
             goalNameExample: 'Japanresa, sparbuffert, ny laptop',
             noteExample: 'Bonus, sidoinkomst, osv.',
@@ -4895,6 +5091,8 @@ const translations = {
             addCategory: 'Lägg till kategori',
             addGoal: 'Lägg till mål',
             addSubscription: '+ Lägg till prenumeration',
+            addAccount: '+ Lägg till konto',
+            saveAccount: 'Spara konto',
             addRepayment: 'Lägg till återbetalning',
             addKeyword: 'Lägg till',
             saveGoal: 'Spara mål',
@@ -5051,6 +5249,7 @@ function applyLanguage() {
     if (typeof renderGoals === 'function') renderGoals();
     if (typeof renderInsights === 'function') renderInsights();
     if (typeof renderSubscriptions === 'function') renderSubscriptions();
+    if (typeof renderAccountsCard === 'function') renderAccountsCard();
     if (typeof updateCyclePreview === 'function') updateCyclePreview();
     if (typeof renderLanguageOptions === 'function') renderLanguageOptions();
     // Update tab title in topbar to match the active tab in the new language
@@ -5391,6 +5590,17 @@ function ensureSchema() {
             created_date TEXT NOT NULL
         )
     `);
+    db.run(`
+        CREATE TABLE IF NOT EXISTS accounts (
+            id INTEGER PRIMARY KEY,
+            name TEXT NOT NULL,
+            type TEXT DEFAULT 'checking',
+            balance REAL DEFAULT 0,
+            linked INTEGER DEFAULT 0,
+            color TEXT DEFAULT '#3b82f6',
+            created_date TEXT NOT NULL
+        )
+    `);
     saveDatabase();
 }
 
@@ -5467,6 +5677,18 @@ function createTables() {
             note TEXT,
             source TEXT DEFAULT 'manual',
             match_key TEXT,
+            created_date TEXT NOT NULL
+        )
+    `);
+
+    db.run(`
+        CREATE TABLE IF NOT EXISTS accounts (
+            id INTEGER PRIMARY KEY,
+            name TEXT NOT NULL,
+            type TEXT DEFAULT 'checking',
+            balance REAL DEFAULT 0,
+            linked INTEGER DEFAULT 0,
+            color TEXT DEFAULT '#3b82f6',
             created_date TEXT NOT NULL
         )
     `);
@@ -5623,6 +5845,23 @@ function loadDataFromDB() {
             createdDate: row[9]
         })) : [];
     } catch(e) { subscriptions = []; }
+
+    // Load accounts
+    try {
+        const accountsResult = db.exec(`
+            SELECT id, name, type, balance, linked, color, created_date
+            FROM accounts ORDER BY created_date ASC
+        `);
+        accounts = accountsResult.length > 0 ? accountsResult[0].values.map(row => ({
+            id: row[0],
+            name: row[1],
+            type: row[2] || 'checking',
+            balance: row[3] || 0,
+            linked: !!row[4],
+            color: row[5] || '#3b82f6',
+            createdDate: row[6]
+        })) : [];
+    } catch(e) { accounts = []; }
 }
 
 function setSetting(key, value) {
@@ -5723,7 +5962,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     document.getElementById('subscriptionForm').addEventListener('submit', saveSubscription);
 
     renderSubscriptionsCard();
-    
+    renderAccountsCard();
+
     const fileUpload = document.getElementById('fileUpload');
     const fileInput = document.getElementById('excelFile');
     fileUpload.addEventListener('click', () => fileInput.click());
@@ -5801,7 +6041,7 @@ function renderLanguageOptions() {
 const TAB_META = {
     dashboard:    { title: 'Dashboard',    addable: true  },
     transactions: { title: 'Transactions', addable: true  },
-    accounts:     { title: 'Accounts',     addable: false },
+    accounts:     { title: 'Accounts',     addable: true  },
     goals:        { title: 'Goals',        addable: true  },
     insights:     { title: 'Insights',     addable: false },
     reports:      { title: 'Reports',      addable: false },
@@ -5845,6 +6085,8 @@ function switchTab(tabName, btnEl) {
         if (typeof updateCharts === 'function') updateCharts();
     } else if (tabName === 'recurring') {
         if (typeof renderSubscriptionsCard === 'function') renderSubscriptionsCard();
+    } else if (tabName === 'accounts') {
+        if (typeof renderAccountsCard === 'function') renderAccountsCard();
     }
 }
 
@@ -5854,6 +6096,8 @@ function topbarAdd() {
     const tabName = active ? active.dataset.tab : 'transactions';
     if (tabName === 'goals') {
         if (typeof openGoalModal === 'function') openGoalModal(null);
+    } else if (tabName === 'accounts') {
+        if (typeof openAccountModal === 'function') openAccountModal(null);
     } else if (tabName === 'recurring') {
         if (typeof openSubscriptionModal === 'function') openSubscriptionModal(null);
     } else if (tabName === 'budget') {
@@ -5904,6 +6148,7 @@ function updateLabels() {
     set('goalCurrentLabel',    'goals.alreadySaved' + k);
     set('goalContribLabel',    'goals.amountToAdd' + k);
     set('subAmountLabel',      'subs.amountPerCycle' + k);
+    set('accountBalanceLabel', 'labels.startingBalance' + k);
     set('obBudgetLabel',       'onboarding.monthlyBudget' + (currency === 'SEK' ? 'Kr' : 'Usd'));
     set('obGoalAmountLabel',   'goals.targetAmount' + k);
 }
@@ -6186,6 +6431,131 @@ function deleteFixedExpense(id) {
     renderFixedExpenses();
     updateDashboard();
     updateCharts();
+}
+
+// =====================================================
+// ACCOUNTS — manual + (future) linked
+// =====================================================
+let currentEditingAccount = null;
+
+function renderAccountsCard() {
+    renderAccountsSummary();
+    renderAccountsList();
+}
+
+function renderAccountsSummary() {
+    const totalEl = document.getElementById('accountsTotalBalance');
+    const metaEl = document.getElementById('accountsTotalMeta');
+    if (!totalEl || !metaEl) return;
+    const total = accounts.reduce((sum, a) => sum + (a.balance || 0), 0);
+    totalEl.textContent = formatCurrency(total);
+    if (accounts.length === 0) {
+        metaEl.textContent = t('accounts.summaryEmpty');
+    } else {
+        const linked = accounts.filter(a => a.linked).length;
+        metaEl.textContent = t('accounts.summaryMeta', { total: accounts.length, linked });
+    }
+}
+
+function renderAccountsList() {
+    const container = document.getElementById('accountsList');
+    if (!container) return;
+    if (accounts.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state" style="margin-top: 0;">
+                <div class="empty-state-icon-svg">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 40px; height: 40px;"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M2 10h20"/><path d="M6 15h2"/><path d="M11 15h2"/></svg>
+                </div>
+                <div data-i18n="accounts.empty">No accounts yet — tap "+ Add Account" to add your first one.</div>
+            </div>
+        `;
+        applyLanguage();
+        return;
+    }
+    container.innerHTML = accounts.map(a => {
+        const tagKey = a.linked ? 'accounts.linked' : 'accounts.unlinked';
+        const tagClass = a.linked ? 'account-tag linked' : 'account-tag unlinked';
+        const typeLabel = t('accountTypes.' + (a.type || 'checking'));
+        return `
+            <div class="account-row" style="--account-color: ${a.color};" onclick="openAccountModal(${a.id})" role="button" tabindex="0">
+                <div class="account-row-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M2 10h20"/></svg>
+                </div>
+                <div class="account-row-text">
+                    <div class="account-row-name">${a.name} <span class="${tagClass}">${t(tagKey)}</span></div>
+                    <div class="account-row-meta">${typeLabel}</div>
+                </div>
+                <div class="account-row-balance">${formatCurrency(a.balance || 0)}</div>
+            </div>
+        `;
+    }).join('');
+}
+
+function openAccountModal(id) {
+    currentEditingAccount = id;
+    const titleEl = document.getElementById('accountModalTitle');
+    const deleteBtn = document.getElementById('accountDeleteBtn');
+    if (id != null) {
+        const a = accounts.find(x => x.id === id);
+        if (!a) return;
+        titleEl.textContent = t('modals.editAccount');
+        deleteBtn.style.display = '';
+        document.getElementById('accountId').value = a.id;
+        document.getElementById('accountName').value = a.name;
+        document.getElementById('accountType').value = a.type || 'checking';
+        document.getElementById('accountBalance').value = a.balance != null ? a.balance : 0;
+        document.getElementById('accountColor').value = a.color || '#3b82f6';
+        document.getElementById('accountLinked').checked = !!a.linked;
+    } else {
+        titleEl.textContent = t('modals.newAccount');
+        deleteBtn.style.display = 'none';
+        document.getElementById('accountId').value = '';
+        document.getElementById('accountName').value = '';
+        document.getElementById('accountType').value = 'checking';
+        document.getElementById('accountBalance').value = '';
+        document.getElementById('accountColor').value = '#3b82f6';
+        document.getElementById('accountLinked').checked = false;
+    }
+    document.getElementById('accountModal').classList.add('active');
+}
+
+function closeAccountModal() {
+    document.getElementById('accountModal').classList.remove('active');
+    currentEditingAccount = null;
+}
+
+function saveAccount() {
+    const name = document.getElementById('accountName').value.trim();
+    if (!name) return;
+    const type = document.getElementById('accountType').value;
+    const balance = parseFloat(document.getElementById('accountBalance').value || '0') || 0;
+    const color = document.getElementById('accountColor').value;
+    const linked = document.getElementById('accountLinked').checked ? 1 : 0;
+    const idStr = document.getElementById('accountId').value;
+
+    if (idStr) {
+        const id = parseInt(idStr, 10);
+        db.run('UPDATE accounts SET name = ?, type = ?, balance = ?, linked = ?, color = ? WHERE id = ?',
+            [name, type, balance, linked, color, id]);
+    } else {
+        const id = Date.now();
+        db.run('INSERT INTO accounts (id, name, type, balance, linked, color, created_date) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            [id, name, type, balance, linked, color, isoDate(new Date())]);
+    }
+    saveDatabase();
+    loadDataFromDB();
+    renderAccountsCard();
+    closeAccountModal();
+}
+
+function deleteAccount() {
+    if (currentEditingAccount == null) return;
+    if (!confirm(t('confirms.deleteAccount'))) return;
+    db.run('DELETE FROM accounts WHERE id = ?', [currentEditingAccount]);
+    saveDatabase();
+    loadDataFromDB();
+    renderAccountsCard();
+    closeAccountModal();
 }
 
 function renderFixedExpenses() {
@@ -9294,6 +9664,7 @@ function formatDate(dateStr) {
         goalContribModal: closeGoalContribModal,
         snapshotModal: closeSnapshotModal,
         cutGoalDetailModal: closeCutGoalDetail,
+        accountModal: closeAccountModal,
     };
     document.addEventListener('click', function (e) {
         const el = e.target;
