@@ -1211,6 +1211,27 @@
             margin-right: 1rem;
         }
 
+        .cat-essential-pill {
+            display: inline-block;
+            margin-left: 0.5rem;
+            padding: 0.1rem 0.5rem;
+            border-radius: 999px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            background: color-mix(in srgb, var(--success) 18%, transparent);
+            color: var(--success);
+            vertical-align: middle;
+        }
+        .cat-locked {
+            font-size: 0.95rem;
+            opacity: 0.55;
+            padding: 0.25rem 0.4rem;
+            cursor: default;
+            user-select: none;
+        }
+
         /* Category List */
         .category-list-item {
             display: flex;
@@ -3992,7 +4013,11 @@ let SQL = null;
 
 // Default categories
 const defaultCategories = [
-    { id: 'food', name: 'Food & Dining', color: '#10b981', keywords: ['ica', 'coop', 'willys', 'hemköp', 'mat', 'restaurang', 'café', 'cafe', 'mcdonald', 'burger', 'pizza', 'sushi', 'lunch', 'middag'] },
+    // essential: not subtracted from the daily budget when checking "did
+    // I overspend today?" — stays in totals/savings-rate, just not in
+    // the per-day streak math. Groceries is built-in & non-deletable.
+    { id: 'groceries', name: 'Groceries', color: '#22c55e', essential: true, keywords: ['ica', 'coop', 'willys', 'hemköp', 'lidl', 'mat', 'matvaror', 'matkasse', 'maxi', 'tempo', 'city gross'] },
+    { id: 'food', name: 'Food & Dining', color: '#10b981', keywords: ['restaurang', 'café', 'cafe', 'mcdonald', 'burger', 'pizza', 'sushi', 'lunch', 'middag'] },
     { id: 'transport', name: 'Transport', color: '#3b82f6', keywords: ['bensin', 'diesel', 'parkering', 'biljett', 'sl', 'tåg', 'buss', 'taxi', 'uber', 'circle k', 'okq8', 'preem'] },
     { id: 'entertainment', name: 'Entertainment', color: '#f59e0b', keywords: ['bio', 'spotify', 'netflix', 'hbo', 'konsert', 'teater', 'museum', 'gym', 'sport', 'svea', 'sf bio'] },
     { id: 'shopping', name: 'Shopping', color: '#ef4444', keywords: ['h&m', 'zara', 'åhlens', 'ikea', 'jysk', 'elgiganten', 'mediamarkt', 'webhallen', 'amazon', 'zalando'] },
@@ -4000,6 +4025,15 @@ const defaultCategories = [
     { id: 'health', name: 'Health & Fitness', color: '#ec4899', keywords: ['apotek', 'läkare', 'tandläkare', 'vårdcentral', 'apoteket', 'pharmacy'] },
     { id: 'other', name: 'Other', color: '#64748b', keywords: [] }
 ];
+
+// Returns true if the given category id is flagged as essential (e.g.
+// groceries) — exempts it from the daily streak / savings-grid math.
+function isEssentialCategory(catId) {
+    const cat = categories.find(c => c.id === catId);
+    if (cat && cat.essential) return true;
+    const seed = defaultCategories.find(c => c.id === catId);
+    return !!(seed && seed.essential);
+}
 
 // Data
 let expenses = [];
@@ -4136,9 +4170,13 @@ const translations = {
             exists: 'Category already exists',
             cantDeleteDefault: 'Cannot delete default categories',
             confirmDelete: 'Delete this category? Expenses will be moved to "Other"',
-            keywordExists: 'Keyword already exists'
+            keywordExists: 'Keyword already exists',
+            essentialBadge: 'Essential',
+            essentialHelp: "Excluded from the daily budget streak so a single big shop doesn't break it.",
+            lockedHelp: "Built-in category — can't be deleted."
         },
         defaultCategories: {
+            groceries: 'Groceries',
             food: 'Food & Dining',
             transport: 'Transport',
             entertainment: 'Entertainment',
@@ -4706,10 +4744,14 @@ const translations = {
             exists: 'Kategorin finns redan',
             cantDeleteDefault: 'Standardkategorier kan inte tas bort',
             confirmDelete: 'Ta bort denna kategori? Utgifterna flyttas till "Övrigt"',
-            keywordExists: 'Sökordet finns redan'
+            keywordExists: 'Sökordet finns redan',
+            essentialBadge: 'Nödvändig',
+            essentialHelp: 'Räknas inte mot dagsbudgeten — en stor matkasse bryter inte streaket.',
+            lockedHelp: 'Inbyggd kategori — kan inte tas bort.'
         },
         defaultCategories: {
-            food: 'Mat & restaurang',
+            groceries: 'Mat (matkasse)',
+            food: 'Restaurang & café',
             transport: 'Transport',
             entertainment: 'Nöje',
             shopping: 'Shopping',
@@ -5568,6 +5610,7 @@ function ensureSchema() {
     // For databases created by an older version, add the new columns idempotently
     addColumnIfMissing('goals', 'kind', "TEXT DEFAULT 'manual'");
     addColumnIfMissing('goals', 'meta', "TEXT DEFAULT '{}'");
+    addColumnIfMissing('categories', 'essential', "INTEGER DEFAULT 0");
     db.run(`
         CREATE TABLE IF NOT EXISTS net_worth_snapshots (
             id INTEGER PRIMARY KEY,
@@ -5630,7 +5673,8 @@ function createTables() {
             id TEXT PRIMARY KEY,
             name TEXT NOT NULL,
             color TEXT NOT NULL,
-            keywords TEXT DEFAULT '[]'
+            keywords TEXT DEFAULT '[]',
+            essential INTEGER DEFAULT 0
         )
     `);
 
@@ -5696,9 +5740,14 @@ function createTables() {
     // Insert default categories
     const stmt = db.prepare('INSERT OR IGNORE INTO categories (id, name, color, keywords) VALUES (?, ?, ?, ?)');
     defaultCategories.forEach(cat => {
-        stmt.run([cat.id, cat.name, cat.color, JSON.stringify(cat.keywords)]);
+        stmt.run([cat.id, cat.name, cat.color, JSON.stringify(cat.keywords), cat.essential ? 1 : 0]);
     });
     stmt.free();
+    const sync = db.prepare('UPDATE categories SET essential = ? WHERE id = ?');
+    defaultCategories.forEach(cat => {
+        sync.run([cat.essential ? 1 : 0, cat.id]);
+    });
+    sync.free();
 
     saveDatabase();
 }
@@ -5750,13 +5799,14 @@ function loadDataFromDB() {
     })) : [];
 
     // Load categories
-    const categoriesResult = db.exec('SELECT * FROM categories');
+    const categoriesResult = db.exec('SELECT id, name, color, keywords, essential FROM categories');
     categories = categoriesResult.length > 0 ? categoriesResult[0].values.map(row => ({
         id: row[0],
         name: row[1],
         color: row[2],
-        keywords: JSON.parse(row[3] || '[]')
-    })) : defaultCategories;
+        keywords: JSON.parse(row[3] || '[]'),
+        essential: !!row[4]
+    })) : defaultCategories.map(c => ({ ...c, essential: !!c.essential }));
 
     // Load settings
     const settingsResult = db.exec('SELECT * FROM settings');
@@ -5898,9 +5948,11 @@ function migrateFromLocalStorage() {
 
     if (oldCategories) {
         const parsed = JSON.parse(oldCategories);
-        const stmt = db.prepare('INSERT OR REPLACE INTO categories (id, name, color, keywords) VALUES (?, ?, ?, ?)');
+        const stmt = db.prepare('INSERT OR REPLACE INTO categories (id, name, color, keywords, essential) VALUES (?, ?, ?, ?, ?)');
         parsed.forEach(cat => {
-            stmt.run([cat.id, cat.name, cat.color, JSON.stringify(cat.keywords || [])]);
+            const seed = defaultCategories.find(d => d.id === cat.id);
+            const essential = (typeof cat.essential === 'boolean' ? cat.essential : !!(seed && seed.essential)) ? 1 : 0;
+            stmt.run([cat.id, cat.name, cat.color, JSON.stringify(cat.keywords || []), essential]);
         });
         stmt.free();
     }
@@ -6199,18 +6251,27 @@ function updateCategorySelects() {
 
 function renderCategoriesList() {
     const container = document.getElementById('categoriesList');
-    container.innerHTML = categories.map(cat => `
-        <div class="category-item" onclick="openEditCategoryModal('${cat.id}')">
-            <div style="display: flex; align-items: center;">
-                <div class="category-badge" style="background: ${cat.color};"></div>
-                <div>
-                    <strong>${localizedCategoryName(cat)}</strong><br>
-                    <small style="color: var(--text-light);">${t('categories.keywordCount', { n: cat.keywords.length })}</small>
+    container.innerHTML = categories.map(cat => {
+        const locked = !!defaultCategories.find(d => d.id === cat.id);
+        const essentialPill = cat.essential
+            ? `<span class="cat-essential-pill" data-i18n-title="categories.essentialHelp" title="Excluded from the daily budget streak math">${t('categories.essentialBadge')}</span>`
+            : '';
+        const deleteBtn = locked
+            ? `<span class="cat-locked" data-i18n-title="categories.lockedHelp" title="Built-in category — can't be deleted">🔒</span>`
+            : `<button class="delete-btn" onclick="event.stopPropagation(); deleteCategory('${cat.id}')">×</button>`;
+        return `
+            <div class="category-item" onclick="openEditCategoryModal('${cat.id}')">
+                <div style="display: flex; align-items: center;">
+                    <div class="category-badge" style="background: ${cat.color};"></div>
+                    <div>
+                        <strong>${localizedCategoryName(cat)}</strong>${essentialPill}<br>
+                        <small style="color: var(--text-light);">${t('categories.keywordCount', { n: cat.keywords.length })}</small>
+                    </div>
                 </div>
+                ${deleteBtn}
             </div>
-            <button class="delete-btn" onclick="event.stopPropagation(); deleteCategory('${cat.id}')">×</button>
-        </div>
-    `).join('');
+        `;
+    }).join('');
 }
 
 function addCategory(e) {
@@ -6225,8 +6286,8 @@ function addCategory(e) {
         return;
     }
     
-    db.run('INSERT INTO categories (id, name, color, keywords) VALUES (?, ?, ?, ?)', 
-        [id, name, color, '[]']);
+    db.run('INSERT INTO categories (id, name, color, keywords, essential) VALUES (?, ?, ?, ?, ?)',
+        [id, name, color, '[]', 0]);
     saveDatabase();
     
     categories.push({ id, name, color, keywords: [] });
@@ -6239,6 +6300,11 @@ function addCategory(e) {
 
 function deleteCategory(id) {
     if (defaultCategories.find(c => c.id === id)) {
+        alert(t('categories.cantDeleteDefault'));
+        return;
+    }
+    const cat = categories.find(c => c.id === id);
+    if (cat && cat.essential) {
         alert(t('categories.cantDeleteDefault'));
         return;
     }
@@ -6595,16 +6661,27 @@ function updateDashboard() {
     const monthExpenses = expenses.filter(exp => exp.date >= startStr && exp.date <= endStr);
 
     const totalFixed = fixedExpenses.reduce((sum, f) => sum + f.amount, 0);
-    const totalSpent = monthExpenses.reduce((sum, exp) => {
+    const expenseDiscretionary = (exp) => {
         const repayments = (exp.swishRepayments || []).reduce((s, r) => s + r.amount, 0);
-        return sum + exp.amount - repayments;
-    }, 0);
+        const net = exp.amount - repayments;
+        return isEssentialCategory(exp.category) ? 0 : net;
+    };
+    const expenseNet = (exp) => {
+        const repayments = (exp.swishRepayments || []).reduce((s, r) => s + r.amount, 0);
+        return exp.amount - repayments;
+    };
+    // totalSpent = honest cash-out for the cycle (includes essentials).
+    // It feeds the savings rate + the "Total Spent This Cycle" stat.
+    const totalSpent = monthExpenses.reduce((sum, exp) => sum + expenseNet(exp), 0);
+    // discretionarySpent = what counted against the daily budget. Big
+    // grocery shops don't punish you here.
+    const discretionarySpent = monthExpenses.reduce((sum, exp) => sum + expenseDiscretionary(exp), 0);
 
     const daysInCycle = bounds.days;
-    const dailyAvg = totalSpent / daysInCycle;
+    const dailyAvg = discretionarySpent / daysInCycle;
 
     const availableBudget = monthlyBudget - totalFixed;
-    const budgetRemaining = availableBudget - totalSpent;
+    const budgetRemaining = availableBudget - discretionarySpent;
     const dailyBudgetAmount = availableBudget / daysInCycle;
 
     document.getElementById('totalSpent').textContent = formatCurrency(totalSpent);
@@ -6613,13 +6690,13 @@ function updateDashboard() {
     document.getElementById('budgetRemaining').textContent = formatCurrency(budgetRemaining);
     document.getElementById('dailyBudget').textContent = formatCurrency(dailyBudgetAmount);
 
-    const budgetPercentage = availableBudget > 0 ? (totalSpent / availableBudget) * 100 : 0;
+    const budgetPercentage = availableBudget > 0 ? (discretionarySpent / availableBudget) * 100 : 0;
     const progressBar = document.getElementById('budgetProgress');
     progressBar.style.width = `${Math.min(budgetPercentage, 100)}%`;
     progressBar.textContent = `${budgetPercentage.toFixed(0)}%`;
     progressBar.classList.toggle('warning', budgetPercentage > 80);
 
-    document.getElementById('budgetSpent').textContent = formatCurrency(totalSpent);
+    document.getElementById('budgetSpent').textContent = formatCurrency(discretionarySpent);
     document.getElementById('budgetTotal').textContent = `of ${formatCurrency(availableBudget)}`;
 
     renderExpensesList();
@@ -6856,21 +6933,27 @@ function updateCharts() {
         }).join('');
     }
 
-    // Trend chart — iterate days within the cycle
+    // Trend chart — iterate days within the cycle. dailyTotals is the
+    // honest daily spend (used for the trend line). dailyDiscretionary
+    // is the same map with essential-category amounts zeroed out — it
+    // drives the per-day "saved/over" classification on the savings
+    // grid so a 1500 kr grocery shop doesn't paint the day red.
     const dailyTotals = {};
+    const dailyDiscretionary = {};
     const labels = [];
     const cursor = new Date(bounds.start);
     while (cursor <= bounds.end) {
         const ds = isoDate(cursor);
         dailyTotals[ds] = 0;
+        dailyDiscretionary[ds] = 0;
         labels.push(`${cursor.getMonth() + 1}/${cursor.getDate()}`);
         cursor.setDate(cursor.getDate() + 1);
     }
 
     monthExpenses.forEach(exp => {
         if (dailyTotals.hasOwnProperty(exp.date)) {
-            const repayments = (exp.swishRepayments || []).reduce((s, r) => s + r.amount, 0);
-            dailyTotals[exp.date] += exp.amount - repayments;
+            dailyTotals[exp.date] += expenseNet(exp);
+            dailyDiscretionary[exp.date] += expenseDiscretionary(exp);
         }
     });
 
@@ -6879,7 +6962,7 @@ function updateCharts() {
     trendChart.update();
 
     // Daily Savings Grid
-    renderSavingsGrid(bounds, dailyTotals);
+    renderSavingsGrid(bounds, dailyDiscretionary);
 }
 
 function renderSavingsGrid(bounds, dailyTotals) {
@@ -7577,9 +7660,12 @@ function computeStreak() {
     const earliest = new Date(Math.min(...dates));
     earliest.setHours(0, 0, 0, 0);
 
-    // Build daily totals map
+    // Build daily totals map — only discretionary (non-essential)
+    // expenses count toward streak math, so a single big grocery run
+    // doesn't snap the streak.
     const dailyMap = {};
     expenses.forEach(exp => {
+        if (isEssentialCategory(exp.category)) return;
         const repayments = (exp.swishRepayments || []).reduce((s, r) => s + r.amount, 0);
         dailyMap[exp.date] = (dailyMap[exp.date] || 0) + (exp.amount - repayments);
     });
