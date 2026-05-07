@@ -2151,6 +2151,19 @@
             color: var(--text-light);
             margin-top: 0.15rem;
         }
+        .goal-row-auto {
+            display: inline-block;
+            margin-left: 0.5rem;
+            padding: 0.1rem 0.5rem;
+            border-radius: 999px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            background: color-mix(in srgb, var(--accent) 18%, transparent);
+            color: var(--accent);
+            vertical-align: middle;
+        }
         .goal-row-amount {
             text-align: right;
             flex-shrink: 0;
@@ -3003,6 +3016,9 @@
                 <button class="tab" data-tab="reports" data-label="Reports" onclick="switchTab('reports', this)" aria-label="Reports">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8"/><path d="M8 17h8"/><path d="M8 9h2"/></svg>
                 </button>
+                <button class="tab" data-tab="recurring" data-label="Recurring" onclick="switchTab('recurring', this)" aria-label="Recurring">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><polyline points="21 4 21 10 15 10"/></svg>
+                </button>
                 <button class="tab" data-tab="budget" data-label="Budget" onclick="switchTab('budget', this)" aria-label="Budget">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
                 </button>
@@ -3081,112 +3097,54 @@
                 </div>
 
                 <div class="dashboard-grid">
-                    <div>
-                        <div class="card">
-                            <h2 class="card-title" data-i18n="cards.categoryBreakdown">Category Breakdown</h2>
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="includeFixed" onchange="updateCharts()">
-                                <span data-i18n="labels.includeFixed">Include Fixed Expenses</span>
-                            </label>
-                            <div class="chart-container">
-                                <canvas id="categoryChart"></canvas>
-                            </div>
-                            <div class="category-list" id="categoryBreakdownList"></div>
+                    <div class="card">
+                        <h2 class="card-title" data-i18n="cards.spendingTrend">Spending Trend</h2>
+                        <div class="chart-container">
+                            <canvas id="trendChart"></canvas>
                         </div>
                     </div>
-                    <div>
-                        <div class="card">
-                            <h2 class="card-title" data-i18n="cards.spendingTrend">Spending Trend</h2>
-                            <div class="chart-container">
-                                <canvas id="trendChart"></canvas>
+                    <div class="card">
+                        <h2 class="card-title" data-i18n="cards.dailySavings">Daily Savings</h2>
+                        <p style="color: var(--text-light); font-size: 0.875rem; margin-bottom: 1rem;" data-i18n="savings.hint">
+                            Hover over a day to see details, click to view expenses
+                        </p>
+                        <div id="savingsGrid" class="savings-grid"></div>
+                        <div style="display: flex; gap: 1.5rem; margin-top: 1.5rem; font-size: 0.875rem; color: var(--text-light); justify-content: center;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <div style="width: 16px; height: 16px; background: var(--success); border-radius: 4px;"></div>
+                                <span data-i18n="savings.underBudget">Under budget</span>
                             </div>
-                        </div>
-                        <div class="card">
-                            <h2 class="card-title" data-i18n="cards.dailySavings">Daily Savings</h2>
-                            <p style="color: var(--text-light); font-size: 0.875rem; margin-bottom: 1rem;" data-i18n="savings.hint">
-                                Hover over a day to see details, click to view expenses
-                            </p>
-                            <div id="savingsGrid" class="savings-grid"></div>
-                            <div style="display: flex; gap: 1.5rem; margin-top: 1.5rem; font-size: 0.875rem; color: var(--text-light); justify-content: center;">
-                                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                    <div style="width: 16px; height: 16px; background: var(--success); border-radius: 4px;"></div>
-                                    <span data-i18n="savings.underBudget">Under budget</span>
-                                </div>
-                                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                    <div style="width: 16px; height: 16px; background: var(--danger); border-radius: 4px;"></div>
-                                    <span data-i18n="savings.overBudget">Over budget</span>
-                                </div>
-                                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                    <div style="width: 16px; height: 16px; background: var(--bg-alt); border: 1px solid var(--border); border-radius: 4px;"></div>
-                                    <span data-i18n="savings.future">Future</span>
-                                </div>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <div style="width: 16px; height: 16px; background: var(--danger); border-radius: 4px;"></div>
+                                <span data-i18n="savings.overBudget">Over budget</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <div style="width: 16px; height: 16px; background: var(--bg-alt); border: 1px solid var(--border); border-radius: 4px;"></div>
+                                <span data-i18n="savings.future">Future</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Expenses Tab -->
+            <!-- Transactions Tab -->
             <div class="tab-content" id="transactions-tab">
-                <div class="expenses-grid">
-                    <div>
-                        <div class="card">
-                            <h2 class="card-title" data-i18n="cards.addExpense">Add Expense</h2>
-                            <form id="expenseForm">
-                                <div class="form-group">
-                                    <label for="amount" id="amountLabel" data-i18n="labels.amountKr">Amount (kr)</label>
-                                    <input type="number" id="amount" step="0.01" min="0" required placeholder="0.00" data-i18n-placeholder="placeholders.amount">
-                                </div>
-                                <div class="form-group">
-                                    <label for="category" data-i18n="labels.category">Category</label>
-                                    <select id="category" required></select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="description" data-i18n="labels.descriptionOptional">Description (Optional)</label>
-                                    <input type="text" id="description" placeholder="Coffee at Starbucks" data-i18n-placeholder="placeholders.descriptionExample">
-                                </div>
-                                <div class="form-group">
-                                    <label for="date" data-i18n="labels.date">Date</label>
-                                    <input type="date" id="date" required>
-                                </div>
-                                <button type="submit" data-i18n="buttons.addExpense">Add Expense</button>
-                            </form>
-                        </div>
-
-                        <div class="card">
-                            <h2 class="card-title" data-i18n="cards.importExcel">Import from Excel</h2>
-                            <div class="file-upload" id="fileUpload">
-                                <div class="upload-icon">📊</div>
-                                <div>
-                                    <strong data-i18n="buttons.uploadClick">Click to upload</strong> <span data-i18n="buttons.dragDrop">or drag and drop</span><br>
-                                    <small data-i18n="buttons.uploadHelp">Support for .xlsx and .xls files</small>
-                                </div>
-                                <input type="file" id="excelFile" accept=".xlsx,.xls">
-                            </div>
-                        </div>
-
-                        <div class="card">
-                            <h2 class="card-title" data-i18n="cards.configureCategories">Configure Categories</h2>
-                            <form id="addCategoryForm">
-                                <div class="form-group">
-                                    <label for="newCategoryName" data-i18n="labels.categoryName">Category Name</label>
-                                    <input type="text" id="newCategoryName" required placeholder="e.g., Groceries" data-i18n-placeholder="placeholders.categoryExample">
-                                </div>
-                                <div class="form-group">
-                                    <label for="newCategoryColor" data-i18n="labels.color">Color</label>
-                                    <input type="color" id="newCategoryColor" value="#3b82f6">
-                                </div>
-                                <button type="submit" data-i18n="buttons.addCategory">Add Category</button>
-                            </form>
-                            <div style="margin-top: 1.5rem;" id="categoriesList"></div>
-                        </div>
+                <div class="card">
+                    <h2 class="card-title" data-i18n="cards.recentExpenses">Recent Expenses</h2>
+                    <div class="expenses-list" id="expensesList">
+                        <p style="text-align: center; color: var(--text-light); padding: 2rem;" data-i18n="expenses.empty">No expenses yet</p>
                     </div>
+                </div>
 
-                    <div class="card">
-                        <h2 class="card-title" data-i18n="cards.recentExpenses">Recent Expenses</h2>
-                        <div class="expenses-list" id="expensesList">
-                            <p style="text-align: center; color: var(--text-light); padding: 2rem;" data-i18n="expenses.empty">No expenses yet</p>
+                <div class="card">
+                    <h2 class="card-title" data-i18n="cards.importExcel">Import from Excel</h2>
+                    <div class="file-upload" id="fileUpload">
+                        <div class="upload-icon">📊</div>
+                        <div>
+                            <strong data-i18n="buttons.uploadClick">Click to upload</strong> <span data-i18n="buttons.dragDrop">or drag and drop</span><br>
+                            <small data-i18n="buttons.uploadHelp">Support for .xlsx and .xls files</small>
                         </div>
+                        <input type="file" id="excelFile" accept=".xlsx,.xls">
                     </div>
                 </div>
             </div>
@@ -3226,32 +3184,78 @@
             <!-- Reports Tab -->
             <div class="tab-content" id="reports-tab">
                 <div class="card">
-                    <h2 class="card-title" data-i18n="cards.reports">Reports</h2>
-                    <p style="color: var(--text-light); margin-bottom: 1.5rem;" data-i18n="reports.intro">
-                        Custom date-range breakdowns and exports. (Coming soon.)
-                    </p>
-                    <div class="empty-state">
-                        <div class="empty-state-icon-svg">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 48px; height: 48px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8"/><path d="M8 17h8"/><path d="M8 9h2"/></svg>
-                        </div>
-                        <div data-i18n="reports.empty">Spending reports by category, merchant, and time range are on the way.</div>
+                    <h2 class="card-title" data-i18n="cards.categoryBreakdown">Category Breakdown</h2>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="includeFixed" onchange="updateCharts()">
+                        <span data-i18n="labels.includeFixed">Include Fixed Expenses</span>
+                    </label>
+                    <div class="chart-container">
+                        <canvas id="categoryChart"></canvas>
                     </div>
+                    <div class="category-list" id="categoryBreakdownList"></div>
+                </div>
+            </div>
+
+            <!-- Recurring Tab -->
+            <div class="tab-content" id="recurring-tab">
+                <div class="card">
+                    <h2 class="card-title" data-i18n="cards.subscriptions">Subscriptions</h2>
+                    <p style="color: var(--text-light); margin-bottom: 1rem; font-size: 0.875rem;" data-i18n="subs.help">
+                        Track your recurring subscriptions and see what they cost. Auto-detected from import data and any you add manually.
+                    </p>
+                    <div id="subsSummary" class="subs-summary"></div>
+                    <div id="subsDetected" class="subs-section" style="display:none;"></div>
+                    <div id="subsActiveList" class="subs-list"></div>
+                    <div id="subsCancelledList" class="subs-list"></div>
+                    <button onclick="openSubscriptionModal(null)" style="margin-top: 1rem;" data-i18n="buttons.addSubscription">+ Add Subscription</button>
                 </div>
             </div>
 
             <!-- Budget Tab -->
             <div class="tab-content" id="budget-tab">
                 <div class="card">
-                    <h2 class="card-title" data-i18n="cards.budget">Budget</h2>
-                    <p style="color: var(--text-light); margin-bottom: 1.5rem;" data-i18n="budget.intro">
-                        Plan how each kr is supposed to behave before the month starts. (Coming soon.)
-                    </p>
-                    <div class="empty-state">
-                        <div class="empty-state-icon-svg">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 48px; height: 48px;"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
-                        </div>
-                        <div data-i18n="budget.empty">Per-category envelope budgeting is in the works.</div>
+                    <h2 class="card-title" data-i18n="cards.incomeBudget">Income & Budget</h2>
+                    <div class="form-group">
+                        <label for="monthlyIncome" id="incomeLabel" data-i18n="labels.monthlyIncomeKr">Monthly Income (kr)</label>
+                        <input type="number" id="monthlyIncome" step="1" min="0" placeholder="35000" onchange="updateIncome()" data-i18n-placeholder="placeholders.incomeExample">
+                        <small style="color: var(--text-light); display: block; margin-top: 0.5rem;" data-i18n="incomeBudget.incomeHelp">
+                            Used to calculate your savings rate. Stored locally, never sent anywhere.
+                        </small>
                     </div>
+                    <div class="form-group">
+                        <label for="monthlyBudget" id="budgetLabel" data-i18n="labels.discretionaryBudgetKr">Discretionary Budget (kr)</label>
+                        <input type="number" id="monthlyBudget" step="1" min="0" placeholder="10000" onchange="updateBudget()" data-i18n-placeholder="placeholders.budgetExample">
+                        <small style="color: var(--text-light); display: block; margin-top: 0.5rem;" data-i18n="incomeBudget.budgetHelp">
+                            What you allow yourself to spend each month (excludes fixed expenses).
+                        </small>
+                    </div>
+                    <div class="budget-bar">
+                        <div class="budget-progress" id="budgetProgress">0%</div>
+                    </div>
+                    <div class="budget-info">
+                        <span id="budgetSpent">0 kr</span>
+                        <span id="budgetTotal">of 0 kr</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title" data-i18n="cards.fixedExpenses">Fixed Expenses</h2>
+                    <form id="fixedExpenseForm">
+                        <div class="form-group">
+                            <label for="fixedName" data-i18n="labels.name">Name</label>
+                            <input type="text" id="fixedName" required placeholder="Rent, Internet, etc." data-i18n-placeholder="placeholders.fixedExample">
+                        </div>
+                        <div class="form-group">
+                            <label for="fixedAmount" id="fixedAmountLabel" data-i18n="labels.amountKr">Amount (kr)</label>
+                            <input type="number" id="fixedAmount" step="0.01" min="0" required placeholder="0.00" data-i18n-placeholder="placeholders.amount">
+                        </div>
+                        <div class="form-group">
+                            <label for="fixedCategory" data-i18n="labels.category">Category</label>
+                            <select id="fixedCategory" required></select>
+                        </div>
+                        <button type="submit" data-i18n="buttons.addFixed">Add Fixed Expense</button>
+                    </form>
+                    <div style="margin-top: 1.5rem;" id="fixedExpensesList"></div>
                 </div>
             </div>
 
@@ -3291,28 +3295,19 @@
                         </div>
 
                         <div class="card">
-                            <h2 class="card-title" data-i18n="cards.incomeBudget">Income & Budget</h2>
-                            <div class="form-group">
-                                <label for="monthlyIncome" id="incomeLabel" data-i18n="labels.monthlyIncomeKr">Monthly Income (kr)</label>
-                                <input type="number" id="monthlyIncome" step="1" min="0" placeholder="35000" onchange="updateIncome()" data-i18n-placeholder="placeholders.incomeExample">
-                                <small style="color: var(--text-light); display: block; margin-top: 0.5rem;" data-i18n="incomeBudget.incomeHelp">
-                                    Used to calculate your savings rate. Stored locally, never sent anywhere.
-                                </small>
-                            </div>
-                            <div class="form-group">
-                                <label for="monthlyBudget" id="budgetLabel" data-i18n="labels.discretionaryBudgetKr">Discretionary Budget (kr)</label>
-                                <input type="number" id="monthlyBudget" step="1" min="0" placeholder="10000" onchange="updateBudget()" data-i18n-placeholder="placeholders.budgetExample">
-                                <small style="color: var(--text-light); display: block; margin-top: 0.5rem;" data-i18n="incomeBudget.budgetHelp">
-                                    What you allow yourself to spend each month (excludes fixed expenses).
-                                </small>
-                            </div>
-                            <div class="budget-bar">
-                                <div class="budget-progress" id="budgetProgress">0%</div>
-                            </div>
-                            <div class="budget-info">
-                                <span id="budgetSpent">0 kr</span>
-                                <span id="budgetTotal">of 0 kr</span>
-                            </div>
+                            <h2 class="card-title" data-i18n="cards.configureCategories">Configure Categories</h2>
+                            <form id="addCategoryForm">
+                                <div class="form-group">
+                                    <label for="newCategoryName" data-i18n="labels.categoryName">Category Name</label>
+                                    <input type="text" id="newCategoryName" required placeholder="e.g., Groceries" data-i18n-placeholder="placeholders.categoryExample">
+                                </div>
+                                <div class="form-group">
+                                    <label for="newCategoryColor" data-i18n="labels.color">Color</label>
+                                    <input type="color" id="newCategoryColor" value="#3b82f6">
+                                </div>
+                                <button type="submit" data-i18n="buttons.addCategory">Add Category</button>
+                            </form>
+                            <div style="margin-top: 1.5rem;" id="categoriesList"></div>
                         </div>
 
                         <div class="card">
@@ -3339,26 +3334,6 @@
                                 </small>
                             </div>
                             <div id="cyclePreview" style="background: var(--bg-alt); padding: 1rem; border-radius: 8px; margin-top: 1rem; font-size: 0.875rem;"></div>
-                        </div>
-
-                        <div class="card">
-                            <h2 class="card-title" data-i18n="cards.fixedExpenses">Fixed Expenses</h2>
-                            <form id="fixedExpenseForm">
-                                <div class="form-group">
-                                    <label for="fixedName" data-i18n="labels.name">Name</label>
-                                    <input type="text" id="fixedName" required placeholder="Rent, Internet, etc." data-i18n-placeholder="placeholders.fixedExample">
-                                </div>
-                                <div class="form-group">
-                                    <label for="fixedAmount" id="fixedAmountLabel" data-i18n="labels.amountKr">Amount (kr)</label>
-                                    <input type="number" id="fixedAmount" step="0.01" min="0" required placeholder="0.00" data-i18n-placeholder="placeholders.amount">
-                                </div>
-                                <div class="form-group">
-                                    <label for="fixedCategory" data-i18n="labels.category">Category</label>
-                                    <select id="fixedCategory" required></select>
-                                </div>
-                                <button type="submit" data-i18n="buttons.addFixed">Add Fixed Expense</button>
-                            </form>
-                            <div style="margin-top: 1.5rem;" id="fixedExpensesList"></div>
                         </div>
 
                         <div class="card">
@@ -3399,18 +3374,6 @@
                                 <label data-i18n="labels.language">Language</label>
                                 <div class="theme-buttons" id="languageButtons" role="tablist"></div>
                             </div>
-                        </div>
-
-                        <div class="card">
-                            <h2 class="card-title" data-i18n="cards.subscriptions">Subscriptions</h2>
-                            <p style="color: var(--text-light); margin-bottom: 1rem; font-size: 0.875rem;" data-i18n="subs.help">
-                                Track your recurring subscriptions and see what they cost. Auto-detected from import data and any you add manually.
-                            </p>
-                            <div id="subsSummary" class="subs-summary"></div>
-                            <div id="subsDetected" class="subs-section" style="display:none;"></div>
-                            <div id="subsActiveList" class="subs-list"></div>
-                            <div id="subsCancelledList" class="subs-list"></div>
-                            <button onclick="openSubscriptionModal(null)" style="margin-top: 1rem;" data-i18n="buttons.addSubscription">+ Add Subscription</button>
                         </div>
                     </div>
                 </div>
@@ -3947,6 +3910,7 @@ const translations = {
             goals: 'Goals',
             insights: 'Insights',
             reports: 'Reports',
+            recurring: 'Recurring',
             budget: 'Budget',
             settings: 'Settings'
         },
@@ -4427,7 +4391,8 @@ const translations = {
             amountToAddUsd: 'Amount to Add ($)',
             targetDate: 'Target Date (Optional)',
             autoTracked: 'Auto-tracked progress',
-            autoTrackedShort: 'Auto-tracked',
+            autoTrackedShort: 'Auto',
+            autoTrackedHelp: 'Progress is computed automatically from your spending — no manual contributions.',
             startingBalance: 'Starting balance',
             deadlineOptional: 'Deadline (optional)',
             newSavingsGoal: 'New Savings Goal',
@@ -4489,6 +4454,7 @@ const translations = {
             goals: 'Mål',
             insights: 'Insikter',
             reports: 'Rapporter',
+            recurring: 'Återkommande',
             budget: 'Budget',
             settings: 'Inställningar'
         },
@@ -4969,7 +4935,8 @@ const translations = {
             amountToAddUsd: 'Belopp att lägga till ($)',
             targetDate: 'Måldatum (valfritt)',
             autoTracked: 'Autoföljda framsteg',
-            autoTrackedShort: 'Autoföljs',
+            autoTrackedShort: 'Auto',
+            autoTrackedHelp: 'Framstegen räknas automatiskt från dina utgifter — inga manuella bidrag.',
             startingBalance: 'Ingående saldo',
             deadlineOptional: 'Deadline (valfritt)',
             newSavingsGoal: 'Nytt sparmål',
@@ -5721,7 +5688,9 @@ document.addEventListener('DOMContentLoaded', async function() {
     renderPaletteMenu();
     renderLanguageOptions();
     applyLanguage();
-    document.getElementById('date').valueAsDate = new Date();
+    // The in-tab Add Expense form was removed; #date may not exist.
+    const dateInput = document.getElementById('date');
+    if (dateInput) dateInput.valueAsDate = new Date();
     document.getElementById('quickDate').valueAsDate = new Date();
     document.getElementById('snapshotDate').valueAsDate = new Date();
     document.getElementById('currencySelect').value = currency;
@@ -5743,7 +5712,10 @@ document.addEventListener('DOMContentLoaded', async function() {
     renderFixedExpenses();
     renderCyclePreview();
 
-    document.getElementById('expenseForm').addEventListener('submit', addExpense);
+    // The in-tab Add Expense form was removed; the quick-add modal is the
+    // single entry point now. Guard so this is a no-op if absent.
+    const expenseForm = document.getElementById('expenseForm');
+    if (expenseForm) expenseForm.addEventListener('submit', addExpense);
     document.getElementById('quickAddForm').addEventListener('submit', addExpenseFromQuick);
     document.getElementById('fixedExpenseForm').addEventListener('submit', addFixedExpense);
     document.getElementById('addCategoryForm').addEventListener('submit', addCategory);
@@ -5827,13 +5799,14 @@ function renderLanguageOptions() {
 
 // Tabs
 const TAB_META = {
-    dashboard:    { title: 'Dashboard',    addable: true },
-    transactions: { title: 'Transactions', addable: true },
+    dashboard:    { title: 'Dashboard',    addable: true  },
+    transactions: { title: 'Transactions', addable: true  },
     accounts:     { title: 'Accounts',     addable: false },
-    goals:        { title: 'Goals',        addable: true },
+    goals:        { title: 'Goals',        addable: true  },
     insights:     { title: 'Insights',     addable: false },
     reports:      { title: 'Reports',      addable: false },
-    budget:       { title: 'Budget',       addable: false },
+    recurring:    { title: 'Recurring',    addable: true  },
+    budget:       { title: 'Budget',       addable: true  },
     settings:     { title: 'Settings',     addable: false }
 };
 
@@ -5866,6 +5839,12 @@ function switchTab(tabName, btnEl) {
         renderGoals();
     } else if (tabName === 'insights') {
         renderInsights();
+    } else if (tabName === 'reports') {
+        // Category Breakdown lives here now; chart needs a re-tick when
+        // the canvas first becomes visible.
+        if (typeof updateCharts === 'function') updateCharts();
+    } else if (tabName === 'recurring') {
+        if (typeof renderSubscriptionsCard === 'function') renderSubscriptionsCard();
     }
 }
 
@@ -5875,6 +5854,17 @@ function topbarAdd() {
     const tabName = active ? active.dataset.tab : 'transactions';
     if (tabName === 'goals') {
         if (typeof openGoalModal === 'function') openGoalModal(null);
+    } else if (tabName === 'recurring') {
+        if (typeof openSubscriptionModal === 'function') openSubscriptionModal(null);
+    } else if (tabName === 'budget') {
+        // Focus the Add-Fixed form's Name field — the form is inline on the Budget tab
+        const nameInput = document.getElementById('fixedName');
+        if (nameInput) {
+            nameInput.focus();
+            nameInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else if (typeof openQuickAdd === 'function') {
+            openQuickAdd();
+        }
     } else {
         // Dashboard & Transactions both add an expense
         if (typeof openQuickAdd === 'function') openQuickAdd();
@@ -6158,8 +6148,10 @@ function addExpense(e) {
         date, swishRepayments: []
     });
 
-    document.getElementById('expenseForm').reset();
-    document.getElementById('date').valueAsDate = new Date();
+    const _form = document.getElementById('expenseForm');
+    if (_form) _form.reset();
+    const _date = document.getElementById('date');
+    if (_date) _date.valueAsDate = new Date();
     updateDashboard();
     updateCharts();
 }
@@ -7784,12 +7776,16 @@ function renderGoals() {
             ? `openCutGoalDetail(${g.id})`
             : (isComplete ? `openGoalModal(${g.id})` : `openGoalContribModal(${g.id})`);
 
+        const autoBadge = isCut
+            ? `<span class="goal-row-auto" title="${t('goals.autoTrackedHelp')}">${t('goals.autoTrackedShort')}</span>`
+            : '';
+
         return `
-            <div class="goal-row ${isComplete ? 'complete' : ''}" style="--goal-color: ${g.color};" onclick="${clickHandler}" role="button" tabindex="0">
+            <div class="goal-row ${isComplete ? 'complete' : ''} ${isCut ? 'cut-goal' : ''}" style="--goal-color: ${g.color};" onclick="${clickHandler}" role="button" tabindex="0">
                 <div class="goal-row-head">
                     <div class="goal-row-icon">${svgIcon(iconName)}</div>
                     <div class="goal-row-text">
-                        <div class="goal-row-name">${g.name}</div>
+                        <div class="goal-row-name">${g.name}${autoBadge}</div>
                         ${dateLabel ? `<div class="goal-row-deadline">${dateLabel}</div>` : ''}
                     </div>
                     <div class="goal-row-amount">
