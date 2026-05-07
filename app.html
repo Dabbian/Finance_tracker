@@ -2088,6 +2088,103 @@
             gap: 1.5rem;
         }
 
+        /* New horizontal goal rows */
+        .goals-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .goal-row {
+            background: linear-gradient(180deg,
+                color-mix(in srgb, var(--text) 7%, transparent) 0%,
+                color-mix(in srgb, var(--text) 3%, transparent) 100%);
+            border: 1px solid color-mix(in srgb, var(--text) 14%, transparent);
+            backdrop-filter: blur(20px) saturate(140%);
+            -webkit-backdrop-filter: blur(20px) saturate(140%);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.10),
+                0 10px 32px rgba(0, 0, 0, 0.18);
+            border-radius: 16px;
+            padding: 1.25rem 1.5rem;
+            cursor: pointer;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+        .goal-row:hover {
+            transform: translateY(-1px);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.12),
+                0 14px 40px rgba(0, 0, 0, 0.22);
+        }
+        .goal-row.complete {
+            opacity: 0.85;
+        }
+        .goal-row-head {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .goal-row-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: color-mix(in srgb, var(--goal-color, var(--accent)) 22%, transparent);
+            color: var(--goal-color, var(--accent));
+            flex-shrink: 0;
+        }
+        .goal-row-icon svg { width: 22px; height: 22px; }
+        .goal-row-text {
+            flex: 1;
+            min-width: 0;
+        }
+        .goal-row-name {
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: var(--text);
+            line-height: 1.25;
+        }
+        .goal-row-deadline {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            margin-top: 0.15rem;
+        }
+        .goal-row-amount {
+            text-align: right;
+            flex-shrink: 0;
+        }
+        .goal-row-current {
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: var(--text);
+        }
+        .goal-row-target {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            margin-top: 0.15rem;
+        }
+        .goal-row-bar {
+            margin-top: 0.85rem;
+            height: 6px;
+            background: color-mix(in srgb, var(--text) 12%, transparent);
+            border-radius: 999px;
+            overflow: hidden;
+        }
+        .goal-row-bar-fill {
+            height: 100%;
+            background: var(--goal-color, var(--success));
+            border-radius: 999px;
+            transition: width 0.3s ease;
+        }
+
+        @media (max-width: 540px) {
+            .goal-row { padding: 1rem 1.1rem; }
+            .goal-row-name, .goal-row-current { font-size: 0.95rem; }
+        }
+
         .goal-card {
             background: var(--bg);
             border: 1px solid var(--border);
@@ -2888,11 +2985,14 @@
                 </svg>
             </div>
             <nav class="app-nav">
-                <button class="tab active" data-tab="overview" data-label="Overview" onclick="switchTab('overview', this)" aria-label="Overview">
+                <button class="tab active" data-tab="dashboard" data-label="Dashboard" onclick="switchTab('dashboard', this)" aria-label="Dashboard">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12 12 3l9 9"/><path d="M5 10v10h14V10"/></svg>
                 </button>
-                <button class="tab" data-tab="expenses" data-label="Expenses" onclick="switchTab('expenses', this)" aria-label="Expenses">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/></svg>
+                <button class="tab" data-tab="transactions" data-label="Transactions" onclick="switchTab('transactions', this)" aria-label="Transactions">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3l4 4-4 4"/><path d="M3 7h18"/><path d="M7 21l-4-4 4-4"/><path d="M21 17H3"/></svg>
+                </button>
+                <button class="tab" data-tab="accounts" data-label="Accounts" onclick="switchTab('accounts', this)" aria-label="Accounts">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M2 10h20"/><path d="M6 15h2"/><path d="M11 15h2"/></svg>
                 </button>
                 <button class="tab" data-tab="goals" data-label="Goals" onclick="switchTab('goals', this)" aria-label="Goals">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>
@@ -2900,7 +3000,13 @@
                 <button class="tab" data-tab="insights" data-label="Insights" onclick="switchTab('insights', this)" aria-label="Insights">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg>
                 </button>
-                <button class="tab" data-tab="budget" data-label="Settings" onclick="switchTab('budget', this)" aria-label="Settings">
+                <button class="tab" data-tab="reports" data-label="Reports" onclick="switchTab('reports', this)" aria-label="Reports">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8"/><path d="M8 17h8"/><path d="M8 9h2"/></svg>
+                </button>
+                <button class="tab" data-tab="budget" data-label="Budget" onclick="switchTab('budget', this)" aria-label="Budget">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+                </button>
+                <button class="tab" data-tab="settings" data-label="Settings" onclick="switchTab('settings', this)" aria-label="Settings">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3h.1a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8v.1a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
                 </button>
             </nav>
@@ -2910,7 +3016,7 @@
         <div class="app-main">
             <!-- Topbar -->
             <div class="app-topbar">
-                <h1 class="topbar-title" id="topbarTitle" data-i18n="tabs.overview">Overview</h1>
+                <h1 class="topbar-title" id="topbarTitle" data-i18n="tabs.dashboard">Dashboard</h1>
                 <div class="topbar-actions">
                     <button class="topbar-btn" id="topbarAddBtn" onclick="topbarAdd()">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
@@ -2931,7 +3037,7 @@
             <!-- Content -->
             <div class="content">
             <!-- Overview Tab -->
-            <div class="tab-content active" id="overview-tab">
+            <div class="tab-content active" id="dashboard-tab">
                 <!-- Hero: Savings Rate + Streak -->
                 <div class="hero-card">
                     <div class="hero-grid">
@@ -3021,7 +3127,7 @@
             </div>
 
             <!-- Expenses Tab -->
-            <div class="tab-content" id="expenses-tab">
+            <div class="tab-content" id="transactions-tab">
                 <div class="expenses-grid">
                     <div>
                         <div class="card">
@@ -3085,37 +3191,25 @@
                 </div>
             </div>
 
+            <!-- Accounts Tab -->
+            <div class="tab-content" id="accounts-tab">
+                <div class="card">
+                    <h2 class="card-title" data-i18n="cards.accounts">Accounts</h2>
+                    <p style="color: var(--text-light); margin-bottom: 1.5rem;" data-i18n="accounts.intro">
+                        Track balances across your bank accounts, cards, and cash. (Coming soon.)
+                    </p>
+                    <div class="empty-state">
+                        <div class="empty-state-icon-svg">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 48px; height: 48px;"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M2 10h20"/><path d="M6 15h2"/><path d="M11 15h2"/></svg>
+                        </div>
+                        <div data-i18n="accounts.empty">No accounts yet — adding manual + linked accounts is on the roadmap.</div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Goals Tab -->
             <div class="tab-content" id="goals-tab">
-                <div class="card">
-                    <h2 class="card-title" data-i18n="cards.savingsGoals">Savings Goals</h2>
-                    <p style="color: var(--text-light); margin-bottom: 1.5rem;" data-i18n="goals.intro">
-                        Name what you're saving for. Watch the jar fill up.
-                    </p>
-                    <div class="goals-grid" id="goalsGrid"></div>
-                </div>
-
-                <div class="card net-worth-section">
-                    <h2 class="card-title" data-i18n="cards.netWorth">Net Worth</h2>
-                    <p style="color: var(--text-light); margin-bottom: 1rem;" data-i18n="netWorth.intro">
-                        Take a monthly snapshot. Watch the line go up over time.
-                    </p>
-                    <div class="net-worth-current">
-                        <div>
-                            <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-light); margin-bottom: 0.25rem; font-family: 'IBM Plex Mono', monospace;" data-i18n="netWorth.latestSnapshot">Latest snapshot</div>
-                            <div class="net-worth-value" id="netWorthLatest">—</div>
-                            <div style="font-size: 0.875rem; color: var(--text-light); margin-top: 0.25rem;" id="netWorthDate"></div>
-                        </div>
-                        <div id="netWorthChangeWrap"></div>
-                    </div>
-                    <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
-                        <button onclick="openSnapshotModal()" style="flex: 1; min-width: 200px;" data-i18n="netWorth.addSnapshot">+ Add Snapshot</button>
-                    </div>
-                    <div class="chart-container" style="height: 240px;">
-                        <canvas id="netWorthChart"></canvas>
-                    </div>
-                    <div id="snapshotsList" style="margin-top: 1rem;"></div>
-                </div>
+                <div class="goals-list" id="goalsGrid"></div>
             </div>
 
             <!-- Insights Tab -->
@@ -3129,8 +3223,40 @@
                 </div>
             </div>
 
+            <!-- Reports Tab -->
+            <div class="tab-content" id="reports-tab">
+                <div class="card">
+                    <h2 class="card-title" data-i18n="cards.reports">Reports</h2>
+                    <p style="color: var(--text-light); margin-bottom: 1.5rem;" data-i18n="reports.intro">
+                        Custom date-range breakdowns and exports. (Coming soon.)
+                    </p>
+                    <div class="empty-state">
+                        <div class="empty-state-icon-svg">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 48px; height: 48px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8"/><path d="M8 17h8"/><path d="M8 9h2"/></svg>
+                        </div>
+                        <div data-i18n="reports.empty">Spending reports by category, merchant, and time range are on the way.</div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Budget Tab -->
             <div class="tab-content" id="budget-tab">
+                <div class="card">
+                    <h2 class="card-title" data-i18n="cards.budget">Budget</h2>
+                    <p style="color: var(--text-light); margin-bottom: 1.5rem;" data-i18n="budget.intro">
+                        Plan how each kr is supposed to behave before the month starts. (Coming soon.)
+                    </p>
+                    <div class="empty-state">
+                        <div class="empty-state-icon-svg">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 48px; height: 48px;"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+                        </div>
+                        <div data-i18n="budget.empty">Per-category envelope budgeting is in the works.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div class="tab-content" id="settings-tab">
                 <div class="budget-grid">
                     <div>
                         <div class="card">
@@ -3815,10 +3941,13 @@ const languagePresets = [
 const translations = {
     en: {
         tabs: {
-            overview: 'Overview',
-            expenses: 'Expenses',
+            dashboard: 'Dashboard',
+            transactions: 'Transactions',
+            accounts: 'Accounts',
             goals: 'Goals',
             insights: 'Insights',
+            reports: 'Reports',
+            budget: 'Budget',
             settings: 'Settings'
         },
         topbar: {
@@ -3976,6 +4105,18 @@ const translations = {
         snapshot: {
             amountAndDateRequired: 'Please enter an amount and date'
         },
+        accounts: {
+            intro: 'Track balances across your bank accounts, cards, and cash. (Coming soon.)',
+            empty: 'No accounts yet — adding manual + linked accounts is on the roadmap.'
+        },
+        reports: {
+            intro: 'Custom date-range breakdowns and exports. (Coming soon.)',
+            empty: 'Spending reports by category, merchant, and time range are on the way.'
+        },
+        budget: {
+            intro: 'Plan how each kr is supposed to behave before the month starts. (Coming soon.)',
+            empty: 'Per-category envelope budgeting is in the works.'
+        },
         insightExtras: {
             monthlyAvg: 'Your monthly avg',
             savePerMonth: 'Save / month',
@@ -4060,6 +4201,9 @@ const translations = {
             saveFailed: 'Could not save. Try again.'
         },
         cards: {
+            accounts: 'Accounts',
+            reports: 'Reports',
+            budget: 'Budget',
             addExpense: 'Add Expense',
             importExcel: 'Import from Excel',
             recentExpenses: 'Recent Expenses',
@@ -4268,6 +4412,8 @@ const translations = {
         },
         goals: {
             intro: "Name what you're saving for. Watch the jar fill up.",
+            empty: 'No goals yet — tap "+ Add" to create your first one.',
+            targetSuffix: '{amount} target',
             completeTitle: 'Goal Complete!',
             reached: 'You reached {name}',
             cutByPercent: 'Cut {category} by {percent}%',
@@ -4337,10 +4483,13 @@ const translations = {
     },
     sv: {
         tabs: {
-            overview: 'Översikt',
-            expenses: 'Utgifter',
+            dashboard: 'Översikt',
+            transactions: 'Transaktioner',
+            accounts: 'Konton',
             goals: 'Mål',
             insights: 'Insikter',
+            reports: 'Rapporter',
+            budget: 'Budget',
             settings: 'Inställningar'
         },
         topbar: {
@@ -4498,6 +4647,18 @@ const translations = {
         snapshot: {
             amountAndDateRequired: 'Ange ett belopp och datum'
         },
+        accounts: {
+            intro: 'Håll koll på saldon för bankkonton, kort och kontanter. (Kommer snart.)',
+            empty: 'Inga konton än — manuella och kopplade konton är på vägen.'
+        },
+        reports: {
+            intro: 'Anpassade tidsintervall och export. (Kommer snart.)',
+            empty: 'Utgiftsrapporter per kategori, butik och tidsperiod är på gång.'
+        },
+        budget: {
+            intro: 'Planera hur varje krona ska bete sig innan månaden börjar. (Kommer snart.)',
+            empty: 'Kuvertbudget per kategori är under utveckling.'
+        },
         insightExtras: {
             monthlyAvg: 'Ditt månadssnitt',
             savePerMonth: 'Spar/månad',
@@ -4582,6 +4743,9 @@ const translations = {
             saveFailed: 'Kunde inte spara. Försök igen.'
         },
         cards: {
+            accounts: 'Konton',
+            reports: 'Rapporter',
+            budget: 'Budget',
             addExpense: 'Lägg till utgift',
             importExcel: 'Importera från Excel',
             recentExpenses: 'Senaste utgifter',
@@ -4790,6 +4954,8 @@ const translations = {
         },
         goals: {
             intro: 'Namnge det du sparar till. Se burken fyllas på.',
+            empty: 'Inga mål än — tryck på "+ Lägg till" för att skapa ditt första.',
+            targetSuffix: 'mål {amount}',
             completeTitle: 'Mål klart!',
             reached: 'Du nådde {name}',
             cutByPercent: 'Minska {category} med {percent} %',
@@ -5661,11 +5827,14 @@ function renderLanguageOptions() {
 
 // Tabs
 const TAB_META = {
-    overview: { title: 'Overview', addable: true },
-    expenses: { title: 'Expenses', addable: true },
-    goals:    { title: 'Goals',    addable: true },
-    insights: { title: 'Insights', addable: false },
-    budget:   { title: 'Settings', addable: false }
+    dashboard:    { title: 'Dashboard',    addable: true },
+    transactions: { title: 'Transactions', addable: true },
+    accounts:     { title: 'Accounts',     addable: false },
+    goals:        { title: 'Goals',        addable: true },
+    insights:     { title: 'Insights',     addable: false },
+    reports:      { title: 'Reports',      addable: false },
+    budget:       { title: 'Budget',       addable: false },
+    settings:     { title: 'Settings',     addable: false }
 };
 
 function switchTab(tabName, btnEl) {
@@ -5695,7 +5864,6 @@ function switchTab(tabName, btnEl) {
     // Render contextual content when activating these tabs
     if (tabName === 'goals') {
         renderGoals();
-        renderNetWorth();
     } else if (tabName === 'insights') {
         renderInsights();
     }
@@ -5704,11 +5872,11 @@ function switchTab(tabName, btnEl) {
 // Topbar "+ Add" — routes to the right add flow per active tab
 function topbarAdd() {
     const active = document.querySelector('.tab.active');
-    const tabName = active ? active.dataset.tab : 'expenses';
+    const tabName = active ? active.dataset.tab : 'transactions';
     if (tabName === 'goals') {
         if (typeof openGoalModal === 'function') openGoalModal(null);
     } else {
-        // Overview & Expenses both add an expense
+        // Dashboard & Transactions both add an expense
         if (typeof openQuickAdd === 'function') openQuickAdd();
     }
 }
@@ -7596,114 +7764,54 @@ function closeCutGoalDetail() {
 function renderGoals() {
     const grid = document.getElementById('goalsGrid');
     if (!grid) return;
+
+    const monthYear = (iso) => {
+        const d = new Date(iso);
+        if (isNaN(d.getTime())) return '';
+        const s = d.toLocaleDateString(activeLocale(), { month: 'short', year: 'numeric' });
+        // Capitalize first letter so Swedish "maj 2026" reads "Maj 2026"
+        return s.charAt(0).toUpperCase() + s.slice(1);
+    };
+
     let html = goals.map(g => {
         const isCut = g.kind === 'cut';
         const current = effectiveCurrentAmount(g);
-        const pct = Math.min(100, (current / g.targetAmount) * 100);
+        const pct = Math.min(100, (current / Math.max(1, g.targetAmount)) * 100);
         const isComplete = current >= g.targetAmount;
-        const remaining = Math.max(0, g.targetAmount - current);
         const iconName = resolveGoalIcon(g.emoji);
-
-        let deadlineHtml = '';
-        if (g.deadline) {
-            const dl = new Date(g.deadline);
-            const today = new Date();
-            const days = Math.ceil((dl - today) / 86400000);
-            deadlineHtml = days > 0
-                ? `<div class="goal-deadline">${t('goals.daysLeft', { n: days })}</div>`
-                : days === 0
-                ? `<div class="goal-deadline" style="color: var(--warning);">${t('goals.dueToday')}</div>`
-                : `<div class="goal-deadline" style="color: var(--danger);">${t('goals.daysOverdue', { n: Math.abs(days) })}</div>`;
-        }
-
-        // Cut-goal-specific: projection footer + "Auto-tracked" badge instead of "+ Add"
-        let footerHtml = '';
-        let actionsHtml = '';
-        if (isCut) {
-            const p = computeCutGoalProgress(g);
-            let projHtml;
-            if (p.monthsElapsed === 0) {
-                projHtml = `<div style="color: var(--text-light);">${t('goals.trackingStarts')}</div>`;
-            } else if (isComplete) {
-                projHtml = `<div style="color: var(--success); font-weight: 600;">${t('goals.targetReached')}</div>`;
-            } else {
-                const status = p.onTrack
-                    ? `<span style="color: var(--success); font-weight: 600;">${t('goals.onTrack')}</span>`
-                    : `<span style="color: var(--warning); font-weight: 600;">${t('goals.behindBy', { amount: formatCurrency(p.target - p.projected) })}</span>`;
-                projHtml = `
-                    <div style="display: flex; justify-content: space-between; gap: 0.5rem;">
-                        <div>
-                            <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-light); font-family: 'IBM Plex Mono', monospace;">${t('goals.projected')}</div>
-                            <div style="font-weight: 700;">${formatCurrency(p.projected)}</div>
-                        </div>
-                        <div style="text-align: right;">
-                            <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-light); font-family: 'IBM Plex Mono', monospace;">${t('goals.status')}</div>
-                            <div>${status}</div>
-                        </div>
-                    </div>
-                `;
-            }
-            footerHtml = `<div class="goal-projection">${projHtml}</div>`;
-            actionsHtml = `
-                <div class="goal-actions">
-                    <button onclick="openCutGoalDetail(${g.id})">${t('goals.viewProgress')}</button>
-                    <button class="btn-secondary" onclick="openGoalModal(${g.id})">${t('common.edit')}</button>
-                </div>
-            `;
-        } else {
-            actionsHtml = `
-                <div class="goal-actions">
-                    <button onclick="openGoalContribModal(${g.id})" ${isComplete ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''}>
-                        ${isComplete ? '✓ ' + t('common.done') : '+ ' + t('common.add')}
-                    </button>
-                    <button class="btn-secondary" onclick="openGoalModal(${g.id})">${t('common.edit')}</button>
-                </div>
-            `;
-        }
-
-        const kindBadge = isCut
-            ? `<div class="goal-kind-badge"><span>${t('goals.autoTrackedShort')}</span></div>`
-            : '';
+        const dateLabel = g.deadline ? monthYear(g.deadline) : '';
+        const clickHandler = isCut
+            ? `openCutGoalDetail(${g.id})`
+            : (isComplete ? `openGoalModal(${g.id})` : `openGoalContribModal(${g.id})`);
 
         return `
-            <div class="goal-card ${isComplete ? 'complete' : ''} ${isCut ? 'cut-goal' : ''}">
-                <div class="goal-header">
-                    <div class="goal-title-row">
-                        <div class="goal-icon-badge" style="--goal-color: ${g.color};">${svgIcon(iconName)}</div>
-                        <div>
-                            <div class="goal-name">${g.name}</div>
-                            ${deadlineHtml}
-                            ${kindBadge}
-                        </div>
+            <div class="goal-row ${isComplete ? 'complete' : ''}" style="--goal-color: ${g.color};" onclick="${clickHandler}" role="button" tabindex="0">
+                <div class="goal-row-head">
+                    <div class="goal-row-icon">${svgIcon(iconName)}</div>
+                    <div class="goal-row-text">
+                        <div class="goal-row-name">${g.name}</div>
+                        ${dateLabel ? `<div class="goal-row-deadline">${dateLabel}</div>` : ''}
                     </div>
-                    <div class="goal-percent">${pct.toFixed(0)}%</div>
-                </div>
-                <div class="goal-jar">
-                    ${jarSvg(pct, g.color)}
-                </div>
-                <div class="goal-amounts">
-                    <div>
-                        <div class="goal-current">${formatCurrency(current)}</div>
-                        <div class="goal-target">${t('goals.of', { amount: formatCurrency(g.targetAmount) })}</div>
-                    </div>
-                    <div style="text-align: right;">
-                        <div style="font-size: 0.75rem; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.05em;">${t('labels.remaining')}</div>
-                        <div style="font-weight: 700;">${formatCurrency(remaining)}</div>
+                    <div class="goal-row-amount">
+                        <div class="goal-row-current">${formatCurrency(current)}</div>
+                        <div class="goal-row-target">${t('goals.targetSuffix', { amount: formatCurrency(g.targetAmount) })}</div>
                     </div>
                 </div>
-                ${footerHtml}
-                ${actionsHtml}
+                <div class="goal-row-bar"><div class="goal-row-bar-fill" style="width: ${pct.toFixed(1)}%;"></div></div>
             </div>
         `;
     }).join('');
 
-    html += `
-        <div class="add-goal-card" onclick="openGoalModal(null)">
-            <div class="add-goal-icon">+</div>
-            <div style="font-weight: 600;">${t('goals.newGoal')}</div>
-            <div style="font-size: 0.875rem; color: var(--text-light); margin-top: 0.5rem;">${t('goals.whatSavingFor')}</div>
-        </div>
-    `;
+    if (goals.length === 0) {
+        html = `
+            <div class="empty-state">
+                <div class="empty-state-icon-svg">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 48px; height: 48px;"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>
+                </div>
+                <div data-i18n="goals.empty">No goals yet — tap "+ Add" to create your first one.</div>
+            </div>
+        `;
+    }
 
     grid.innerHTML = html;
 }
@@ -7957,6 +8065,10 @@ function renderNetWorth() {
     const dateEl = document.getElementById('netWorthDate');
     const changeWrap = document.getElementById('netWorthChangeWrap');
     const list = document.getElementById('snapshotsList');
+    // Net Worth UI was removed from the Goals tab. Bail safely if the
+    // section isn't in the DOM so other flows (e.g. snapshot modal
+    // save/delete) don't crash.
+    if (!latestEl || !dateEl || !changeWrap || !list) return;
 
     if (snapshots.length === 0) {
         latestEl.textContent = '—';
