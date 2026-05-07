@@ -6759,6 +6759,25 @@ function updateBudget() {
 }
 
 // Dashboard
+// Net amount on an expense (amount minus any Swish repayments).
+// Hoisted to module scope because both updateDashboard and updateCharts
+// need it; previously these were const inside updateDashboard, which
+// made them undefined inside updateCharts → a ReferenceError aborted
+// the per-day loop, so trendChart.update() and renderSavingsGrid()
+// silently never ran. That manifested as Spending Trend / Daily
+// Savings not updating when the cycle changes.
+function expenseNet(exp) {
+    const repayments = (exp.swishRepayments || []).reduce((s, r) => s + r.amount, 0);
+    return exp.amount - repayments;
+}
+// Discretionary amount: same as net, but zeroed for essential
+// categories (Groceries by default) so big shops don't break the
+// streak / paint the savings calendar red.
+function expenseDiscretionary(exp) {
+    const net = expenseNet(exp);
+    return isEssentialCategory(exp.category) ? 0 : net;
+}
+
 function updateDashboard() {
     const bounds = getCycleBounds(currentViewMonth);
     const startStr = isoDate(bounds.start);
@@ -6771,15 +6790,6 @@ function updateDashboard() {
     );
 
     const totalFixed = fixedExpenses.reduce((sum, f) => sum + f.amount, 0);
-    const expenseDiscretionary = (exp) => {
-        const repayments = (exp.swishRepayments || []).reduce((s, r) => s + r.amount, 0);
-        const net = exp.amount - repayments;
-        return isEssentialCategory(exp.category) ? 0 : net;
-    };
-    const expenseNet = (exp) => {
-        const repayments = (exp.swishRepayments || []).reduce((s, r) => s + r.amount, 0);
-        return exp.amount - repayments;
-    };
     // totalSpent = honest cash-out for the cycle (includes essentials).
     // It feeds the savings rate + the "Total Spent This Cycle" stat.
     const totalSpent = monthExpenses.reduce((sum, exp) => sum + expenseNet(exp), 0);
