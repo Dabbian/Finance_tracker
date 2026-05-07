@@ -6039,15 +6039,19 @@ function renderLanguageOptions() {
 
 // Tabs
 const TAB_META = {
-    dashboard:    { title: 'Dashboard',    addable: true  },
-    transactions: { title: 'Transactions', addable: true  },
-    accounts:     { title: 'Accounts',     addable: true  },
-    goals:        { title: 'Goals',        addable: true  },
-    insights:     { title: 'Insights',     addable: false },
-    reports:      { title: 'Reports',      addable: false },
-    recurring:    { title: 'Recurring',    addable: true  },
-    budget:       { title: 'Budget',       addable: true  },
-    settings:     { title: 'Settings',     addable: false }
+    // addable controls whether the topbar "+ Add" button is shown.
+    // We keep it visible on every tab now and let topbarAdd() route
+    // to the most relevant add flow per tab — falling back to the
+    // quick-add expense modal when a tab has no obvious add action.
+    dashboard:    { title: 'Dashboard',    addable: true },
+    transactions: { title: 'Transactions', addable: true },
+    accounts:     { title: 'Accounts',     addable: true },
+    goals:        { title: 'Goals',        addable: true },
+    insights:     { title: 'Insights',     addable: true },
+    reports:      { title: 'Reports',      addable: true },
+    recurring:    { title: 'Recurring',    addable: true },
+    budget:       { title: 'Budget',       addable: true },
+    settings:     { title: 'Settings',     addable: true }
 };
 
 function switchTab(tabName, btnEl) {
