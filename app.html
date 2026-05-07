@@ -5678,6 +5678,13 @@ function ensureSchema() {
     addColumnIfMissing('goals', 'kind', "TEXT DEFAULT 'manual'");
     addColumnIfMissing('goals', 'meta', "TEXT DEFAULT '{}'");
     addColumnIfMissing('categories', 'essential', "INTEGER DEFAULT 0");
+    // Per-transaction account link + kind (expense/income). Existing
+    // DBs created before #16 don't have these on the expenses table —
+    // add them idempotently. loadDataFromDB selects both columns, so
+    // without this migration the first SELECT throws "no such column:
+    // account_id" and the page fails to load.
+    addColumnIfMissing('expenses', 'account_id', "INTEGER");
+    addColumnIfMissing('expenses', 'kind', "TEXT DEFAULT 'expense'");
     db.run(`
         CREATE TABLE IF NOT EXISTS net_worth_snapshots (
             id INTEGER PRIMARY KEY,
