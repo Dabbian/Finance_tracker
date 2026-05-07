@@ -3973,10 +3973,6 @@ const translations = {
             noHeaderRow: 'No header row found and no rows match a (date, description, amount) layout.',
             headerNoRows: 'Found a header row at line {line}, but no valid expense rows below it.\n\nDate column: {dateCol}, Amount column: {amountCol}\nSkipped: {empty} empty, {badDate} bad date, {zeroAmount} zero amount.'
         },
-        db: {
-            loadOk: 'Database loaded successfully!',
-            loadError: 'Error loading database: {msg}'
-        },
         snapshot: {
             amountAndDateRequired: 'Please enter an amount and date'
         },
@@ -4100,6 +4096,9 @@ const translations = {
             empty: 'No insights yet — add a few expenses to see trends.',
             emptyHint: 'Add a few weeks of expenses for personalized insights.',
             intro: 'Patterns we noticed in your spending. Concrete actions, real numbers.',
+            setAsGoal: 'Set as goal',
+            gotIt: 'Got it',
+            markAsNew: 'Mark as new',
             thisCycle: 'This Cycle',
             watchOut: 'Watch Out',
             recurringCharges: 'Recurring Charges',
@@ -4178,7 +4177,8 @@ const translations = {
             downloaded: 'Database downloaded.',
             downloadedAt: 'Database downloaded: {time}',
             loaded: 'Database loaded.',
-            loadError: 'Could not read that database file.'
+            loadOk: 'Database loaded successfully!',
+            loadError: 'Error loading database: {msg}'
         },
         labels: {
             amount: 'Amount',
@@ -4266,21 +4266,6 @@ const translations = {
             cancelGoal: 'Cancel goal',
             cancel: 'Cancel'
         },
-        cycle: {
-            help: 'Choose when your budget month resets. Useful for payday-based budgeting (e.g., Swedish 25th payday) or credit card billing cycles (e.g., Amex on the 2nd).',
-            adjustNone: 'Use that exact day',
-            adjustWeekend: 'Move to nearest weekday',
-            adjustSweden: 'Move to nearest Swedish business day'
-        },
-        subs: {
-            help: 'Track your recurring subscriptions and see what they cost. Auto-detected from import data and any you add manually.',
-            amountPerCycle: 'Amount per cycle',
-            billingCycle: 'Billing cycle',
-            monthly: 'Monthly',
-            yearly: 'Yearly',
-            quarterly: 'Quarterly',
-            weekly: 'Weekly'
-        },
         goals: {
             intro: "Name what you're saving for. Watch the jar fill up.",
             completeTitle: 'Goal Complete!',
@@ -4317,12 +4302,6 @@ const translations = {
             projected: 'Projected',
             status: 'Status',
             viewProgress: 'View progress'
-        },
-        insights: {
-            empty: 'No insights yet — add a few expenses to see trends.',
-            setAsGoal: 'Set as goal',
-            gotIt: 'Got it',
-            markAsNew: 'Mark as new'
         },
         signIn: {
             title: 'Welcome back',
@@ -4516,10 +4495,6 @@ const translations = {
             noHeaderRow: 'Ingen rubrikrad hittades och inga rader matchar formatet (datum, beskrivning, belopp).',
             headerNoRows: 'Hittade en rubrikrad på rad {line}, men inga giltiga utgiftsrader under den.\n\nDatumkolumn: {dateCol}, Beloppskolumn: {amountCol}\nÖverhoppade: {empty} tomma, {badDate} dåligt datum, {zeroAmount} noll-belopp.'
         },
-        db: {
-            loadOk: 'Databasen laddades!',
-            loadError: 'Fel vid inläsning av databas: {msg}'
-        },
         snapshot: {
             amountAndDateRequired: 'Ange ett belopp och datum'
         },
@@ -4643,6 +4618,9 @@ const translations = {
             empty: 'Inga insikter än — lägg till några utgifter för att se trender.',
             emptyHint: 'Lägg till några veckors utgifter för personliga insikter.',
             intro: 'Mönster vi sett i dina utgifter. Konkreta åtgärder, riktiga siffror.',
+            setAsGoal: 'Sätt som mål',
+            gotIt: 'Uppfattat',
+            markAsNew: 'Markera som ny',
             thisCycle: 'Denna cykel',
             watchOut: 'Se upp',
             recurringCharges: 'Återkommande betalningar',
@@ -4721,7 +4699,8 @@ const translations = {
             downloaded: 'Databasen har laddats ner.',
             downloadedAt: 'Databasen laddades ner: {time}',
             loaded: 'Databasen har lästs in.',
-            loadError: 'Kunde inte läsa den databasfilen.'
+            loadOk: 'Databasen laddades!',
+            loadError: 'Fel vid inläsning av databas: {msg}'
         },
         labels: {
             amount: 'Belopp',
@@ -4809,21 +4788,6 @@ const translations = {
             cancelGoal: 'Avbryt mål',
             cancel: 'Avbryt'
         },
-        cycle: {
-            help: 'Välj när din budgetmånad återställs. Praktiskt för lönedagsbaserad budgetering (t.ex. svensk lön den 25:e) eller kreditkortsfaktureringar (t.ex. Amex den 2:a).',
-            adjustNone: 'Använd den exakta dagen',
-            adjustWeekend: 'Flytta till närmaste vardag',
-            adjustSweden: 'Flytta till närmaste svenska bankdag'
-        },
-        subs: {
-            help: 'Håll koll på återkommande prenumerationer och se vad de kostar. Identifieras automatiskt från importerad data, eller läggs till manuellt.',
-            amountPerCycle: 'Belopp per cykel',
-            billingCycle: 'Faktureringscykel',
-            monthly: 'Månadsvis',
-            yearly: 'Årsvis',
-            quarterly: 'Kvartalsvis',
-            weekly: 'Veckovis'
-        },
         goals: {
             intro: 'Namnge det du sparar till. Se burken fyllas på.',
             completeTitle: 'Mål klart!',
@@ -4860,12 +4824,6 @@ const translations = {
             projected: 'Prognos',
             status: 'Status',
             viewProgress: 'Visa framsteg'
-        },
-        insights: {
-            empty: 'Inga insikter än — lägg till några utgifter för att se trender.',
-            setAsGoal: 'Sätt som mål',
-            gotIt: 'Uppfattat',
-            markAsNew: 'Markera som ny'
         },
         signIn: {
             title: 'Välkommen tillbaka',
