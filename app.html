@@ -3788,7 +3788,7 @@
             </div>
             <div class="form-group">
                 <label for="accountBalance" id="accountBalanceLabel" data-i18n="labels.startingBalanceKr">Starting Balance (kr)</label>
-                <input type="number" id="accountBalance" step="0.01" placeholder="0.00" data-i18n-placeholder="placeholders.amount">
+                <input type="text" inputmode="decimal" id="accountBalance" placeholder="0.00" data-i18n-placeholder="placeholders.amount">
             </div>
             <div class="form-group">
                 <label for="accountColor" data-i18n="labels.color">Color</label>
@@ -3804,7 +3804,7 @@
                 </small>
             </div>
             <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
-                <button class="btn-secondary" id="accountDeleteBtn" onclick="deleteAccount()" style="flex: 0 0 auto; display: none;" data-i18n="common.delete">Delete</button>
+                <button class="btn-secondary" id="accountDeleteBtn" onclick="deleteAccount()" style="flex: 0 0 auto; width: auto; padding: 0.875rem 1.25rem; display: none;" data-i18n="common.delete">Delete</button>
                 <button class="btn-secondary" onclick="closeAccountModal()" style="flex: 1;" data-i18n="common.cancel">Cancel</button>
                 <button onclick="saveAccount()" style="flex: 1;" data-i18n="buttons.saveAccount">Save</button>
             </div>
@@ -6524,11 +6524,34 @@ function closeAccountModal() {
     currentEditingAccount = null;
 }
 
+// Robust amount parser — accepts both "278.54" and "278,54" so users
+// don't get bitten when typing in a Swedish-locale style. Also strips
+// thousands separators (spaces, non-breaking spaces, common kr suffix).
+function parseAmountInput(raw) {
+    if (raw == null) return 0;
+    let s = String(raw).trim();
+    if (!s) return 0;
+    // Drop currency suffix / spaces / non-breaking spaces
+    s = s.replace(/\s| |kr|SEK|\$|USD/gi, '');
+    // If both '.' and ',' appear, assume the LAST one is the decimal
+    // separator and strip the others as thousand-separators.
+    const lastDot = s.lastIndexOf('.');
+    const lastComma = s.lastIndexOf(',');
+    if (lastDot !== -1 && lastComma !== -1) {
+        const decAt = Math.max(lastDot, lastComma);
+        s = s.slice(0, decAt).replace(/[.,]/g, '') + '.' + s.slice(decAt + 1);
+    } else {
+        s = s.replace(',', '.');
+    }
+    const n = parseFloat(s);
+    return isNaN(n) ? 0 : n;
+}
+
 function saveAccount() {
     const name = document.getElementById('accountName').value.trim();
     if (!name) return;
     const type = document.getElementById('accountType').value;
-    const balance = parseFloat(document.getElementById('accountBalance').value || '0') || 0;
+    const balance = parseAmountInput(document.getElementById('accountBalance').value);
     const color = document.getElementById('accountColor').value;
     const linked = document.getElementById('accountLinked').checked ? 1 : 0;
     const idStr = document.getElementById('accountId').value;
