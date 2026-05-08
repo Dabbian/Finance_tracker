@@ -99,30 +99,23 @@
                     <div class="wins-strip" id="winsStrip"></div>
                 </div>
 
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-label" data-i18n="stats.totalSpentCycle">Total Spent This Cycle</div>
-                        <div class="stat-value" id="totalSpent">0 kr</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label" data-i18n="stats.dailyAverage">Daily Average</div>
-                        <div class="stat-value" id="dailyAverage">0 kr</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label" data-i18n="stats.budgetRemaining">Budget Remaining</div>
-                        <div class="stat-value" id="budgetRemaining">0 kr</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label" data-i18n="stats.dailyBudget">Daily Budget</div>
-                        <div class="stat-value" id="dailyBudget">0 kr</div>
-                    </div>
-                </div>
-
-                <div class="dashboard-grid">
-                    <div class="card">
-                        <h2 class="card-title" data-i18n="cards.spendingTrend">Spending Trend</h2>
-                        <div class="chart-container">
-                            <canvas id="trendChart"></canvas>
+                <div class="dashboard-top">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-label" data-i18n="stats.totalSpentCycle">Total Spent This Cycle</div>
+                            <div class="stat-value" id="totalSpent">0 kr</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label" data-i18n="stats.dailyAverage">Daily Average</div>
+                            <div class="stat-value" id="dailyAverage">0 kr</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label" data-i18n="stats.budgetRemaining">Budget Remaining</div>
+                            <div class="stat-value" id="budgetRemaining">0 kr</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label" data-i18n="stats.dailyBudget">Daily Budget</div>
+                            <div class="stat-value" id="dailyBudget">0 kr</div>
                         </div>
                     </div>
                     <div class="card">
@@ -145,6 +138,13 @@
                                 <span data-i18n="savings.future">Future</span>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title" data-i18n="cards.spendingTrend">Spending Trend</h2>
+                    <div class="chart-container">
+                        <canvas id="trendChart"></canvas>
                     </div>
                 </div>
             </div>
