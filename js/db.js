@@ -25,6 +25,8 @@ function ensureSchema() {
     // account_id" and the page fails to load.
     addColumnIfMissing('expenses', 'account_id', "INTEGER");
     addColumnIfMissing('expenses', 'kind', "TEXT DEFAULT 'expense'");
+    addColumnIfMissing('subscriptions', 'billing_day', "TEXT");
+    addColumnIfMissing('subscriptions', 'account_id', "INTEGER");
     db.run(`
         CREATE TABLE IF NOT EXISTS net_worth_snapshots (
             id INTEGER PRIMARY KEY,
@@ -44,6 +46,8 @@ function ensureSchema() {
             note TEXT,
             source TEXT DEFAULT 'manual',
             match_key TEXT,
+            billing_day TEXT,
+            account_id INTEGER,
             created_date TEXT NOT NULL
         )
     `);
@@ -137,6 +141,8 @@ function createTables() {
             note TEXT,
             source TEXT DEFAULT 'manual',
             match_key TEXT,
+            billing_day TEXT,
+            account_id INTEGER,
             created_date TEXT NOT NULL
         )
     `);
@@ -302,7 +308,8 @@ function loadDataFromDB() {
     // Load subscriptions
     try {
         const subsResult = db.exec(`
-            SELECT id, name, amount, cycle, category, status, note, source, match_key, created_date
+            SELECT id, name, amount, cycle, category, status, note, source, match_key,
+                   billing_day, account_id, created_date
             FROM subscriptions ORDER BY status ASC, amount DESC
         `);
         subscriptions = subsResult.length > 0 ? subsResult[0].values.map(row => ({
@@ -315,7 +322,9 @@ function loadDataFromDB() {
             note: row[6],
             source: row[7] || 'manual',
             matchKey: row[8],
-            createdDate: row[9]
+            billingDay: row[9] || null,
+            accountId: row[10] != null ? row[10] : null,
+            createdDate: row[11]
         })) : [];
     } catch(e) { subscriptions = []; }
 

@@ -101,6 +101,7 @@ async function initDatabase() {
         }
 
         loadDataFromDB();
+        autoCreateMissingSubscriptionExpenses();
     } catch (error) {
         console.error('Failed to initialize database:', error);
         alert(t('errors.initDb'));

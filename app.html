@@ -468,12 +468,20 @@
                 </div>
                 <div class="form-group">
                     <label for="subCycle" data-i18n="subs.billingCycle">Billing cycle</label>
-                    <select id="subCycle">
+                    <select id="subCycle" onchange="onSubCycleChange()">
                         <option value="monthly" data-i18n="subs.monthly">Monthly</option>
                         <option value="yearly" data-i18n="subs.yearly">Yearly</option>
                         <option value="quarterly" data-i18n="subs.quarterly">Quarterly</option>
                         <option value="weekly" data-i18n="subs.weekly">Weekly</option>
                     </select>
+                </div>
+                <div class="form-group" id="subBillingDayGroup">
+                    <label id="subBillingDayLabel" data-i18n="subs.billingDay">Billing day</label>
+                    <div id="subBillingDayContainer"></div>
+                </div>
+                <div class="form-group">
+                    <label for="subAccount" data-i18n="labels.account">Account</label>
+                    <select id="subAccount"></select>
                 </div>
                 <div class="form-group">
                     <label for="subCategory" data-i18n="labels.categoryOptional">Category (Optional)</label>

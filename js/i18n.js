@@ -89,6 +89,8 @@ const translations = {
             activeStatus: 'Active',
             markCancelled: 'Mark as cancelled',
             reactivate: 'Reactivate',
+            billingDay: 'Billing day',
+            due: 'Due',
             cycleShort: { weekly: 'wk', monthly: 'mo', quarterly: 'qt', yearly: 'yr' }
         },
         categories: {
@@ -670,6 +672,8 @@ const translations = {
             activeStatus: 'Aktiv',
             markCancelled: 'Markera som avslutad',
             reactivate: 'Återaktivera',
+            billingDay: 'Fakturadag',
+            due: 'Förfaller',
             cycleShort: { weekly: 'v', monthly: 'mån', quarterly: 'kv', yearly: 'år' }
         },
         categories: {
