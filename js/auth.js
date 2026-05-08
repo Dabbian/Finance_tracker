@@ -54,7 +54,7 @@ function populateAccountCard() {
     }
 
     // Account type — currently always demo, but ready for real backend
-    setText('accountType', t('account.demoLocalOnly'));
+    setText('userAccountType', t('account.demoLocalOnly'));
 
     // Subline under the email
     const sublineParts = [];
