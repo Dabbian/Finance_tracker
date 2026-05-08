@@ -881,16 +881,6 @@
             text-align: center;
         }
 
-        select.currency-select {
-            background: rgba(255,255,255,0.1);
-            color: white;
-            border: 1px solid rgba(255,255,255,0.2);
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            font-weight: 600;
-            width: auto;
-        }
-
         /* Account card (Settings tab) */
         .account-row {
             display: flex;
@@ -3037,27 +3027,6 @@
             font-size: 0.95rem;
             font-weight: 500;
         }
-        .app-topbar select.currency-select {
-            background: transparent;
-            color: var(--text);
-            border: none;
-            padding: 0.4rem 1.4rem 0.4rem 0.5rem;
-            font-size: 0.95rem;
-            font-weight: 500;
-            cursor: pointer;
-            opacity: 0.85;
-            appearance: none;
-            -webkit-appearance: none;
-            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
-            background-repeat: no-repeat;
-            background-position: right 0.25rem center;
-        }
-        .app-topbar select.currency-select:hover { opacity: 1; }
-        .app-topbar select.currency-select option {
-            background: var(--bg);
-            color: var(--text);
-        }
-
         /* Content lives inside .app-main */
         .app-main .content {
             padding: 2rem;
