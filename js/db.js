@@ -154,7 +154,7 @@ function createTables() {
     `);
 
     // Insert default categories
-    const stmt = db.prepare('INSERT OR IGNORE INTO categories (id, name, color, keywords) VALUES (?, ?, ?, ?)');
+    const stmt = db.prepare('INSERT OR IGNORE INTO categories (id, name, color, keywords, essential) VALUES (?, ?, ?, ?, ?)');
     defaultCategories.forEach(cat => {
         stmt.run([cat.id, cat.name, cat.color, JSON.stringify(cat.keywords), cat.essential ? 1 : 0]);
     });
