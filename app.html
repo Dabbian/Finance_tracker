@@ -9,8 +9,52 @@
     <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
     <link rel="stylesheet" href="styles/app.css">
+    <script>
+        // Apply theme, palette, and the user's last tab BEFORE the body
+        // parses — otherwise the body's static data-theme + the CSS rules
+        // below have nothing to act on, the page paints with defaults, and
+        // we get a flash when JS later swaps to the user's real settings.
+        (function() {
+            try {
+                var theme = localStorage.getItem('theme');
+                if (theme === 'light' || theme === 'dark') {
+                    document.documentElement.setAttribute('data-theme', theme);
+                }
+                var palette = localStorage.getItem('palette');
+                if (palette) document.documentElement.setAttribute('data-palette', palette);
+            } catch (e) {}
+
+            var target = 'dashboard';
+            try {
+                if (sessionStorage.getItem('freshLogin')) {
+                    sessionStorage.removeItem('freshLogin');
+                } else {
+                    var last = localStorage.getItem('lastTab');
+                    if (last) target = last;
+                }
+            } catch (e) {}
+            document.documentElement.setAttribute('data-initial-tab', target);
+        })();
+    </script>
+    <style>
+        /* While data-initial-tab is set, hide every .tab-content and show
+           only the matching one. Removed by app.html's bottom inline script
+           once the .active class has been swapped to the right element. */
+        html[data-initial-tab] .tab-content { display: none !important; }
+        html[data-initial-tab="dashboard"]    #dashboard-tab,
+        html[data-initial-tab="transactions"] #transactions-tab,
+        html[data-initial-tab="accounts"]     #accounts-tab,
+        html[data-initial-tab="goals"]        #goals-tab,
+        html[data-initial-tab="insights"]     #insights-tab,
+        html[data-initial-tab="reports"]      #reports-tab,
+        html[data-initial-tab="recurring"]    #recurring-tab,
+        html[data-initial-tab="budget"]       #budget-tab,
+        html[data-initial-tab="settings"]     #settings-tab {
+            display: block !important;
+        }
+    </style>
 </head>
-<body data-theme="dark" data-palette="sunset">
+<body>
     <div class="app-shell">
         <!-- Slim icon sidebar -->
         <aside class="app-sidebar" data-i18n-aria-label="topbar.primaryNav" aria-label="Primary navigation">
@@ -407,6 +451,37 @@
         </div><!-- /.content -->
         </div><!-- /.app-main -->
     </div><!-- /.app-shell -->
+
+    <script>
+        // The CSS in <head> (driven by data-initial-tab on <html>) has already
+        // hidden the wrong tab's content. Now that the body is parsed, swap
+        // the .active class onto the right tab/content so the rest of the
+        // JS sees correct state, then drop data-initial-tab so the CSS
+        // overrides become inert and switchTab() can take over normally.
+        (function() {
+            var target = document.documentElement.getAttribute('data-initial-tab');
+            if (target && target !== 'dashboard') {
+                var btn = document.querySelector('.tab[data-tab="' + target + '"]');
+                var content = document.getElementById(target + '-tab');
+                if (btn && content) {
+                    document.querySelectorAll('.tab.active').forEach(function(el) { el.classList.remove('active'); });
+                    document.querySelectorAll('.tab-content.active').forEach(function(el) { el.classList.remove('active'); });
+                    btn.classList.add('active');
+                    content.classList.add('active');
+                    var titleEl = document.getElementById('topbarTitle');
+                    if (titleEl) {
+                        titleEl.dataset.i18n = 'tabs.' + target;
+                        // applyLanguage() runs later and will translate; for
+                        // now set the English label from the tab button so
+                        // we don't flash the literal "Dashboard" text.
+                        var label = btn.getAttribute('data-label');
+                        if (label) titleEl.textContent = label;
+                    }
+                }
+            }
+            document.documentElement.removeAttribute('data-initial-tab');
+        })();
+    </script>
 
     <!-- Edit Expense Modal -->
     <div class="modal" id="editModal">

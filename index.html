@@ -774,6 +774,7 @@
                 method: 'password',
                 signedInAt: Date.now()
             }));
+            sessionStorage.setItem('freshLogin', '1');
             window.location.href = APP_URL;
         }, 450);
     });
@@ -797,6 +798,7 @@
                 signedInAt: Date.now(),
                 isNewAccount: true
             }));
+            sessionStorage.setItem('freshLogin', '1');
             window.location.href = APP_URL;
         }, 600);
     });
@@ -842,6 +844,7 @@
                 method: 'passkey',
                 signedInAt: Date.now()
             }));
+            sessionStorage.setItem('freshLogin', '1');
             window.location.href = APP_URL;
         }, 1000);
     }
