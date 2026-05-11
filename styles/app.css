@@ -405,6 +405,139 @@
             padding: 0;
             box-sizing: border-box;
         }
+/* ---------- PALETTE: NORDIC ---------- */
+/* Crisp ice surfaces, cobalt accent. A clean Scandinavian read —
+   distinct from Slate (mid-blue) and Ocean (cyan). */
+[data-palette="nordic"] {
+    --primary:#0b1f3a; --secondary:#1e3a5f;
+    --accent:#1e40af; --accent-light:#3b66d6;
+    --success:#047857; --warning:#ca8a04; --danger:#be123c;
+    --text:#0b1f3a; --text-light:#5b6b80;
+    --border:#d6dee8; --bg:#f4f7fb; --bg-alt:#e6ecf3;
+    --header-from:#0b1f3a; --header-to:#1e3a5f;
+    --shadow:0 1px 3px rgba(11,31,58,0.08); --shadow-lg:0 10px 25px rgba(30,64,175,0.14);
+}
+[data-palette="nordic"][data-theme="dark"] {
+    --primary:#e8eef7; --secondary:#c5d2e2;
+    --accent:#60a5fa; --accent-light:#93c5fd;
+    --success:#34d399; --warning:#fbbf24; --danger:#fb7185;
+    --text:#e8eef7; --text-light:#94a3b8;
+    --border:#1e3a5f; --bg:#0a1424; --bg-alt:#122036;
+    --header-from:#122036; --header-to:#1e3a5f;
+    --shadow:0 1px 3px rgba(0,0,0,0.3); --shadow-lg:0 10px 25px rgba(0,0,0,0.3);
+}
+
+/* ---------- PALETTE: SAGE ---------- */
+/* Dusty, muted green. Calm — not the vivid garden of Forest, not
+   the cool teal of Mint. Reads like a herbarium page. */
+[data-palette="sage"] {
+    --primary:#1f2a22; --secondary:#34433a;
+    --accent:#4d7c5f; --accent-light:#6b9a7b;
+    --success:#65a30d; --warning:#ca8a04; --danger:#b91c1c;
+    --text:#1f2a22; --text-light:#6b7a6f;
+    --border:#d9e0d6; --bg:#f5f7f3; --bg-alt:#ebefe6;
+    --header-from:#1f2a22; --header-to:#34433a;
+    --shadow:0 1px 3px rgba(0,0,0,0.08); --shadow-lg:0 10px 25px rgba(0,0,0,0.1);
+}
+[data-palette="sage"][data-theme="dark"] {
+    --primary:#eaeee6; --secondary:#c8d2c2;
+    --accent:#86c098; --accent-light:#a8d4b6;
+    --success:#4ade80; --warning:#facc15; --danger:#f87171;
+    --text:#eaeee6; --text-light:#94a39a;
+    --border:#34433a; --bg:#131a14; --bg-alt:#1e271f;
+    --header-from:#1e271f; --header-to:#34433a;
+    --shadow:0 1px 3px rgba(0,0,0,0.3); --shadow-lg:0 10px 25px rgba(0,0,0,0.3);
+}
+
+/* ---------- PALETTE: CRIMSON ---------- */
+/* Bone-white surfaces, deep wine accent. The first proper red
+   palette — Sunset/Earth are orange, Blossom is pink. */
+[data-palette="crimson"] {
+    --primary:#2b0b0d; --secondary:#4a1018;
+    --accent:#9f1239; --accent-light:#be123c;
+    --success:#15803d; --warning:#b45309; --danger:#7f1d1d;
+    --text:#2b0b0d; --text-light:#84545a;
+    --border:#ecd9dc; --bg:#fdf7f7; --bg-alt:#f6e8ea;
+    --header-from:#2b0b0d; --header-to:#9f1239;
+    --shadow:0 1px 3px rgba(76,13,18,0.08); --shadow-lg:0 10px 30px rgba(159,18,57,0.18);
+}
+[data-palette="crimson"][data-theme="dark"] {
+    --primary:#fce7ea; --secondary:#f3c8d0;
+    --accent:#fb7185; --accent-light:#fda4af;
+    --success:#4ade80; --warning:#fbbf24; --danger:#f87171;
+    --text:#fce7ea; --text-light:#c89aa1;
+    --border:rgba(255,180,200,0.18); --bg:#1a0608; --bg-alt:rgba(255,200,210,0.06);
+    --header-from:#3a0c10; --header-to:#6b1226;
+    --shadow:0 1px 3px rgba(0,0,0,0.35); --shadow-lg:0 14px 40px rgba(0,0,0,0.45);
+}
+
+/* ---------- PALETTE: ESPRESSO ---------- */
+/* Cream + roasted-coffee brown. Tactile, editorial — Earth is
+   terracotta orange, Espresso is the bean itself. */
+[data-palette="espresso"] {
+    --primary:#1c0f08; --secondary:#3a2415;
+    --accent:#6f4518; --accent-light:#8b5a2b;
+    --success:#65a30d; --warning:#ca8a04; --danger:#b91c1c;
+    --text:#1c0f08; --text-light:#7a5a3f;
+    --border:#e8dccb; --bg:#fbf6ee; --bg-alt:#f2e8d4;
+    --header-from:#1c0f08; --header-to:#3a2415;
+    --shadow:0 1px 3px rgba(28,15,8,0.08); --shadow-lg:0 10px 25px rgba(58,36,21,0.16);
+}
+[data-palette="espresso"][data-theme="dark"] {
+    --primary:#f5ead4; --secondary:#d4ba8e;
+    --accent:#c4956b; --accent-light:#d4ad88;
+    --success:#84cc16; --warning:#fbbf24; --danger:#f87171;
+    --text:#f5ead4; --text-light:#a8896a;
+    --border:#3a2415; --bg:#180c05; --bg-alt:#241509;
+    --header-from:#241509; --header-to:#3a2415;
+    --shadow:0 1px 3px rgba(0,0,0,0.35); --shadow-lg:0 14px 40px rgba(0,0,0,0.4);
+}
+
+/* ---------- PALETTE: LAVENDER ---------- */
+/* Pale violet ground + indigo accent. Soft, optimistic — distinct
+   from Plum's deeper magenta-purple by leaning blue. */
+[data-palette="lavender"] {
+    --primary:#1e1b4b; --secondary:#312e81;
+    --accent:#4f46e5; --accent-light:#6366f1;
+    --success:#10b981; --warning:#f59e0b; --danger:#dc2626;
+    --text:#1e1b4b; --text-light:#6b6a8a;
+    --border:#e2e0ef; --bg:#faf9ff; --bg-alt:#efeefa;
+    --header-from:#1e1b4b; --header-to:#312e81;
+    --shadow:0 1px 3px rgba(30,27,75,0.08); --shadow-lg:0 10px 25px rgba(79,70,229,0.16);
+}
+[data-palette="lavender"][data-theme="dark"] {
+    --primary:#ede9fe; --secondary:#c4b5fd;
+    --accent:#a78bfa; --accent-light:#c4b5fd;
+    --success:#34d399; --warning:#fbbf24; --danger:#f87171;
+    --text:#ede9fe; --text-light:#a8a0c8;
+    --border:#312e81; --bg:#0f0d2b; --bg-alt:#1e1b4b;
+    --header-from:#1e1b4b; --header-to:#312e81;
+    --shadow:0 1px 3px rgba(0,0,0,0.3); --shadow-lg:0 10px 25px rgba(0,0,0,0.35);
+}
+
+/* ---------- PALETTE: CARBON ---------- */
+/* High-contrast charcoal + electric lime accent. Technical,
+   terminal-adjacent. Mono is monochrome; Carbon adds one bright
+   semantic-color signal. */
+[data-palette="carbon"] {
+    --primary:#0a0a0a; --secondary:#1f1f1f;
+    --accent:#65a30d; --accent-light:#84cc16;
+    --success:#16a34a; --warning:#f59e0b; --danger:#dc2626;
+    --text:#0a0a0a; --text-light:#525252;
+    --border:#e5e5e5; --bg:#fafafa; --bg-alt:#f0f0f0;
+    --header-from:#0a0a0a; --header-to:#1f1f1f;
+    --shadow:0 1px 3px rgba(0,0,0,0.1); --shadow-lg:0 10px 25px rgba(101,163,13,0.18);
+}
+[data-palette="carbon"][data-theme="dark"] {
+    --primary:#fafafa; --secondary:#d4d4d4;
+    --accent:#a3e635; --accent-light:#bef264;
+    --success:#4ade80; --warning:#fbbf24; --danger:#f87171;
+    --text:#fafafa; --text-light:#a3a3a3;
+    --border:#262626; --bg:#050505; --bg-alt:#141414;
+    --header-from:#0a0a0a; --header-to:#1f1f1f;
+    --shadow:0 1px 3px rgba(0,0,0,0.5); --shadow-lg:0 14px 40px rgba(163,230,53,0.18);
+}
+
 
         body {
             /* Default ambient — every palette inherits this unless it
