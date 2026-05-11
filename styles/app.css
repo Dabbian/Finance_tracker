@@ -400,11 +400,7 @@
             color: var(--primary);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+
 /* ---------- PALETTE: NORDIC ---------- */
 /* Crisp ice surfaces, cobalt accent. A clean Scandinavian read —
    distinct from Slate (mid-blue) and Ocean (cyan). */
@@ -537,7 +533,11 @@
     --header-from:#0a0a0a; --header-to:#1f1f1f;
     --shadow:0 1px 3px rgba(0,0,0,0.5); --shadow-lg:0 14px 40px rgba(163,230,53,0.18);
 }
-
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
             /* Default ambient — every palette inherits this unless it
