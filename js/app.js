@@ -117,10 +117,16 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     await initDatabase();
 
-    document.body.setAttribute('data-theme', theme);
-    document.body.setAttribute('data-palette', palette);
-    // Mirror DB-stored language to localStorage so the login page picks it up.
-    try { localStorage.setItem('language', language); } catch (e) {}
+    document.documentElement.setAttribute('data-theme', theme);
+    document.documentElement.setAttribute('data-palette', palette);
+    // Mirror DB-stored values to localStorage. Language: so the login page
+    // picks it up. Theme/palette: so the inline <head> script can apply them
+    // before paint on the next reload (avoids a default-theme flash).
+    try {
+        localStorage.setItem('language', language);
+        localStorage.setItem('theme', theme);
+        localStorage.setItem('palette', palette);
+    } catch (e) {}
     renderThemeButtons();
     renderPaletteMenu();
     renderLanguageOptions();
@@ -187,6 +193,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Resize confetti canvas
     window.addEventListener('resize', resizeConfettiCanvas);
     resizeConfettiCanvas();
+
+    renderActiveTabContent();
 });
 
 

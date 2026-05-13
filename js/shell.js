@@ -2,8 +2,9 @@
 function setTheme(newTheme) {
     if (newTheme !== 'light' && newTheme !== 'dark') return;
     theme = newTheme;
-    document.body.setAttribute('data-theme', theme);
+    document.documentElement.setAttribute('data-theme', theme);
     setSetting('theme', theme);
+    try { localStorage.setItem('theme', theme); } catch (e) {}
     renderThemeButtons();
 }
 
@@ -29,8 +30,9 @@ function renderPaletteMenu() {
 
 function changePalette(id) {
     palette = id;
-    document.body.setAttribute('data-palette', id);
+    document.documentElement.setAttribute('data-palette', id);
     setSetting('palette', id);
+    try { localStorage.setItem('palette', id); } catch (e) {}
     renderPaletteMenu();
 }
 
@@ -62,6 +64,7 @@ const TAB_META = {
 };
 
 function switchTab(tabName, btnEl) {
+    try { localStorage.setItem('lastTab', tabName); } catch (e) {}
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
     // Use the explicitly-passed element instead of event.target (which can be a child node)
@@ -99,6 +102,24 @@ function switchTab(tabName, btnEl) {
     } else if (tabName === 'accounts') {
         if (typeof renderAccountsCard === 'function') renderAccountsCard();
     }
+}
+
+// After data is loaded, trigger the contextual render hook for whatever tab
+// is active. switchTab does this on click; this mirrors it for the initial
+// load when the inline tab-restore script (in app.html) picked a non-default
+// tab. Also updates the topbar Add button visibility for the active tab.
+function renderActiveTabContent() {
+    const active = document.querySelector('.tab.active');
+    if (!active) return;
+    const tabName = active.dataset.tab;
+    if (tabName === 'goals' && typeof renderGoals === 'function') renderGoals();
+    else if (tabName === 'insights' && typeof renderInsights === 'function') renderInsights();
+    else if (tabName === 'reports' && typeof updateCharts === 'function') updateCharts();
+    // recurring and accounts are already rendered unconditionally during init
+
+    const meta = TAB_META[tabName];
+    const addBtn = document.getElementById('topbarAddBtn');
+    if (addBtn && meta) addBtn.hidden = !meta.addable;
 }
 
 // Topbar "+ Add" — routes to the right add flow per active tab
