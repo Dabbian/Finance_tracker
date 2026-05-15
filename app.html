@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Personal Finance Tracker</title>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;500;600;700&family=Varela+Round&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
     <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
@@ -54,7 +54,7 @@
         }
     </style>
 </head>
-<body>
+<body data-theme="light" data-palette="earth">
     <div class="app-shell">
         <!-- Slim icon sidebar -->
         <aside class="app-sidebar" data-i18n-aria-label="topbar.primaryNav" aria-label="Primary navigation">
@@ -116,6 +116,11 @@
             <div class="content">
             <!-- Overview Tab -->
             <div class="tab-content active" id="dashboard-tab">
+                <!-- Greeting -->
+                <div class="greeting-band">
+                    <div class="greeting-text" id="greetingText" data-i18n="greeting.afternoon">Good afternoon</div>
+                    <div class="greeting-date" id="greetingDate"></div>
+                </div>
                 <!-- Hero: Savings Rate + Streak -->
                 <div class="hero-card">
                     <div class="hero-grid">
@@ -137,6 +142,13 @@
                         </div>
                     </div>
                     <div class="wins-strip" id="winsStrip"></div>
+                </div>
+
+                <!-- vs last cycle comparison -->
+                <div class="comparison-band" id="comparisonBand" hidden>
+                    <span class="comparison-label" data-i18n="comparison.vsLast">vs last cycle</span>
+                    <span class="comparison-item" id="comparisonSpend"></span>
+                    <span class="comparison-item" id="comparisonSavings"></span>
                 </div>
 
                 <div class="dashboard-top">
@@ -235,7 +247,13 @@
                 <div class="card">
                     <h2 class="card-title" data-i18n="cards.importExcel">Import from Excel</h2>
                     <div class="file-upload" id="fileUpload">
-                        <div class="upload-icon">📊</div>
+                        <div class="upload-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
+                                <path d="M14 3v6h6"/>
+                                <path d="M9 13l2 2 4-4"/>
+                            </svg>
+                        </div>
                         <div>
                             <strong data-i18n="buttons.uploadClick">Click to upload</strong> <span data-i18n="buttons.dragDrop">or drag and drop</span><br>
                             <small data-i18n="buttons.uploadHelp">Support for .xlsx and .xls files</small>
