@@ -32,43 +32,105 @@ function addExpense(e) {
 
 function renderExpensesList() {
     const container = document.getElementById('expensesList');
+    const summary = document.getElementById('txSummary');
+
     if (expenses.length === 0) {
-        container.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: 2rem;">' + t('expenses.empty') + '</p>';
+        if (summary) summary.hidden = true;
+        container.innerHTML = `
+            <div class="empty-state">
+                <svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="3" y="5" width="18" height="14" rx="3"/>
+                    <path d="M3 10h18"/>
+                    <path d="M7 15h4"/>
+                </svg>
+                <p class="empty-state-text">${t('expenses.empty')}</p>
+            </div>`;
         return;
     }
 
     const accountById = new Map(accounts.map(a => [a.id, a]));
+    const visible = expenses.slice(0, 50);
 
-    container.innerHTML = expenses.slice(0, 50).map(exp => {
+    let totalSpent = 0;
+    let totalReceived = 0;
+    visible.forEach(exp => {
+        const repayments = (exp.swishRepayments || []).reduce((s, r) => s + r.amount, 0);
+        const net = exp.amount - repayments;
+        if (exp.kind === 'income') totalReceived += net;
+        else totalSpent += net;
+    });
+    if (summary) {
+        summary.hidden = false;
+        document.getElementById('txCount').textContent = visible.length;
+        document.getElementById('txSpent').textContent = formatCurrency(totalSpent);
+        const recvWrap = document.getElementById('txReceivedWrap');
+        if (totalReceived > 0) {
+            recvWrap.hidden = false;
+            document.getElementById('txReceived').textContent = formatCurrency(totalReceived);
+        } else {
+            recvWrap.hidden = true;
+        }
+    }
+
+    const groups = new Map();
+    visible.forEach(exp => {
+        if (!groups.has(exp.date)) groups.set(exp.date, []);
+        groups.get(exp.date).push(exp);
+    });
+
+    const today = isoDate(new Date());
+    const yesterday = (() => {
+        const d = new Date(); d.setDate(d.getDate() - 1);
+        return isoDate(d);
+    })();
+    const loc = activeLocale();
+    const dateHeader = (dStr) => {
+        if (dStr === today) return t('labels.today');
+        if (dStr === yesterday) return t('labels.yesterday');
+        const d = new Date(dStr + 'T00:00:00');
+        return d.toLocaleDateString(loc, { weekday: 'short', month: 'short', day: 'numeric' });
+    };
+
+    const rowHtml = (exp) => {
         const repayments = (exp.swishRepayments || []).reduce((s, r) => s + r.amount, 0);
         const netAmount = exp.amount - repayments;
         const isIncome = exp.kind === 'income';
         const color = getCategoryColor(exp.category);
         const account = exp.accountId != null ? accountById.get(exp.accountId) : null;
         const accountTag = account
-            ? `<span class="expense-tag account" style="background: color-mix(in srgb, ${account.color || 'var(--accent)'} 22%, transparent); color: ${account.color || 'var(--accent)'};">${account.name}</span>`
+            ? `<span class="expense-tag account" style="--tag-color: ${account.color || 'var(--accent)'};">${account.name}</span>`
             : '';
         const incomeTag = isIncome
             ? `<span class="expense-tag income">${t('imports.incomeTag')}</span>`
             : '';
+        const swishTag = repayments > 0
+            ? '<span class="expense-tag is-swish">Swish</span>'
+            : '';
+        const categoryBadge = isIncome
+            ? ''
+            : `<span class="expense-category" style="--cat-color: ${color};">${getCategoryName(exp.category)}</span>`;
         const sign = isIncome ? '+' : '';
         const amountClass = isIncome ? 'expense-amount income' : 'expense-amount';
-        const swishTag = repayments > 0 ? '<span class="expense-category" style="background: var(--text-light); color: white;">Swish</span>' : '';
 
         return `
             <div class="expense-item ${isIncome ? 'income' : ''}" onclick="openEditModal(${exp.id})">
                 <div class="expense-info">
-                    ${isIncome ? '' : `<span class="expense-category" style="background: ${color}; color: white;">${getCategoryName(exp.category)}</span>`}
-                    ${swishTag}
-                    ${incomeTag}
-                    ${accountTag}
+                    <div class="expense-tags">
+                        ${categoryBadge}${swishTag}${incomeTag}${accountTag}
+                    </div>
                     <div class="expense-description">${exp.description}</div>
-                    <div class="expense-date">${formatDate(exp.date)}</div>
                 </div>
                 <div class="${amountClass}">${sign}${formatCurrency(netAmount)}</div>
             </div>
         `;
-    }).join('');
+    };
+
+    container.innerHTML = Array.from(groups.entries()).map(([dStr, items]) => `
+        <div class="tx-group">
+            <div class="tx-day-header">${dateHeader(dStr)}</div>
+            ${items.map(rowHtml).join('')}
+        </div>
+    `).join('');
 }
 
 // Edit Modal

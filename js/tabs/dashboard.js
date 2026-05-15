@@ -42,6 +42,14 @@ function updateDashboard() {
     renderExpensesList();
     renderHero(totalSpent);
     renderWins();
+    renderGreeting();
+    renderCycleComparison({
+        bounds,
+        totalSpent,
+        discretionarySpent,
+        availableBudget,
+        totalFixed,
+    });
 }
 
 
@@ -164,4 +172,126 @@ function showExpenseDetailsModal(expensesList, title) {
 
 function closeExpenseDetailsModal() {
     document.getElementById('expenseDetailsModal').classList.remove('active');
+}
+
+// Greeting band: time-aware salutation + today's date in active locale.
+function renderGreeting() {
+    const textEl = document.getElementById('greetingText');
+    const dateEl = document.getElementById('greetingDate');
+    if (!textEl || !dateEl) return;
+    const h = new Date().getHours();
+    let key;
+    if (h < 5) key = 'greeting.night';
+    else if (h < 12) key = 'greeting.morning';
+    else if (h < 17) key = 'greeting.afternoon';
+    else if (h < 22) key = 'greeting.evening';
+    else key = 'greeting.night';
+    textEl.textContent = t(key);
+    textEl.setAttribute('data-i18n', key);
+    dateEl.textContent = new Date().toLocaleDateString(activeLocale(), {
+        weekday: 'long', month: 'long', day: 'numeric',
+    });
+}
+
+// vs-last-cycle band + per-stat delta chips.
+function renderCycleComparison({ bounds, totalSpent, discretionarySpent, availableBudget }) {
+    const band = document.getElementById('comparisonBand');
+    if (!band) return;
+
+    // Last cycle = the cycle ending the day before this cycle starts.
+    const prevRef = new Date(bounds.start);
+    prevRef.setDate(prevRef.getDate() - 1);
+    const prev = getCycleBounds(prevRef);
+    const prevStartStr = isoDate(prev.start);
+    const prevEndStr = isoDate(prev.end);
+    const prevExpenses = expenses.filter(e =>
+        e.date >= prevStartStr && e.date <= prevEndStr && e.kind !== 'income'
+    );
+    if (prevExpenses.length === 0) {
+        band.hidden = true;
+        hideAllDeltas();
+        return;
+    }
+    const prevTotalFixed = fixedExpenses.reduce((s, f) => s + f.amount, 0);
+    const prevTotalSpent = prevExpenses.reduce((s, e) => s + expenseNet(e), 0);
+    const prevDiscretionary = prevExpenses.reduce((s, e) => s + expenseDiscretionary(e), 0);
+    const prevDailyAvg = prevDiscretionary / prev.days;
+    const prevAvailable = monthlyBudget - prevTotalFixed;
+    const prevBudgetRemaining = prevAvailable - prevDiscretionary;
+
+    band.hidden = false;
+    setComparisonItem('comparisonSpend', t('comparison.spending'), prevTotalSpent, totalSpent, /*lowerIsBetter=*/true);
+    if (monthlyIncome > 0) {
+        const rateNow = (monthlyIncome - totalSpent) / monthlyIncome * 100;
+        const ratePrev = (monthlyIncome - prevTotalSpent) / monthlyIncome * 100;
+        setComparisonItem('comparisonSavings', t('comparison.savingsRate'), ratePrev, rateNow, /*lowerIsBetter=*/false, '%', /*absolutePoints=*/true);
+    } else {
+        const el = document.getElementById('comparisonSavings');
+        if (el) el.hidden = true;
+    }
+
+    const dailyAvgNow = discretionarySpent / bounds.days;
+    setStatDelta('deltaTotalSpent', prevTotalSpent, totalSpent, /*lowerIsBetter=*/true);
+    setStatDelta('deltaDailyAverage', prevDailyAvg, dailyAvgNow, /*lowerIsBetter=*/true);
+    setStatDelta('deltaBudgetRemaining', prevBudgetRemaining, availableBudget - discretionarySpent, /*lowerIsBetter=*/false);
+}
+
+function hideAllDeltas() {
+    ['deltaTotalSpent', 'deltaDailyAverage', 'deltaBudgetRemaining'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.hidden = true;
+    });
+}
+
+function setStatDelta(id, prev, curr, lowerIsBetter) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (!isFinite(prev) || prev === 0) { el.hidden = true; return; }
+    const pct = ((curr - prev) / Math.abs(prev)) * 100;
+    if (!isFinite(pct)) { el.hidden = true; return; }
+    const rounded = Math.round(pct);
+    if (rounded === 0) {
+        el.hidden = false;
+        el.setAttribute('data-trend', 'neutral');
+        el.textContent = '0%';
+        return;
+    }
+    const isUp = pct > 0;
+    const isGood = lowerIsBetter ? !isUp : isUp;
+    el.hidden = false;
+    el.setAttribute('data-trend', isGood ? 'good' : 'bad');
+    el.textContent = (isUp ? '+' : '') + rounded + '%';
+}
+
+function setComparisonItem(id, label, prev, curr, lowerIsBetter, suffix, absolutePoints) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.hidden = false;
+    if (!isFinite(prev)) { el.hidden = true; return; }
+    let valueText, isGood;
+    if (absolutePoints) {
+        const diff = curr - prev;
+        const rounded = Math.round(diff);
+        if (rounded === 0) {
+            el.setAttribute('data-trend', 'neutral');
+            valueText = `${label} 0pp`;
+        } else {
+            isGood = lowerIsBetter ? diff < 0 : diff > 0;
+            el.setAttribute('data-trend', isGood ? 'good' : 'bad');
+            valueText = `${label} ${diff > 0 ? '+' : ''}${rounded}pp`;
+        }
+    } else {
+        if (prev === 0) { el.hidden = true; return; }
+        const pct = ((curr - prev) / Math.abs(prev)) * 100;
+        const rounded = Math.round(pct);
+        if (rounded === 0) {
+            el.setAttribute('data-trend', 'neutral');
+            valueText = `${label} 0%`;
+        } else {
+            isGood = lowerIsBetter ? pct < 0 : pct > 0;
+            el.setAttribute('data-trend', isGood ? 'good' : 'bad');
+            valueText = `${label} ${pct > 0 ? '+' : ''}${rounded}%`;
+        }
+    }
+    el.textContent = valueText;
 }
