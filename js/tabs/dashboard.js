@@ -198,6 +198,19 @@ function renderCycleComparison({ bounds, totalSpent, discretionarySpent, availab
     const band = document.getElementById('comparisonBand');
     if (!band) return;
 
+    // Don't compare a partial cycle to a full one. Wait until the
+    // current cycle is at least 50% elapsed before showing deltas —
+    // anything earlier is misleading (-100% spending on day 6 etc.).
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const cycleStart = new Date(bounds.start);
+    const dayOfCycle = Math.max(1, Math.round((today - cycleStart) / 86400000) + 1);
+    const cycleProgress = dayOfCycle / bounds.days;
+    if (cycleProgress < 0.5) {
+        band.hidden = true;
+        hideAllDeltas();
+        return;
+    }
+
     // Last cycle = the cycle ending the day before this cycle starts.
     const prevRef = new Date(bounds.start);
     prevRef.setDate(prevRef.getDate() - 1);
