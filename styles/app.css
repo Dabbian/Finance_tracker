@@ -847,18 +847,12 @@
             }
         }
 
-        /* Stats Grid */
+        /* Stats Grid — 2x2 inside the dashboard-top side-by-side layout. */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        @media (max-width: 1024px) {
-            .stats-grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1rem;
+            align-content: stretch;
         }
 
         .stat-card {
