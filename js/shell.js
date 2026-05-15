@@ -1,4 +1,7 @@
-// Theme
+// Theme — attributes live on <html> only (the inline boot script
+// applies them pre-paint, and CSS compound selectors like
+// [data-palette="earth"][data-theme="dark"] need both attrs on the
+// same element). Token cascade flows down to body.
 function setTheme(newTheme) {
     if (newTheme !== 'light' && newTheme !== 'dark') return;
     theme = newTheme;
