@@ -38,8 +38,8 @@ let accounts = [];
 let monthlyBudget = 0;
 let monthlyIncome = 0;
 let currency = 'SEK';
-let theme = 'dark';
-let palette = 'slate';
+let theme = 'light';
+let palette = 'earth';
 let language = 'en'; // 'en' | 'sv'
 let cycleStartDay = 1;          // 1 = calendar month, otherwise 1–28
 let cycleAdjustment = 'none';   // 'none' | 'weekend' | 'sweden'

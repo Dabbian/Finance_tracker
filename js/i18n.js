@@ -247,6 +247,22 @@ const translations = {
             keeping: "You're keeping <strong>{amount}</strong> this cycle",
             spendingOver: 'Spending <strong style="color:var(--danger);">{amount}</strong> over income'
         },
+        greeting: {
+            morning: 'Good morning',
+            afternoon: 'Good afternoon',
+            evening: 'Good evening',
+            night: 'Hey there'
+        },
+        comparison: {
+            vsLast: 'vs last cycle',
+            spending: 'spending',
+            savingsRate: 'savings rate'
+        },
+        transactions: {
+            count: 'transactions',
+            spent: 'spent',
+            received: 'received'
+        },
         stats: {
             totalSpentCycle: 'Total Spent This Cycle',
             dailyAverage: 'Daily Average',
@@ -839,6 +855,22 @@ const translations = {
             setIncomeHint: 'Ange din inkomst i Inställningar för att följa sparandet',
             keeping: 'Du behåller <strong>{amount}</strong> denna cykel',
             spendingOver: 'Spenderar <strong style="color:var(--danger);">{amount}</strong> över inkomsten'
+        },
+        greeting: {
+            morning: 'God morgon',
+            afternoon: 'God eftermiddag',
+            evening: 'God kväll',
+            night: 'Hej där'
+        },
+        comparison: {
+            vsLast: 'jämfört med förra cykeln',
+            spending: 'utgifter',
+            savingsRate: 'sparkvot'
+        },
+        transactions: {
+            count: 'transaktioner',
+            spent: 'spenderat',
+            received: 'mottaget'
         },
         stats: {
             totalSpentCycle: 'Totalt spenderat denna cykel',
