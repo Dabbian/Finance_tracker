@@ -15,14 +15,18 @@
         // below have nothing to act on, the page paints with defaults, and
         // we get a flash when JS later swaps to the user's real settings.
         (function() {
+            // Defaults for first-time visitors / when localStorage is empty.
+            // Earth + light is the canonical warm look.
+            var theme = 'light';
+            var palette = 'earth';
             try {
-                var theme = localStorage.getItem('theme');
-                if (theme === 'light' || theme === 'dark') {
-                    document.documentElement.setAttribute('data-theme', theme);
-                }
-                var palette = localStorage.getItem('palette');
-                if (palette) document.documentElement.setAttribute('data-palette', palette);
+                var t = localStorage.getItem('theme');
+                if (t === 'light' || t === 'dark') theme = t;
+                var p = localStorage.getItem('palette');
+                if (p) palette = p;
             } catch (e) {}
+            document.documentElement.setAttribute('data-theme', theme);
+            document.documentElement.setAttribute('data-palette', palette);
 
             var target = 'dashboard';
             try {
@@ -54,7 +58,7 @@
         }
     </style>
 </head>
-<body data-theme="light" data-palette="earth">
+<body>
     <div class="app-shell">
         <!-- Slim icon sidebar -->
         <aside class="app-sidebar" data-i18n-aria-label="topbar.primaryNav" aria-label="Primary navigation">

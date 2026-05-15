@@ -37,8 +37,8 @@ function loadDatabase(event) {
             saveDatabase();
             loadDataFromDB();
 
-            document.body.setAttribute('data-theme', theme);
-            document.body.setAttribute('data-palette', palette);
+            document.documentElement.setAttribute('data-theme', theme);
+            document.documentElement.setAttribute('data-palette', palette);
             renderThemeButtons();
             document.getElementById('currencySelect').value = currency;
             document.getElementById('monthlyBudget').value = monthlyBudget;
