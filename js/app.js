@@ -174,14 +174,14 @@ document.addEventListener('DOMContentLoaded', async function() {
     fileInput.addEventListener('change', handleFileSelect);
     fileUpload.addEventListener('dragover', (e) => {
         e.preventDefault();
-        fileUpload.style.borderColor = 'var(--accent)';
+        fileUpload.classList.add('is-drag-active');
     });
     fileUpload.addEventListener('dragleave', () => {
-        fileUpload.style.borderColor = '';
+        fileUpload.classList.remove('is-drag-active');
     });
     fileUpload.addEventListener('drop', (e) => {
         e.preventDefault();
-        fileUpload.style.borderColor = '';
+        fileUpload.classList.remove('is-drag-active');
         if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
     });
 

@@ -4,36 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign in · Personal Finance</title>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;500;600;700&family=Varela+Round&display=swap" rel="stylesheet">
     <style>
-        /* Locked to dark + sunset — same design tokens as the app's sunset palette */
+        /* Earth + light — matches the app's default earth palette. */
         :root {
-            --primary: #fff1e6;
-            --secondary: #fcd9bd;
-            --accent: #fb923c;
-            --accent-light: #fdba74;
-            --accent-dark: #ea580c;
-            --success: #a3e635;
-            --warning: #fbbf24;
-            --danger: #f87171;
-            --text: #fff1e6;
-            --text-light: #f3c5a8;
-            --border: rgba(255, 200, 160, 0.18);
-            --bg: #2a0907;
-            --bg-alt: rgba(255, 240, 220, 0.06);
-            --bg-card: rgba(255, 240, 220, 0.05);
-            --shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
-            --shadow-lg: 0 18px 50px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.25);
+            --primary: #1c1917;                    /* warm near-black */
+            --secondary: #44403c;
+            --accent: #9a3412;                      /* terracotta */
+            --accent-light: #c2410c;
+            --accent-dark: #7c2d10;
+            --success: #15803d;
+            --warning: #b45309;
+            --danger: #b91c1c;
+            --text: #1c1917;
+            --text-light: #78716c;
+            --border: #efe4d7;
+            --bg: #fffbeb;                          /* warm cream */
+            --bg-alt: #f5efe6;
+            --bg-card: #ffffff;                     /* card surface */
+            --shadow: 0 1px 2px rgba(28, 25, 23, 0.06);
+            --shadow-lg: 0 20px 50px rgba(28, 25, 23, 0.10), 0 2px 8px rgba(28, 25, 23, 0.05);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
             background:
-                radial-gradient(1200px 800px at 75% -15%, #b13b1b 0%, rgba(177, 59, 27, 0) 55%),
-                radial-gradient(900px 700px at 100% 50%, #7a1f12 0%, rgba(122, 31, 18, 0) 55%),
-                linear-gradient(180deg, #2a0907 0%, #401410 100%);
+                radial-gradient(1200px 800px at 75% -15%, rgba(234, 139, 107, 0.22) 0%, transparent 55%),
+                radial-gradient(900px 700px at 0% 110%, rgba(154, 52, 18, 0.10) 0%, transparent 55%),
+                linear-gradient(180deg, #fffbeb 0%, #f5efe6 100%);
             background-attachment: fixed;
             color: var(--text);
             min-height: 100vh;
@@ -63,25 +63,25 @@
             justify-content: center;
             width: 56px;
             height: 56px;
-            border-radius: 16px;
+            border-radius: 22px;
             background: var(--accent);
-            color: #2a0907;
+            color: #ffffff;
             margin-bottom: 0.75rem;
-            box-shadow: 0 6px 20px rgba(251, 146, 60, 0.35);
+            box-shadow: 0 6px 20px color-mix(in srgb, var(--accent) 32%, transparent);
         }
         .brand-mark svg {
             width: 28px;
             height: 28px;
         }
         .brand-name {
-            font-family: 'DM Sans', sans-serif;
+            font-family: 'Varela Round', 'Nunito Sans', sans-serif;
             font-size: 1.5rem;
             font-weight: 700;
             color: var(--primary);
             letter-spacing: -0.02em;
         }
         .brand-sub {
-            font-family: 'IBM Plex Mono', monospace;
+            font-family: 'Nunito Sans', sans-serif;
             font-size: 0.7rem;
             color: var(--text-light);
             text-transform: uppercase;
@@ -92,21 +92,19 @@
         /* Card */
         .auth-card {
             background: var(--bg-card);
-            border-radius: 20px;
+            border-radius: 28px;
             padding: 2rem;
             box-shadow: var(--shadow-lg);
             border: 1px solid var(--border);
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
         }
 
         /* Tabs (Sign in / Sign up) */
         .tab-bar {
             display: flex;
             gap: 4px;
-            background: rgba(0, 0, 0, 0.25);
+            background: var(--bg-alt);
             padding: 4px;
-            border-radius: 12px;
+            border-radius: 18px;
             margin-bottom: 1.5rem;
         }
         .tab-btn {
@@ -115,8 +113,8 @@
             color: var(--text-light);
             border: none;
             padding: 0.6rem 1rem;
-            border-radius: 8px;
-            font-family: 'DM Sans', sans-serif;
+            border-radius: 14px;
+            font-family: 'Varela Round', 'Nunito Sans', sans-serif;
             font-weight: 600;
             cursor: pointer;
             font-size: 0.9rem;
@@ -126,9 +124,9 @@
             color: var(--text);
         }
         .tab-btn.active {
-            background: rgba(255, 240, 220, 0.10);
+            background: var(--bg-card);
             color: var(--text);
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+            box-shadow: 0 1px 3px rgba(28, 25, 23, 0.08);
         }
 
         .panel { display: none; }
@@ -140,7 +138,7 @@
         }
 
         h2 {
-            font-family: 'DM Sans', sans-serif;
+            font-family: 'Varela Round', 'Nunito Sans', sans-serif;
             font-size: 1.4rem;
             font-weight: 700;
             color: var(--primary);
@@ -187,24 +185,24 @@
             width: 100%;
             padding: 0.75rem 0.9rem;
             border: 1.5px solid var(--border);
-            border-radius: 10px;
+            border-radius: 14px;
             font-size: 1rem;
             font-family: inherit;
-            background: rgba(0, 0, 0, 0.25);
+            background: var(--bg);
             color: var(--text);
             transition: border-color 0.15s ease, box-shadow 0.15s ease;
         }
-        input::placeholder { color: var(--text-light); opacity: 0.6; }
+        input::placeholder { color: var(--text-light); opacity: 0.7; }
         input:focus {
             outline: none;
             border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(251, 146, 60, 0.18);
+            box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent);
         }
         input.error {
             border-color: var(--danger);
         }
         input.error:focus {
-            box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.18);
+            box-shadow: 0 0 0 3px color-mix(in srgb, var(--danger) 18%, transparent);
         }
         .field-error {
             color: var(--danger);
@@ -234,7 +232,7 @@
             border-radius: 6px;
         }
         .password-toggle:hover {
-            background: rgba(255, 240, 220, 0.08);
+            background: var(--bg-alt);
             color: var(--text);
         }
         .password-toggle svg {
@@ -246,8 +244,8 @@
         .btn {
             width: 100%;
             padding: 0.8rem 1rem;
-            border-radius: 10px;
-            font-family: 'DM Sans', sans-serif;
+            border-radius: 16px;
+            font-family: 'Varela Round', 'Nunito Sans', sans-serif;
             font-weight: 600;
             font-size: 0.95rem;
             cursor: pointer;
@@ -260,12 +258,12 @@
         }
         .btn-primary {
             background: var(--accent);
-            color: #2a0907;
-            box-shadow: 0 4px 14px rgba(251, 146, 60, 0.25);
+            color: #ffffff;
+            box-shadow: 0 4px 14px color-mix(in srgb, var(--accent) 22%, transparent);
         }
         .btn-primary:hover {
             background: var(--accent-light);
-            box-shadow: 0 6px 20px rgba(251, 146, 60, 0.40);
+            box-shadow: 0 6px 20px color-mix(in srgb, var(--accent) 32%, transparent);
             transform: translateY(-1px);
         }
         .btn-primary:active {
@@ -277,12 +275,12 @@
             transform: none;
         }
         .btn-secondary {
-            background: rgba(0, 0, 0, 0.25);
+            background: var(--bg-alt);
             color: var(--text);
             border: 1.5px solid var(--border);
         }
         .btn-secondary:hover {
-            background: rgba(255, 240, 220, 0.08);
+            background: var(--bg);
             border-color: var(--accent);
         }
         .btn svg {
@@ -294,8 +292,8 @@
         .spinner {
             width: 16px;
             height: 16px;
-            border: 2px solid rgba(255,255,255,0.4);
-            border-top-color: white;
+            border: 2px solid rgba(255,255,255,0.45);
+            border-top-color: #ffffff;
             border-radius: 50%;
             animation: spin 0.6s linear infinite;
         }
@@ -313,7 +311,8 @@
             font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 0.08em;
-            font-family: 'IBM Plex Mono', monospace;
+            font-family: 'Nunito Sans', sans-serif;
+            font-weight: 600;
         }
         .divider::before, .divider::after {
             content: '';
@@ -324,10 +323,10 @@
 
         /* Demo banner */
         .demo-banner {
-            background: color-mix(in srgb, var(--accent) 14%, transparent);
-            border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
-            color: var(--accent-light);
-            border-radius: 10px;
+            background: color-mix(in srgb, var(--accent) 8%, transparent);
+            border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
+            color: var(--accent);
+            border-radius: 16px;
             padding: 0.7rem 0.85rem;
             font-size: 0.8rem;
             margin-bottom: 1.25rem;
@@ -348,12 +347,12 @@
             bottom: 24px;
             left: 50%;
             transform: translateX(-50%) translateY(20px);
-            background: #1a0504;
+            background: var(--bg-card);
             color: var(--text);
             border: 1px solid var(--border);
             padding: 0.85rem 1.25rem;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
             opacity: 0;
             transition: all 0.3s ease;
             font-size: 0.9rem;
@@ -384,12 +383,11 @@
             right: 18px;
             z-index: 10;
             display: inline-flex;
-            background: rgba(0, 0, 0, 0.35);
+            background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 999px;
             padding: 3px;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            box-shadow: var(--shadow);
         }
         .lang-switch button {
             appearance: none;
@@ -398,7 +396,7 @@
             border: none;
             border-radius: 999px;
             padding: 0.35rem 0.8rem;
-            font-family: 'DM Sans', sans-serif;
+            font-family: 'Varela Round', 'Nunito Sans', sans-serif;
             font-size: 0.8rem;
             font-weight: 600;
             cursor: pointer;
@@ -406,7 +404,7 @@
         }
         .lang-switch button.active {
             background: var(--accent);
-            color: #2a0907;
+            color: #ffffff;
         }
         .lang-switch button:hover:not(.active) {
             color: var(--text);

@@ -475,6 +475,16 @@ const translations = {
             categoryOptional: 'Category (Optional)',
             swishRepayments: 'Swish Repayments'
         },
+        comparison: {
+            vsLast: 'vs last cycle',
+            spending: 'spending',
+            savingsRate: 'savings rate'
+        },
+        transactions: {
+            count: 'transactions',
+            spent: 'spent',
+            received: 'received'
+        },
         placeholders: {
             amount: '0.00',
             categoryExample: 'e.g., Groceries',
@@ -1057,6 +1067,16 @@ const translations = {
             icon: 'Ikon',
             categoryOptional: 'Kategori (valfritt)',
             swishRepayments: 'Swish-återbetalningar'
+        },
+        comparison: {
+            vsLast: 'vs förra cykeln',
+            spending: 'utgifter',
+            savingsRate: 'sparkvot'
+        },
+        transactions: {
+            count: 'transaktioner',
+            spent: 'spenderat',
+            received: 'mottaget'
         },
         placeholders: {
             amount: '0,00',

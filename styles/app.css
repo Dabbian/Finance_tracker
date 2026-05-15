@@ -657,12 +657,30 @@
         }
 
         /* Savings Grid */
+        /* Daily Savings sits alongside stats grid. Trim card padding and
+           use flatter cells so its height matches the 2x2 stats column. */
+        #dashboard-tab .card {
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 1rem;
+        }
+        #dashboard-tab .card-title {
+            margin-bottom: 0.5rem;
+            font-size: 1.05rem;
+        }
+
         .savings-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 8px;
+            gap: 6px;
             margin-top: 1rem;
             width: 100%;
+        }
+
+        /* Override default 1:1 squares with a flatter cell so 5 rows
+           fit alongside the 2x2 stats grid. */
+        .dashboard-top .day-square {
+            aspect-ratio: auto;
+            height: clamp(28px, 5vw, 44px);
         }
 
         .day-square {
@@ -812,8 +830,15 @@
         /* Stats Grid */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
+            grid-template-columns: repeat(4, minmax(0, 1fr));
             gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 1024px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
         }
 
         .stat-card {
@@ -844,6 +869,61 @@
             font-weight: 700;
             color: var(--primary);
         }
+
+        .stat-row {
+            display: flex;
+            align-items: baseline;
+            gap: 0.5rem;
+        }
+
+        .stat-delta {
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 0.1rem 0.4rem;
+            border-radius: 6px;
+        }
+
+        .stat-delta.is-positive {
+            color: var(--success);
+            background: color-mix(in srgb, var(--success) 15%, transparent);
+        }
+
+        .stat-delta.is-negative {
+            color: var(--danger);
+            background: color-mix(in srgb, var(--danger) 15%, transparent);
+        }
+
+        .savings-hint {
+            color: var(--text-light);
+            font-size: 0.8rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .savings-legend {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 0.6rem;
+            font-size: 0.75rem;
+            color: var(--text-light);
+            justify-content: center;
+        }
+
+        .savings-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .savings-legend-swatch {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+        }
+
+        .savings-legend-swatch.is-under { background: var(--success); }
+        .savings-legend-swatch.is-over  { background: var(--danger); }
+        .savings-legend-swatch.is-future { background: var(--bg-alt); border: 1px solid var(--border); }
 
         /* Cards */
         .card {
@@ -1260,36 +1340,21 @@
         .expense-item {
             display: flex;
             align-items: center;
+            gap: 1rem;
             justify-content: space-between;
-            padding: 1rem;
-            border-bottom: 1px solid var(--border);
-            transition: all 0.2s ease;
+            padding: 0.85rem 1rem;
+            border-radius: 14px;
+            transition: background 0.15s ease;
             cursor: pointer;
         }
 
         .expense-item:hover {
-            background: var(--bg-alt);
-            transform: translateX(4px);
-        }
-
-        .expense-item:last-child {
-            border-bottom: none;
+            background: color-mix(in srgb, var(--text) 5%, transparent);
         }
 
         .expense-info {
             flex: 1;
-        }
-
-        .expense-category {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 0.25rem;
-            margin-right: 0.5rem;
+            min-width: 0;
         }
 
         .expense-description {
@@ -1308,25 +1373,136 @@
             color: var(--success);
         }
 
-        /* Account / income tags shown next to a transaction's category */
+        /* Account / income / swish tags next to a transaction's category */
         .expense-tag {
-            display: inline-block;
-            padding: 0.15rem 0.6rem;
+            display: inline-flex;
+            align-items: center;
+            padding: 0.18rem 0.6rem;
             border-radius: 999px;
             font-size: 0.7rem;
             font-weight: 700;
             letter-spacing: 0.04em;
             text-transform: uppercase;
-            margin-right: 0.4rem;
-            margin-bottom: 0.25rem;
-            vertical-align: middle;
+            background: color-mix(in srgb, var(--text) 8%, transparent);
+            color: var(--text-light);
+        }
+        .expense-tag.account {
+            background: color-mix(in srgb, var(--tag-color, var(--accent)) 16%, transparent);
+            color: var(--tag-color, var(--accent));
         }
         .expense-tag.income {
-            background: color-mix(in srgb, var(--success) 18%, transparent);
+            background: color-mix(in srgb, var(--success) 16%, transparent);
             color: var(--success);
+        }
+        .expense-tag.is-swish {
+            background: color-mix(in srgb, var(--text) 10%, transparent);
+            color: var(--text);
         }
         .expense-item.income .expense-description {
             color: var(--text);
+        }
+
+        .expense-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-bottom: 0.3rem;
+        }
+
+        /* Category badge — warm tinted bg (uses --cat-color set inline)
+           keeps the brand color while staying readable on cream/dark. */
+        .expense-category {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.2rem 0.7rem 0.2rem 0.6rem;
+            border-radius: 999px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            background: color-mix(in srgb, var(--cat-color, var(--accent)) 16%, transparent);
+            color: var(--cat-color, var(--accent));
+        }
+        .expense-category::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--cat-color, var(--accent));
+        }
+
+        /* =====================================================
+           Transactions tab
+           ===================================================== */
+        .tx-card-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.75rem;
+        }
+        .tx-card-head .card-title {
+            margin-bottom: 0;
+        }
+        .tx-summary {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.4rem 0.85rem;
+            font-size: 0.8rem;
+        }
+        .tx-summary-item {
+            display: inline-flex;
+            align-items: baseline;
+            gap: 0.35rem;
+        }
+        .tx-summary-item + .tx-summary-item::before {
+            content: '·';
+            color: var(--text-light);
+            margin-right: 0.5rem;
+            opacity: 0.6;
+        }
+        .tx-summary-label {
+            color: var(--text-light);
+        }
+        .tx-summary-value {
+            font-weight: 700;
+            color: var(--text);
+            font-variant-numeric: tabular-nums;
+        }
+        .tx-summary-item.is-income .tx-summary-value {
+            color: var(--success);
+        }
+
+        .tx-group + .tx-group {
+            margin-top: 1rem;
+        }
+
+        .tx-day-header {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-weight: 700;
+            color: var(--text-light);
+            padding: 0.4rem 1rem 0.5rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 0.25rem;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .empty-state-icon {
+            width: 48px;
+            height: 48px;
+            color: var(--text-light);
+            margin-bottom: 0.75rem;
+            opacity: 0.5;
+        }
+
+        .empty-state-text {
+            font-size: 0.95rem;
+            color: var(--text-light);
         }
 
         .import-tag {
@@ -1591,13 +1767,18 @@
             padding: 2rem;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: background 0.15s ease, border-color 0.15s ease;
             background: var(--bg-alt);
         }
 
         .file-upload:hover {
             border-color: var(--accent);
             background: var(--bg);
+        }
+
+        .file-upload.is-drag-active {
+            background: color-mix(in srgb, var(--accent) 12%, transparent);
+            border-color: var(--accent);
         }
 
         .file-upload input {
@@ -2130,6 +2311,9 @@
             .hero-divider {
                 display: none;
             }
+            /* Mobile: priority-ordered scroll. Greeting → hero → stats →
+               savings → trend (savings before chart on small screens). */
+            #dashboard-tab .comparison-band { order: 5; }
         }
 
         .hero-divider {
