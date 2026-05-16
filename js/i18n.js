@@ -57,6 +57,7 @@ const translations = {
             expensesLower: 'expenses',
             total: 'total',
             reviewImport: 'Review Imported Expenses',
+            dupReview: 'Possible Duplicates',
             expensesFound: 'expenses found',
             quickAdd: 'Quick add expense',
             addToGoal: 'Add to Goal',
@@ -184,6 +185,25 @@ const translations = {
             dupMaybeSummary: '{n} possible duplicate — review',
             importAnyway: 'Import anyway',
             skipDup: 'Skip — this is a duplicate',
+            dupIntro: 'Found {total} row(s) that look like existing transactions ({exact} exact, {maybe} possible). Decide what to do with each before continuing.',
+            dupMatchesExisting: 'Matches existing: {desc}',
+            dupSkip: 'Skip',
+            dupImport: 'Import',
+            dupSkipAll: 'Skip all',
+            dupKeepAll: 'Import all',
+            dupContinue: 'Continue',
+            dupDecisionLabel: 'Skip or import this duplicate',
+            stepOneOfTwo: 'Step 1 of 2 · Resolve duplicates',
+            stepTwoOfTwo: 'Step 2 of 2 · Confirm import',
+            chipExpenses: 'expenses',
+            chipIncome: 'income',
+            chipTransfers: 'transfers',
+            chipSwish: 'swish',
+            chipSkipped: 'skipped',
+            editRow: 'Edit',
+            removeRow: 'Remove row',
+            skipThisRow: "Skip this row — don't import",
+            skippedTag: 'Skipped',
             oneDupSkipped: '{n} duplicate skipped',
             dupSkipped: '{n} duplicates skipped',
             incomeOne: '{n} incoming payment',
@@ -504,7 +524,12 @@ const translations = {
             categoryOptional: 'Category (Optional)',
             swishRepayments: 'Swish Repayments',
             tagAsIncome: 'Tag as income (counts toward monthly income)',
-            transactionType: 'Type'
+            transactionType: 'Type',
+            billingDay: 'Billing day',
+            matchKeyword: 'Match keyword'
+        },
+        hints: {
+            matchKey: 'Used to recognize future transactions. Defaults to the name.'
         },
         kinds: {
             expense: 'Expense',
@@ -536,7 +561,9 @@ const translations = {
             subName: 'Spotify, Netflix, gym, etc.',
             subNote: 'e.g., shared with Anna',
             quickDesc: 'What was it for?',
-            snapshotNote: 'e.g., received bonus'
+            snapshotNote: 'e.g., received bonus',
+            dayOfMonth: '1–31',
+            matchKey: 'e.g. hyresavi'
         },
         buttons: {
             addExpense: 'Add Expense',
@@ -687,6 +714,7 @@ const translations = {
             expensesLower: 'utgifter',
             total: 'totalt',
             reviewImport: 'Granska importerade utgifter',
+            dupReview: 'Möjliga dubbletter',
             expensesFound: 'utgifter hittade',
             quickAdd: 'Snabblägg till utgift',
             addToGoal: 'Bidra till mål',
@@ -814,6 +842,25 @@ const translations = {
             dupMaybeSummary: '{n} möjlig dubblett — granska',
             importAnyway: 'Importera ändå',
             skipDup: 'Hoppa över — detta är en dubblett',
+            dupIntro: 'Hittade {total} rad(er) som ser ut som befintliga transaktioner ({exact} exakta, {maybe} möjliga). Bestäm vad du vill göra med varje innan du fortsätter.',
+            dupMatchesExisting: 'Matchar befintlig: {desc}',
+            dupSkip: 'Hoppa över',
+            dupImport: 'Importera',
+            dupSkipAll: 'Hoppa över alla',
+            dupKeepAll: 'Importera alla',
+            dupContinue: 'Fortsätt',
+            dupDecisionLabel: 'Hoppa över eller importera denna dubblett',
+            stepOneOfTwo: 'Steg 1 av 2 · Hantera dubbletter',
+            stepTwoOfTwo: 'Steg 2 av 2 · Bekräfta import',
+            chipExpenses: 'utgifter',
+            chipIncome: 'inkomster',
+            chipTransfers: 'överföringar',
+            chipSwish: 'swish',
+            chipSkipped: 'överhoppade',
+            editRow: 'Redigera',
+            removeRow: 'Ta bort rad',
+            skipThisRow: 'Hoppa över denna rad — importera inte',
+            skippedTag: 'Överhoppad',
             oneDupSkipped: '{n} dubblett hoppas över',
             dupSkipped: '{n} dubbletter hoppade över',
             incomeOne: '{n} insättning',
@@ -1134,7 +1181,12 @@ const translations = {
             categoryOptional: 'Kategori (valfritt)',
             swishRepayments: 'Swish-återbetalningar',
             tagAsIncome: 'Tagga som inkomst (räknas mot månadsinkomst)',
-            transactionType: 'Typ'
+            transactionType: 'Typ',
+            billingDay: 'Förfallodag',
+            matchKeyword: 'Matchande sökord'
+        },
+        hints: {
+            matchKey: 'Används för att känna igen framtida transaktioner. Standard är namnet.'
         },
         kinds: {
             expense: 'Utgift',
@@ -1166,7 +1218,9 @@ const translations = {
             subName: 'Spotify, Netflix, gym, osv.',
             subNote: 't.ex. delat med Anna',
             quickDesc: 'Vad var det för?',
-            snapshotNote: 't.ex. fick bonus'
+            snapshotNote: 't.ex. fick bonus',
+            dayOfMonth: '1–31',
+            matchKey: 't.ex. hyresavi'
         },
         buttons: {
             addExpense: 'Lägg till utgift',

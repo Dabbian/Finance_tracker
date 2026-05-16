@@ -27,6 +27,11 @@ function ensureSchema() {
     addColumnIfMissing('expenses', 'kind', "TEXT DEFAULT 'expense'");
     addColumnIfMissing('subscriptions', 'billing_day', "TEXT");
     addColumnIfMissing('subscriptions', 'account_id', "INTEGER");
+    // Fixed expenses gained transaction-recognition fields. Older DBs
+    // only had id/name/amount/category.
+    addColumnIfMissing('fixed_expenses', 'match_key', "TEXT");
+    addColumnIfMissing('fixed_expenses', 'billing_day', "TEXT");
+    addColumnIfMissing('fixed_expenses', 'account_id', "INTEGER");
     db.run(`
         CREATE TABLE IF NOT EXISTS net_worth_snapshots (
             id INTEGER PRIMARY KEY,
@@ -84,7 +89,10 @@ function createTables() {
             id INTEGER PRIMARY KEY,
             name TEXT NOT NULL,
             amount REAL NOT NULL,
-            category TEXT NOT NULL
+            category TEXT NOT NULL,
+            match_key TEXT,
+            billing_day TEXT,
+            account_id INTEGER
         )
     `);
 
@@ -219,12 +227,18 @@ function loadDataFromDB() {
     })) : [];
 
     // Load fixed expenses
-    const fixedResult = db.exec('SELECT * FROM fixed_expenses');
+    const fixedResult = db.exec(`
+        SELECT id, name, amount, category, match_key, billing_day, account_id
+        FROM fixed_expenses
+    `);
     fixedExpenses = fixedResult.length > 0 ? fixedResult[0].values.map(row => ({
         id: row[0],
         name: row[1],
         amount: row[2],
-        category: row[3]
+        category: row[3],
+        matchKey: row[4] || null,
+        billingDay: row[5] || null,
+        accountId: row[6] != null ? row[6] : null
     })) : [];
 
     // Load categories
