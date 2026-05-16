@@ -408,7 +408,9 @@ function computeForecast() {
 
     const startStr = isoDate(viewBounds.start);
     const endStr = isoDate(viewBounds.end);
-    const monthExpenses = expenses.filter(exp => exp.date >= startStr && exp.date <= endStr);
+    const monthExpenses = expenses.filter(exp =>
+        exp.date >= startStr && exp.date <= endStr && isSpendingKind(exp.kind)
+    );
     const spentSoFar = monthExpenses.reduce((sum, exp) => {
         const repayments = (exp.swishRepayments || []).reduce((s, r) => s + r.amount, 0);
         return sum + exp.amount - repayments;
@@ -462,7 +464,9 @@ function computeAnomalies() {
     const endStr = isoDate(currentBounds.end);
 
     // Per-category spend this cycle vs trailing 3-cycle avg
-    const monthExpenses = expenses.filter(exp => exp.date >= startStr && exp.date <= endStr);
+    const monthExpenses = expenses.filter(exp =>
+        exp.date >= startStr && exp.date <= endStr && isSpendingKind(exp.kind)
+    );
 
     // Walk back 3 cycles
     const trailingByCategory = {}; // catId -> [c1, c2, c3]
@@ -474,6 +478,7 @@ function computeAnomalies() {
         const eStr = isoDate(b.end);
         const buckets = {};
         expenses.forEach(exp => {
+            if (!isSpendingKind(exp.kind)) return;
             if (exp.date >= sStr && exp.date <= eStr) {
                 const repayments = (exp.swishRepayments || []).reduce((s, r) => s + r.amount, 0);
                 buckets[exp.category] = (buckets[exp.category] || 0) + exp.amount - repayments;

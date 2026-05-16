@@ -3,6 +3,29 @@
 // =====================================================
 let currentEditingAccount = null;
 
+// Net signed effect of all linked transactions on an account.
+// Inflows (income, transfer-in) add; outflows (expense, transfer-out)
+// subtract. For a credit-card account this naturally produces a more-
+// negative number as charges pile up and pushes it back toward zero
+// when payments come in.
+function accountTransactionDelta(accountId) {
+    let delta = 0;
+    for (const exp of expenses) {
+        if (exp.accountId !== accountId) continue;
+        const repayments = (exp.swishRepayments || []).reduce((s, r) => s + r.amount, 0);
+        const net = exp.amount - repayments;
+        const isInflow = exp.kind === 'income' || exp.kind === 'transfer-in';
+        delta += isInflow ? net : -net;
+    }
+    return delta;
+}
+
+// Stored manual balance + impact of every linked transaction.
+function accountCurrentBalance(a) {
+    const base = a.balance || 0;
+    return base + accountTransactionDelta(a.id);
+}
+
 function renderAccountsCard() {
     renderAccountsSummary();
     renderAccountsList();
@@ -12,7 +35,10 @@ function renderAccountsSummary() {
     const totalEl = document.getElementById('accountsTotalBalance');
     const metaEl = document.getElementById('accountsTotalMeta');
     if (!totalEl || !metaEl) return;
-    const total = accounts.reduce((sum, a) => sum + (a.balance || 0), 0);
+    // Credit-card balances are debt, not assets — exclude them from
+    // the "total balance" stat so it reads as money you actually have.
+    const total = accounts.reduce((sum, a) =>
+        a.type === 'credit' ? sum : sum + accountCurrentBalance(a), 0);
     totalEl.textContent = formatCurrency(total);
     if (accounts.length === 0) {
         metaEl.textContent = t('accounts.summaryEmpty');
@@ -53,7 +79,7 @@ function renderAccountsList() {
                     <div class="account-row-name">${a.name} <span class="${tagClass}">${t(tagKey)}</span></div>
                     <div class="account-row-meta">${typeLabel}</div>
                 </div>
-                <div class="account-row-balance">${formatCurrency(a.balance || 0)}</div>
+                <div class="account-row-balance">${formatCurrency(accountCurrentBalance(a))}</div>
             </div>
         `;
     }).join('');

@@ -54,6 +54,7 @@ function renderExpensesList() {
     let totalSpent = 0;
     let totalReceived = 0;
     visible.forEach(exp => {
+        if (isTransferKind(exp.kind)) return; // transfers don't count as spend or receive
         const repayments = (exp.swishRepayments || []).reduce((s, r) => s + r.amount, 0);
         const net = exp.amount - repayments;
         if (exp.kind === 'income') totalReceived += net;
@@ -95,6 +96,9 @@ function renderExpensesList() {
         const repayments = (exp.swishRepayments || []).reduce((s, r) => s + r.amount, 0);
         const netAmount = exp.amount - repayments;
         const isIncome = exp.kind === 'income';
+        const isTransferIn = exp.kind === 'transfer-in';
+        const isTransferOut = exp.kind === 'transfer-out';
+        const isTransfer = isTransferIn || isTransferOut;
         const color = getCategoryColor(exp.category);
         const account = exp.accountId != null ? accountById.get(exp.accountId) : null;
         const accountTag = account
@@ -103,20 +107,25 @@ function renderExpensesList() {
         const incomeTag = isIncome
             ? `<span class="expense-tag income">${t('imports.incomeTag')}</span>`
             : '';
+        const transferTag = isTransfer
+            ? `<span class="expense-tag transfer">${t(isTransferIn ? 'imports.transferIn' : 'imports.transferOut')}</span>`
+            : '';
         const swishTag = repayments > 0
             ? '<span class="expense-tag is-swish">Swish</span>'
             : '';
-        const categoryBadge = isIncome
+        const categoryBadge = (isIncome || isTransfer)
             ? ''
             : `<span class="expense-category" style="--cat-color: ${color};">${getCategoryName(exp.category)}</span>`;
-        const sign = isIncome ? '+' : '';
-        const amountClass = isIncome ? 'expense-amount income' : 'expense-amount';
+        const sign = (isIncome || isTransferIn) ? '+' : (isTransferOut ? '−' : '');
+        const amountClass = isIncome
+            ? 'expense-amount income'
+            : isTransfer ? 'expense-amount transfer' : 'expense-amount';
 
         return `
-            <div class="expense-item ${isIncome ? 'income' : ''}" onclick="openEditModal(${exp.id})">
+            <div class="expense-item ${isIncome ? 'income' : ''} ${isTransfer ? 'transfer' : ''}" onclick="openEditModal(${exp.id})">
                 <div class="expense-info">
                     <div class="expense-tags">
-                        ${categoryBadge}${swishTag}${incomeTag}${accountTag}
+                        ${categoryBadge}${swishTag}${incomeTag}${transferTag}${accountTag}
                     </div>
                     <div class="expense-description">${exp.description}</div>
                 </div>
@@ -148,6 +157,8 @@ function openEditModal(id) {
     if (editAccount) {
         editAccount.innerHTML = renderAccountOptions(exp.accountId);
     }
+    const editKind = document.getElementById('editKind');
+    if (editKind) editKind.value = exp.kind || 'expense';
 
     renderSwishList(exp.swishRepayments || []);
     document.getElementById('editModal').classList.add('active');
@@ -216,9 +227,12 @@ function saveExpenseEdit() {
     const acctEl = document.getElementById('editAccount');
     const accountIdRaw = acctEl ? acctEl.value : '';
     exp.accountId = accountIdRaw ? parseInt(accountIdRaw, 10) : null;
+    const kindEl = document.getElementById('editKind');
+    const validKinds = ['expense', 'income', 'transfer-in', 'transfer-out'];
+    exp.kind = (kindEl && validKinds.includes(kindEl.value)) ? kindEl.value : 'expense';
 
-    db.run('UPDATE expenses SET category = ?, account_id = ? WHERE id = ?',
-        [exp.category, exp.accountId, currentEditingExpense]);
+    db.run('UPDATE expenses SET category = ?, account_id = ?, kind = ? WHERE id = ?',
+        [exp.category, exp.accountId, exp.kind, currentEditingExpense]);
     saveDatabase();
 
     closeEditModal();

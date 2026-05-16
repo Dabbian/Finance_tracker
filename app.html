@@ -565,6 +565,16 @@
             </div>
 
             <div class="form-group">
+                <label for="editKind" data-i18n="labels.transactionType">Type</label>
+                <select id="editKind">
+                    <option value="expense"      data-i18n="kinds.expense">Expense</option>
+                    <option value="income"       data-i18n="kinds.income">Income</option>
+                    <option value="transfer-out" data-i18n="kinds.transferOut">Transfer out (money left this account)</option>
+                    <option value="transfer-in"  data-i18n="kinds.transferIn">Transfer in (money arrived in this account)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
                 <label data-i18n="labels.swishRepayments">Swish Repayments</label>
                 <div class="swish-list" id="swishList"></div>
                 <div style="display: flex; gap: 0.5rem;">

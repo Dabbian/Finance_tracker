@@ -71,10 +71,41 @@ function expenseNet(exp) {
     const repayments = (exp.swishRepayments || []).reduce((s, r) => s + r.amount, 0);
     return exp.amount - repayments;
 }
+
+// Transfers move money between the user's own accounts. They affect
+// each side's account balance but never count as spending or income.
+function isTransferKind(kind) {
+    return kind === 'transfer-in' || kind === 'transfer-out';
+}
+function isSpendingKind(kind) {
+    // Anything not explicitly income/transfer counts as spending —
+    // legacy rows have undefined kind which should still spend.
+    return kind !== 'income' && !isTransferKind(kind);
+}
 // Discretionary amount: same as net, but zeroed for essential
 // categories (Groceries by default) so big shops don't break the
 // streak / paint the savings calendar red.
 function expenseDiscretionary(exp) {
     const net = expenseNet(exp);
     return isEssentialCategory(exp.category) ? 0 : net;
+}
+
+// Sum of kind='income' transactions within a cycle. Used to derive
+// the cycle's actual income (salary + refunds + deposits) instead of
+// relying on the manually entered Monthly Income setting.
+function cycleIncomeFromTransactions(bounds) {
+    const startStr = isoDate(bounds.start);
+    const endStr = isoDate(bounds.end);
+    return expenses.reduce((sum, e) => {
+        if (e.kind !== 'income') return sum; // transfers excluded by being a different kind
+        if (e.date < startStr || e.date > endStr) return sum;
+        return sum + expenseNet(e);
+    }, 0);
+}
+
+// Effective income for a cycle: derived from tagged transactions when
+// any exist, otherwise the manual monthlyIncome setting.
+function effectiveMonthlyIncome(bounds) {
+    const derived = cycleIncomeFromTransactions(bounds);
+    return derived > 0 ? derived : monthlyIncome;
 }
