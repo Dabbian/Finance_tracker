@@ -1592,8 +1592,272 @@
             color: var(--warning, #b45309);
             margin-left: 0.4rem;
         }
-        .import-row.dup-exact { opacity: 0.55; }
+        /* In the review modal, the dimmed-look is reserved for is-skipped;
+           dup-exact only keeps the left-edge marker so users can still see
+           which rows were flagged. */
+        .import-row.dup-exact { box-shadow: inset 3px 0 0 color-mix(in srgb, var(--text) 25%, transparent); }
         .import-row.dup-maybe { box-shadow: inset 3px 0 0 var(--warning, #b45309); }
+
+        /* Each row in the dedicated duplicates popup. Independent of the
+           main .import-row grid — uses its own column layout so it never
+           gets squeezed by the slider's intrinsic width on narrow modals. */
+        /* Row in the duplicates popup. Mirrors the main review modal's
+           single-line layout: info on the left, decision slider on the
+           right. flex-wrap so the slider drops below on narrow modals
+           (or at high browser zoom) instead of crushing the info column. */
+        .dup-row-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.75rem 1rem;
+            flex-wrap: wrap;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .dup-row-card:last-child { border-bottom: none; }
+        .dup-row-card.is-maybe { box-shadow: inset 3px 0 0 var(--warning, #b45309); }
+        .dup-row-card.is-exact { box-shadow: inset 3px 0 0 color-mix(in srgb, var(--text) 25%, transparent); }
+        .dup-row-info {
+            flex: 1 1 220px;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+        .dup-row-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            word-break: break-word;
+            font-size: 0.9375rem;
+        }
+        .dup-row-meta {
+            color: var(--text-light);
+            font-size: 0.8125rem;
+            font-family: 'Nunito Sans', sans-serif;
+            font-variant-numeric: tabular-nums;
+        }
+        .dup-row-amount {
+            color: var(--text);
+            font-weight: 600;
+        }
+        .dup-row-match {
+            color: var(--text-light);
+            font-size: 0.8125rem;
+            font-style: italic;
+            opacity: 0.85;
+        }
+        .import-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        /* Skip ⇄ Import slider used in the duplicates popup. Two text
+           labels flank a horizontal track; the thumb slides left for
+           "Skip", right for "Import". The active label fades to full
+           color, the inactive one stays muted. */
+        /* Segmented Skip/Import pill — labels live inside the track and
+           a sliding thumb sits behind the active label. Same pattern as
+           the theme/light-dark toggle. */
+        .dup-switch {
+            position: relative;
+            display: inline-flex;
+            background: var(--bg-alt);
+            border-radius: 16px;
+            padding: 4px;
+            gap: 0;
+            flex-shrink: 0;
+        }
+        .dup-switch-thumb {
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            width: calc(50% - 4px);
+            height: calc(100% - 8px);
+            border-radius: 14px;
+            background: var(--bg);
+            box-shadow: var(--shadow, 0 1px 3px rgba(0, 0, 0, 0.18));
+            transition: left 180ms ease, background 180ms ease;
+            pointer-events: none;
+        }
+        .dup-switch.is-import .dup-switch-thumb {
+            left: 50%;
+            background: var(--accent, #3b82f6);
+        }
+        .dup-switch-option {
+            position: relative;
+            z-index: 1;
+            background: transparent;
+            color: var(--text-light);
+            border: none;
+            padding: 0.45rem 1.1rem;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            font-family: 'Varela Round', 'Nunito Sans', sans-serif;
+            cursor: pointer;
+            white-space: nowrap;
+            width: auto;
+            transition: color 160ms ease;
+        }
+        .dup-switch-option:hover {
+            background: transparent;
+            transform: none;
+            box-shadow: none;
+            color: var(--text);
+        }
+        .dup-switch:not(.is-import) .dup-switch-option-skip   { color: var(--text); }
+        .dup-switch.is-import      .dup-switch-option-import  { color: #fff; }
+        .dup-switch.is-import      .dup-switch-option-import:hover { color: #fff; }
+        .dup-row-card .dup-switch { margin-left: auto; }
+
+        /* =====================================================
+           Import flow — unified styling for both modals
+           (Possible Duplicates → Review Imported Transactions)
+           ===================================================== */
+        .import-flow-modal {
+            max-width: 880px !important;
+            padding: 1.75rem;
+        }
+        .modal-step {
+            font-family: 'Nunito Sans', sans-serif;
+            font-size: 0.75rem;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--text-light);
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        .import-flow-summary {
+            background: var(--bg-alt);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .import-flow-intro {
+            margin: 0;
+            color: var(--text-light);
+            line-height: 1.5;
+            font-size: 0.9375rem;
+        }
+        .import-flow-bulk-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .import-flow-default-account {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+        .import-flow-default-account label {
+            font-size: 0.8125rem;
+            color: var(--text-light);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .import-flow-default-account select {
+            width: auto;
+            min-width: 180px;
+            padding: 0.55rem 0.75rem;
+            border-radius: 10px;
+        }
+        .import-stat-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+        }
+        .import-stat-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.3rem 0.7rem;
+            border-radius: 999px;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            font-family: 'Nunito Sans', sans-serif;
+            font-variant-numeric: tabular-nums;
+            background: color-mix(in srgb, var(--text) 8%, transparent);
+            color: var(--text);
+        }
+        .import-stat-chip.is-income   { background: color-mix(in srgb, var(--success) 16%, transparent); color: var(--success); }
+        .import-stat-chip.is-transfer { background: color-mix(in srgb, var(--accent) 16%, transparent);  color: var(--accent); }
+        .import-stat-chip.is-swish    { background: color-mix(in srgb, var(--success) 12%, transparent); color: var(--success); }
+        .import-stat-chip.is-dup      { background: color-mix(in srgb, var(--warning, #b45309) 16%, transparent); color: var(--warning, #b45309); }
+        .import-stat-chip-num { font-weight: 700; }
+
+        .import-flow-list {
+            max-height: 440px;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            background: color-mix(in srgb, var(--bg-alt) 50%, transparent);
+        }
+
+        .import-flow-footer {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+            justify-content: flex-end;
+        }
+        .import-flow-footer .btn-secondary {
+            width: auto;
+            min-width: 120px;
+            padding: 0.75rem 1.25rem;
+        }
+        .import-flow-footer .btn-primary {
+            width: auto;
+            min-width: 180px;
+            padding: 0.75rem 1.5rem;
+        }
+
+        /* Bulk-action / tertiary buttons inside summary panels */
+        .btn-tertiary {
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 0.4rem 0.85rem;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            border-radius: 999px;
+            cursor: pointer;
+            width: auto;
+            transition: background 140ms ease, border-color 140ms ease, color 140ms ease;
+        }
+        .btn-tertiary:hover {
+            background: color-mix(in srgb, var(--text) 6%, transparent);
+            border-color: color-mix(in srgb, var(--text) 22%, transparent);
+            transform: none;
+            box-shadow: none;
+        }
+        .btn-tertiary:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+
+        /* Primary explicit class (overrides global button defaults) */
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+            width: auto;
+        }
+
+        /* Focus rings */
+        .modal-close:focus-visible,
+        .import-flow-footer button:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+        .dup-switch-option:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+            border-radius: 10px;
+        }
 
         .expense-date {
             font-family: 'Nunito Sans', sans-serif; font-variant-numeric: tabular-nums;
@@ -2064,11 +2328,9 @@
         /* Excel import preview rows */
         .import-row {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.85rem 0;
+            flex-direction: column;
+            padding: 0;
             border-bottom: 1px solid var(--border);
-            gap: 1rem;
         }
         .import-row:last-child {
             border-bottom: none;
@@ -2079,16 +2341,173 @@
         .import-row .import-amount {
             font-weight: 700;
             white-space: nowrap;
-            font-family: 'Varela Round', 'Nunito Sans', sans-serif;
+            font-family: 'Nunito Sans', sans-serif;
+            font-variant-numeric: tabular-nums;
+            min-width: 100px;
+            text-align: right;
+        }
+        .import-row .import-amount.income { color: var(--success); }
+        .import-row .import-amount.transfer { color: var(--accent); }
+
+        /* Top section of an import row — always visible. Holds description,
+           badges, amount and the Edit / Delete actions. */
+        .import-row-main {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            padding: 0.85rem 1.25rem;
+            flex-wrap: wrap;
+        }
+        .import-row-info {
+            flex: 1 1 220px;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        .import-row-title {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+            font-size: 0.9375rem;
+        }
+        .import-row-meta {
+            color: var(--text-light);
+            font-size: 0.8125rem;
+            font-family: 'Nunito Sans', sans-serif;
+            font-variant-numeric: tabular-nums;
+        }
+        .import-row-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+        .import-row-edit {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: transparent;
+            color: var(--text-light);
+            border: 1px solid var(--border);
+            padding: 0.4rem 0.7rem;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            width: auto;
+            transition: background 140ms ease, color 140ms ease, border-color 140ms ease;
+        }
+        .import-row-edit:hover,
+        .import-row-edit.is-active {
+            color: var(--text);
+            background: color-mix(in srgb, var(--text) 6%, transparent);
+            border-color: color-mix(in srgb, var(--text) 22%, transparent);
+            transform: none;
+            box-shadow: none;
+        }
+        .import-row-edit.is-active {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+        }
+        .import-row-delete {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            color: var(--text-light);
+            border: 1px solid transparent;
+            padding: 0.4rem;
+            border-radius: 10px;
+            cursor: pointer;
+            width: auto;
+            transition: color 140ms ease, background 140ms ease, border-color 140ms ease;
+        }
+        .import-row-delete:hover {
+            color: var(--warning, #b45309);
+            background: color-mix(in srgb, var(--warning, #b45309) 12%, transparent);
+            border-color: color-mix(in srgb, var(--warning, #b45309) 22%, transparent);
+            transform: none;
+            box-shadow: none;
+        }
+        .import-row-edit:focus-visible,
+        .import-row-delete:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+
+        /* Expanded details panel — revealed when user clicks Edit. */
+        .import-row-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 0.75rem 1rem;
+            padding: 0 1.25rem 1rem;
+            border-top: 1px dashed color-mix(in srgb, var(--border) 60%, transparent);
+            margin-top: 0;
+            padding-top: 0.85rem;
+            background: color-mix(in srgb, var(--bg-alt) 35%, transparent);
+        }
+        .import-row.is-expanded .import-row-edit {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+        }
+        .import-row-field {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+        .import-row-field label {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+        .import-row-field select {
+            padding: 0.5rem 0.65rem;
+            border-radius: 10px;
+            background: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+            font-family: inherit;
+        }
+        .import-row-field-skip {
+            grid-column: 1 / -1;
+            justify-self: start;
+        }
+        .import-row-field-skip .import-skip-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.8125rem;
+            color: var(--text-light);
+            cursor: pointer;
+        }
+        .import-row-field-skip input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+        }
+
+        /* Skipped rows are visually dimmed so users instantly see what
+           won't be imported. */
+        .import-row.is-skipped { opacity: 0.55; }
+        .import-tag.is-skipped {
+            background: color-mix(in srgb, var(--text) 12%, transparent);
+            color: var(--text-light);
         }
         .import-row-swish {
+            flex-direction: row;
+            align-items: center;
+            gap: 0.85rem;
             background: color-mix(in srgb, var(--success) 6%, transparent);
             border-radius: 14px;
-            padding-left: 0.75rem;
-            padding-right: 0.75rem;
+            padding: 0.85rem 1.25rem;
             border-bottom: none;
             margin-bottom: 0.25rem;
             position: relative;
+            flex-wrap: wrap;
         }
         .import-row-swish .swish-tag {
             position: absolute;

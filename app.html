@@ -369,6 +369,19 @@
                             <label for="fixedCategory" data-i18n="labels.category">Category</label>
                             <select id="fixedCategory" required></select>
                         </div>
+                        <div class="form-group">
+                            <label for="fixedBillingDay" data-i18n="labels.billingDay">Billing day</label>
+                            <input type="number" id="fixedBillingDay" min="1" max="31" placeholder="1–31" data-i18n-placeholder="placeholders.dayOfMonth">
+                        </div>
+                        <div class="form-group">
+                            <label for="fixedAccount" data-i18n="labels.account">Account</label>
+                            <select id="fixedAccount"></select>
+                        </div>
+                        <div class="form-group">
+                            <label for="fixedMatchKey" data-i18n="labels.matchKeyword">Match keyword</label>
+                            <input type="text" id="fixedMatchKey" placeholder="e.g. hyresavi" data-i18n-placeholder="placeholders.matchKey">
+                            <small style="display:block;margin-top:0.25rem;color:var(--text-light);" data-i18n="hints.matchKey">Used to recognize future transactions. Defaults to the name.</small>
+                        </div>
                         <button type="submit" data-i18n="buttons.addFixed">Add Fixed Expense</button>
                     </form>
                     <div style="margin-top: 1.5rem;" id="fixedExpensesList"></div>
@@ -698,26 +711,54 @@
         </div>
     </div>
 
+    <!-- Import Duplicates Modal — shown first when the parsed file contains
+         rows that look like transactions already in the DB. The user resolves
+         them here, then proceeds to the main review modal. -->
+    <div class="modal" id="importDuplicatesModal">
+        <div class="modal-content import-flow-modal">
+            <div class="modal-header">
+                <div>
+                    <div class="modal-step" data-i18n="imports.stepOneOfTwo">Step 1 of 2 · Resolve duplicates</div>
+                    <h3 class="modal-title" data-i18n="modals.dupReview">Possible Duplicates</h3>
+                </div>
+                <button class="modal-close" onclick="closeImportDuplicatesModal()" data-i18n-aria-label="common.close" aria-label="Close">×</button>
+            </div>
+            <div class="import-flow-summary">
+                <p id="importDupIntro" class="import-flow-intro"></p>
+                <div class="import-flow-bulk-actions">
+                    <button type="button" class="btn-tertiary" onclick="dupBulkSetSkip(true)" data-i18n="imports.dupSkipAll">Skip all</button>
+                    <button type="button" class="btn-tertiary" onclick="dupBulkSetSkip(false)" data-i18n="imports.dupKeepAll">Import all</button>
+                </div>
+            </div>
+            <div id="importDuplicatesList" class="import-flow-list" aria-live="polite"></div>
+            <div class="import-flow-footer">
+                <button class="btn-secondary" onclick="closeImportDuplicatesModal()" data-i18n="common.cancel">Cancel</button>
+                <button class="btn-primary" onclick="continueFromDuplicatesModal()" data-i18n="imports.dupContinue">Continue</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Import Modal -->
     <div class="modal" id="importModal">
-        <div class="modal-content" style="max-width: 900px;">
+        <div class="modal-content import-flow-modal">
             <div class="modal-header">
-                <h3 class="modal-title" data-i18n="modals.reviewImport">Review Imported Transactions</h3>
+                <div>
+                    <div class="modal-step" data-i18n="imports.stepTwoOfTwo">Step 2 of 2 · Confirm import</div>
+                    <h3 class="modal-title" data-i18n="modals.reviewImport">Review Imported Transactions</h3>
+                </div>
                 <button class="modal-close" onclick="closeImportModal()" data-i18n-aria-label="common.close" aria-label="Close">×</button>
             </div>
-            <div style="background: var(--bg-alt); padding: 1rem; border-radius: 8px; margin-bottom: 1rem; display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
-                <div style="flex: 1; min-width: 200px;">
-                    <strong id="importCount">0</strong>
-                </div>
-                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                    <label for="importDefaultAccount" style="font-size: 0.875rem; color: var(--text-light); white-space: nowrap;" data-i18n="imports.applyAccountToAll">Account for all rows:</label>
-                    <select id="importDefaultAccount" style="padding: 0.5rem; min-width: 180px;" onchange="applyImportDefaultAccount()"></select>
+            <div class="import-flow-summary">
+                <div id="importStatChips" class="import-stat-chips" aria-live="polite"></div>
+                <div class="import-flow-default-account">
+                    <label for="importDefaultAccount" data-i18n="imports.applyAccountToAll">Account for all rows:</label>
+                    <select id="importDefaultAccount" onchange="applyImportDefaultAccount()"></select>
                 </div>
             </div>
-            <div id="importPreview" style="max-height: 400px; overflow-y: auto;"></div>
-            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
-                <button class="btn-secondary" onclick="closeImportModal()" style="flex: 1;" data-i18n="common.cancel">Cancel</button>
-                <button onclick="confirmImport()" style="flex: 1;" data-i18n="buttons.importAll">Import All</button>
+            <div id="importPreview" class="import-flow-list"></div>
+            <div class="import-flow-footer">
+                <button class="btn-secondary" onclick="closeImportModal()" data-i18n="common.cancel">Cancel</button>
+                <button class="btn-primary" onclick="confirmImport()" data-i18n="buttons.importAll">Import All</button>
             </div>
         </div>
     </div>

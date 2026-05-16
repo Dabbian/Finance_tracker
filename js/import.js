@@ -262,6 +262,88 @@ function processExcelData(rows) {
         return;
     }
 
+    // If any rows look like duplicates, resolve them in their own popup
+    // first. Cleaner mental model than mixing dupes into the main review.
+    if (pendingImports.some(i => i.duplicateStatus)) {
+        showImportDuplicatesModal();
+    } else {
+        showImportModal();
+    }
+}
+
+// =====================================================
+// Duplicates-first popup
+// Shown before the main import modal whenever any parsed row matched an
+// existing transaction. Lets the user batch-decide skip vs. import-anyway
+// without scrolling past clean rows.
+// =====================================================
+
+function showImportDuplicatesModal() {
+    const list = document.getElementById('importDuplicatesList');
+    const intro = document.getElementById('importDupIntro');
+    if (!list || !intro) return;
+
+    const dups = pendingImports
+        .map((item, idx) => ({ item, idx }))
+        .filter(p => p.item.duplicateStatus);
+
+    const exactN = dups.filter(p => p.item.duplicateStatus === 'exact').length;
+    const maybeN = dups.length - exactN;
+    intro.textContent = t('imports.dupIntro', { exact: exactN, maybe: maybeN, total: dups.length });
+
+    const warnIcon = '<svg viewBox="0 0 16 16" width="11" height="11" aria-hidden="true" style="flex-shrink:0;"><path fill="currentColor" d="M8 1.5 15 14H1L8 1.5Zm0 4.25v3.75M8 11.5h.007" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>';
+    const equalIcon = '<svg viewBox="0 0 16 16" width="11" height="11" aria-hidden="true" style="flex-shrink:0;"><path fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" d="M3 6h10M3 10h10"/></svg>';
+
+    list.innerHTML = dups.map(({ item, idx }) => {
+        const isExact = item.duplicateStatus === 'exact';
+        const badge = isExact
+            ? `<span class="import-tag dup-exact">${equalIcon}<span>${t('imports.dupExact')}</span></span>`
+            : `<span class="import-tag dup-maybe">${warnIcon}<span>${t('imports.dupMaybe')}</span></span>`;
+        const matchLine = item.duplicateMatchDesc
+            ? `<div class="dup-row-match">↪ ${item.duplicateMatchDesc}</div>`
+            : '';
+        return `
+            <div class="dup-row-card ${isExact ? 'is-exact' : 'is-maybe'}">
+                <div class="dup-row-info">
+                    <div class="dup-row-title"><strong>${item.description}</strong> ${badge}</div>
+                    <div class="dup-row-meta">${formatDate(item.date)} · <span class="dup-row-amount">${formatCurrency(item.amount)}</span></div>
+                    ${matchLine}
+                </div>
+                <div class="dup-switch ${item.skip ? '' : 'is-import'}" role="group" aria-label="${t('imports.dupDecisionLabel')}">
+                    <span class="dup-switch-thumb" aria-hidden="true"></span>
+                    <button type="button" class="dup-switch-option dup-switch-option-skip" onclick="setImportDupSkip(${idx}, true)" aria-pressed="${item.skip ? 'true' : 'false'}">${t('imports.dupSkip')}</button>
+                    <button type="button" class="dup-switch-option dup-switch-option-import" onclick="setImportDupSkip(${idx}, false)" aria-pressed="${!item.skip ? 'true' : 'false'}">${t('imports.dupImport')}</button>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    document.getElementById('importDuplicatesModal').classList.add('active');
+}
+
+// Per-row skip handler for the dup modal. Unlike setImportRowSkip we
+// only re-render the dup modal (cheaper, and the main modal isn't open).
+function setImportDupSkip(idx, skip) {
+    const item = pendingImports[idx];
+    if (!item) return;
+    item.skip = !!skip;
+    showImportDuplicatesModal();
+}
+
+function dupBulkSetSkip(skip) {
+    pendingImports.forEach(item => {
+        if (item.duplicateStatus) item.skip = !!skip;
+    });
+    showImportDuplicatesModal();
+}
+
+function closeImportDuplicatesModal() {
+    document.getElementById('importDuplicatesModal').classList.remove('active');
+    pendingImports = [];
+}
+
+function continueFromDuplicatesModal() {
+    document.getElementById('importDuplicatesModal').classList.remove('active');
     showImportModal();
 }
 
@@ -355,28 +437,20 @@ function showImportModal() {
     const transferCount = pendingImports.filter(i => i.kind === 'transfer-in' || i.kind === 'transfer-out').length;
     const incomeCount = pendingImports.filter(i => i.kind === 'income' && !i.isSwishRepayment).length;
     const expenseCount = pendingImports.length - swishCount - incomeCount - transferCount;
-    const exactDupCount = pendingImports.filter(i => i.duplicateStatus === 'exact').length;
-    const maybeDupCount = pendingImports.filter(i => i.duplicateStatus === 'maybe').length;
+    const skippedCount = pendingImports.filter(i => i.skip).length;
 
-    // Update header summary
-    const countEl = document.getElementById('importCount');
-    const parts = [t('expenses.countLabel', { n: expenseCount })];
-    if (incomeCount > 0) {
-        parts.push(`<span style="color: var(--success);">${t(incomeCount === 1 ? 'imports.incomeOne' : 'imports.incomeMany', { n: incomeCount })}</span>`);
+    // Render compact stat chips — easier to scan than a long " · " line.
+    const chipsEl = document.getElementById('importStatChips');
+    if (chipsEl) {
+        const chip = (cls, label, n) => `<span class="import-stat-chip ${cls}"><span class="import-stat-chip-num">${n}</span><span>${label}</span></span>`;
+        const parts = [];
+        if (expenseCount > 0)  parts.push(chip('', t('imports.chipExpenses'), expenseCount));
+        if (incomeCount > 0)   parts.push(chip('is-income', t('imports.chipIncome'), incomeCount));
+        if (transferCount > 0) parts.push(chip('is-transfer', t('imports.chipTransfers'), transferCount));
+        if (swishCount > 0)    parts.push(chip('is-swish', t('imports.chipSwish'), swishCount));
+        if (skippedCount > 0)  parts.push(chip('is-dup', t('imports.chipSkipped'), skippedCount));
+        chipsEl.innerHTML = parts.join('');
     }
-    if (transferCount > 0) {
-        parts.push(`<span style="color: var(--text-light);">${t(transferCount === 1 ? 'imports.transferOne' : 'imports.transferMany', { n: transferCount })}</span>`);
-    }
-    if (swishCount > 0) {
-        parts.push(`<span style="color: var(--success);">${t(swishCount === 1 ? 'expenses.swishOne' : 'expenses.swishMany', { n: swishCount })}</span>`);
-    }
-    if (exactDupCount > 0) {
-        parts.push(`<span style="color: var(--text-light);">${t('imports.dupExactSummary', { n: exactDupCount })}</span>`);
-    }
-    if (maybeDupCount > 0) {
-        parts.push(`<span style="color: var(--warning, #b45309);">${t('imports.dupMaybeSummary', { n: maybeDupCount })}</span>`);
-    }
-    countEl.innerHTML = parts.join(' · ');
 
     // Default-account picker — applied to every row that doesn't have
     // a specific override yet.
@@ -472,8 +546,9 @@ function renderExpenseImportRow(item, idx) {
     else if (isTransferIn) kindBadge = `<span class="import-tag transfer">${t('imports.transferIn')}</span>`;
     else if (isTransferOut) kindBadge = `<span class="import-tag transfer">${t('imports.transferOut')}</span>`;
 
-    // Duplicate detection chip — sits inline with the kind badge so
-    // it's visible without expanding the row.
+    // Duplicate detection chip — small, no inline skip toggle (the user
+    // already resolved each dup in the Step 1 popup, so no need to
+    // re-prompt; the badge is just informational here).
     let dupBadge = '';
     if (item.duplicateStatus === 'exact') {
         dupBadge = `<span class="import-tag dup-exact" title="${escapeAttr(item.duplicateMatchDesc || '')}">${t('imports.dupExact')}</span>`;
@@ -484,54 +559,71 @@ function renderExpenseImportRow(item, idx) {
         dupBadge = `<span class="import-tag dup-maybe" title="${escapeAttr(matchLabel)}">${t('imports.dupMaybe')}</span>`;
     }
 
-    // Skip toggle: only shown when there's something to skip about.
-    let skipToggle = '';
-    if (item.duplicateStatus) {
-        const skipLabel = item.duplicateStatus === 'exact'
-            ? t('imports.importAnyway')
-            : t('imports.skipDup');
-        // For exact dupes the toggle is "import anyway" (checked = import).
-        // For maybe dupes the toggle is "skip"           (checked = skip).
-        const checked = item.duplicateStatus === 'exact'
-            ? (!item.skip ? 'checked' : '')
-            : (item.skip ? 'checked' : '');
-        const onchange = item.duplicateStatus === 'exact'
-            ? `setImportRowSkip(${idx}, !this.checked)`
-            : `setImportRowSkip(${idx}, this.checked)`;
-        skipToggle = `
-            <label class="import-skip-toggle" style="display:inline-flex;align-items:center;gap:0.3rem;font-size:0.75rem;color:var(--text-light);margin-top:0.25rem;">
-                <input type="checkbox" ${checked} onchange="${onchange}" style="width:auto;margin:0;">
-                <span>${skipLabel}</span>
-            </label>`;
-    }
-
     const dupRowClass = item.duplicateStatus === 'exact' ? 'dup-exact'
         : item.duplicateStatus === 'maybe' ? 'dup-maybe' : '';
+    const isExpanded = !!item._expanded;
+    const editIcon = '<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" d="M10.5 2.5l3 3-8 8H2.5v-3l8-8Z"/></svg>';
+    const trashIcon = '<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" d="M3 4.5h10M6 4.5V3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v1.5M4.5 4.5l.6 8.4a1 1 0 0 0 1 .9h3.8a1 1 0 0 0 1-.9l.6-8.4M7 7v4M9 7v4"/></svg>';
+    const skippedBadge = item.skip
+        ? `<span class="import-tag is-skipped">${t('imports.skippedTag')}</span>`
+        : '';
+
     return `
-        <div class="import-row ${isIncome ? 'income' : ''} ${isTransfer ? 'transfer' : ''} ${dupRowClass}">
-            <div style="flex: 1; min-width: 0;">
-                <strong>${item.description}</strong> ${kindBadge}${dupBadge}<br>
-                <small style="color: var(--text-light);">${formatDate(item.date)}</small>
-                ${skipToggle}
+        <div class="import-row ${isIncome ? 'income' : ''} ${isTransfer ? 'transfer' : ''} ${dupRowClass} ${item.skip ? 'is-skipped' : ''} ${isExpanded ? 'is-expanded' : ''}">
+            <div class="import-row-main">
+                <div class="import-row-info">
+                    <div class="import-row-title"><strong>${item.description}</strong> ${kindBadge}${dupBadge}${skippedBadge}</div>
+                    <div class="import-row-meta">${formatDate(item.date)}</div>
+                </div>
+                <div class="${amountClass}">${sign}${formatCurrency(item.amount)}</div>
+                <div class="import-row-actions">
+                    <button type="button" class="import-row-edit ${isExpanded ? 'is-active' : ''}" onclick="toggleImportRowExpanded(${idx})" aria-expanded="${isExpanded ? 'true' : 'false'}" aria-label="${t('imports.editRow')}">${editIcon}<span>${t('imports.editRow')}</span></button>
+                    <button type="button" class="import-row-delete" onclick="removePendingImport(${idx})" aria-label="${t('imports.removeRow')}">${trashIcon}</button>
+                </div>
             </div>
-            <div class="${amountClass}">${sign}${formatCurrency(item.amount)}</div>
-            <select id="import-kind-${idx}" style="padding: 0.5rem; width: 130px;" onchange="setImportRowKind(${idx}, this.value)" title="${t('labels.transactionType')}">
-                <option value="expense"      ${item.kind === 'expense' ? 'selected' : ''}>${t('kinds.expense')}</option>
-                <option value="income"       ${item.kind === 'income' ? 'selected' : ''}>${t('kinds.income')}</option>
-                <option value="transfer-out" ${item.kind === 'transfer-out' ? 'selected' : ''}>${t('imports.transferOut')}</option>
-                <option value="transfer-in"  ${item.kind === 'transfer-in' ? 'selected' : ''}>${t('imports.transferIn')}</option>
-            </select>
-            <select id="import-cat-${idx}" style="padding: 0.5rem; width: 140px;" onchange="pendingImports[${idx}].category = this.value">
-                ${categories.map(cat =>
-                    `<option value="${cat.id}" ${item.category === cat.id ? 'selected' : ''}>${localizedCategoryName(cat)}</option>`
-                ).join('')}
-            </select>
-            <select id="import-acct-${idx}" style="padding: 0.5rem; width: 160px;" onchange="setImportRowAccount(${idx}, this.value)">
-                ${renderAccountOptions(item.accountId)}
-            </select>
-            <button class="delete-btn" onclick="removePendingImport(${idx})">×</button>
+            ${isExpanded ? `
+            <div class="import-row-details">
+                <div class="import-row-field">
+                    <label for="import-kind-${idx}" data-i18n="labels.transactionType">${t('labels.transactionType')}</label>
+                    <select id="import-kind-${idx}" onchange="setImportRowKind(${idx}, this.value)">
+                        <option value="expense"      ${item.kind === 'expense' ? 'selected' : ''}>${t('kinds.expense')}</option>
+                        <option value="income"       ${item.kind === 'income' ? 'selected' : ''}>${t('kinds.income')}</option>
+                        <option value="transfer-out" ${item.kind === 'transfer-out' ? 'selected' : ''}>${t('imports.transferOut')}</option>
+                        <option value="transfer-in"  ${item.kind === 'transfer-in' ? 'selected' : ''}>${t('imports.transferIn')}</option>
+                    </select>
+                </div>
+                <div class="import-row-field">
+                    <label for="import-cat-${idx}">${t('labels.category')}</label>
+                    <select id="import-cat-${idx}" onchange="pendingImports[${idx}].category = this.value">
+                        ${categories.map(cat =>
+                            `<option value="${cat.id}" ${item.category === cat.id ? 'selected' : ''}>${localizedCategoryName(cat)}</option>`
+                        ).join('')}
+                    </select>
+                </div>
+                <div class="import-row-field">
+                    <label for="import-acct-${idx}">${t('labels.account')}</label>
+                    <select id="import-acct-${idx}" onchange="setImportRowAccount(${idx}, this.value)">
+                        ${renderAccountOptions(item.accountId)}
+                    </select>
+                </div>
+                ${item.duplicateStatus ? `
+                <div class="import-row-field import-row-field-skip">
+                    <label class="import-skip-toggle">
+                        <input type="checkbox" ${item.skip ? 'checked' : ''} onchange="setImportRowSkip(${idx}, this.checked)">
+                        <span>${t('imports.skipThisRow')}</span>
+                    </label>
+                </div>` : ''}
+            </div>` : ''}
         </div>
     `;
+}
+
+// Toggle the inline details panel for an import row.
+function toggleImportRowExpanded(idx) {
+    const item = pendingImports[idx];
+    if (!item) return;
+    item._expanded = !item._expanded;
+    showImportModal();
 }
 
 function renderSwishImportRow(item, idx) {
@@ -700,6 +792,13 @@ function confirmImport() {
 
     saveDatabase();
     loadDataFromDB();
+    // After import, re-check fixed expenses against the new transactions
+    // (including historical months). Matches are recognised silently;
+    // unmatched past billing dates get placeholder rows just like at app
+    // init.
+    if (typeof autoCreateMissingFixedExpenseTransactions === 'function') {
+        autoCreateMissingFixedExpenseTransactions();
+    }
     updateDashboard();
     updateCharts();
     closeImportModal();
