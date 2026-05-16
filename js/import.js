@@ -20,6 +20,117 @@ function handleFile(file) {
     document.getElementById('excelFile').value = '';
 }
 
+// Credit-card statements invert the usual sign convention: a charge
+// appears as a positive number (money you owe) and a payment appears
+// as a negative number. For credit-card accounts we flip the rule so
+// charges still count as spending toward the daily budget and streak.
+function accountIsCredit(accountId) {
+    if (accountId == null || accountId === '') return false;
+    const id = parseInt(accountId, 10);
+    const a = accounts.find(x => x.id === id);
+    return !!(a && a.type === 'credit');
+}
+
+function deriveImportKind(signedAmount, isSwishRepayment, accountId, isSalary, transferDirection) {
+    const isPositive = signedAmount > 0;
+    // Transfer wins over salary/swish: it's a movement between your own
+    // accounts and shouldn't be in spending or income totals.
+    if (transferDirection === 'in') return 'transfer-in';
+    if (transferDirection === 'out') return 'transfer-out';
+    if (isSalary) return 'income';
+    if (isSwishRepayment) return 'expense'; // attached to an expense as a repayment
+    if (accountIsCredit(accountId)) {
+        // Flip: positive charge → expense, negative payment → income.
+        return isPositive ? 'expense' : 'income';
+    }
+    return isPositive ? 'income' : 'expense';
+}
+
+// Escape a string for safe inclusion in a RegExp literal.
+function escapeRegex(s) {
+    return String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+// Tiny attribute-safe escaper for short text injected into HTML
+// attributes (titles/aria-labels). Doesn't try to be a full sanitizer
+// — the surrounding code already trusts the descriptions enough to
+// drop them into innerHTML elsewhere.
+function escapeAttr(s) {
+    return String(s || '')
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/</g, '&lt;');
+}
+
+// Normalize a description for fuzzy comparison: NFC, lowercase, trim,
+// collapse internal whitespace. Lets "Coop Konsum  " == "coop konsum".
+function normalizeDescForMatch(s) {
+    return String(s || '').normalize('NFC').toLowerCase().replace(/\s+/g, ' ').trim();
+}
+
+// Look for a previously imported transaction that could be the same as
+// `item`. Returns { status, match } where status is:
+//   'exact' — same amount, same date, same description → almost certainly a dup
+//   'maybe' — same amount, same date, but description differs → ask user
+//   null    — no match
+// Amounts are compared with a 0.01 tolerance to avoid float oddities.
+function findDuplicateForImport(item) {
+    const wantAmount = Math.abs(item.amount);
+    const wantDesc = normalizeDescForMatch(item.description);
+    let maybe = null;
+    for (const exp of expenses) {
+        if (exp.date !== item.date) continue;
+        if (Math.abs((exp.amount || 0) - wantAmount) > 0.01) continue;
+        const haveDesc = normalizeDescForMatch(exp.description);
+        if (haveDesc === wantDesc) {
+            return { status: 'exact', match: exp };
+        }
+        if (!maybe) maybe = exp;
+    }
+    return maybe ? { status: 'maybe', match: maybe } : { status: null, match: null };
+}
+
+// "Lön", "LÖN 2026-05", "Månadslön", "Lon april" — all should match.
+// NFC-normalize first so decomposed accents from bank exports still hit.
+function isSalaryDescription(description) {
+    if (!description) return false;
+    const normalized = String(description).normalize('NFC').toLowerCase();
+    return /\bl[öo]n\b/.test(normalized);
+}
+
+// Decide whether a description points at a known transfer, and which
+// way the money is moving. Returns 'in' | 'out' | null.
+//
+// Direction priority:
+//   1. "till <accountName>"        → 'out'   (money sent to one of your accounts)
+//      "från <accountName>"        → 'in'    (money came from one of your accounts)
+//      "fran <accountName>"        → 'in'    (decomposed-accent variant)
+//      where <accountName> must match an existing account's name.
+//   2. Generic "överf*"/"transfer" word with no account match → use the
+//      signed amount as the direction hint (positive=in, negative=out).
+//   3. Otherwise null.
+//
+// Account-name match: case- and accent-tolerant substring with word
+// boundaries — "till Sparkonto", "Överföring till Sparkonto 12345" all
+// match an account named "Sparkonto".
+function detectTransferDirection(description, signedAmount) {
+    if (!description) return null;
+    const desc = String(description).normalize('NFC').toLowerCase();
+
+    for (const acc of accounts) {
+        const name = (acc.name || '').normalize('NFC').toLowerCase().trim();
+        if (!name) continue;
+        const nameRe = escapeRegex(name);
+        if (new RegExp(`\\btill\\s+${nameRe}\\b`).test(desc)) return 'out';
+        if (new RegExp(`\\bfr[åa]n\\s+${nameRe}\\b`).test(desc)) return 'in';
+    }
+
+    if (/\böverf\w*/.test(desc) || /\btransfer\b/.test(desc)) {
+        return signedAmount > 0 ? 'in' : 'out';
+    }
+    return null;
+}
+
 function processExcelData(rows) {
     pendingImports = [];
 
@@ -110,22 +221,30 @@ function processExcelData(rows) {
         // Detect Swish repayments (incoming money from a friend, e.g., paying you back for shared dinner).
         // Pattern: positive amount AND description starts with "Swish från" (case-insensitive, accent-insensitive).
         const isSwishRepayment = isPositive && isSwishFromText(description);
-        // Anything else that's positive and not a Swish repayment is
-        // treated as income (a deposit / refund / salary). It still
-        // gets a category guess but the user can leave it as "other".
-        const kind = (isPositive && !isSwishRepayment) ? 'income' : 'expense';
-
-        pendingImports.push({
+        const isSalary = isSalaryDescription(description);
+        const transferDirection = detectTransferDirection(description, amountRaw);
+        const draft = {
             date: dateStr,
             description: description,
             amount: amount,
+            signedAmount: amountRaw,    // preserved so kind can flip when account is a credit card
             category: guessCategory(description),
             swishRepayments: [],
             isSwishRepayment: isSwishRepayment,
-            kind,
+            isSalary: isSalary,
+            transferDirection: transferDirection,
+            kind: deriveImportKind(amountRaw, isSwishRepayment, null, isSalary, transferDirection),
             accountId: null,            // user picks from preview UI
             attachToExpenseId: null     // for Swish repayments
-        });
+        };
+        const dup = findDuplicateForImport(draft);
+        draft.duplicateStatus = dup.status;     // 'exact' | 'maybe' | null
+        draft.duplicateMatchDesc = dup.match ? dup.match.description : null;
+        // Exact dupes default to skipped; "maybe" dupes require an
+        // explicit user decision but start as not-skipped (user sees
+        // a warning chip and can flip the toggle).
+        draft.skip = dup.status === 'exact';
+        pendingImports.push(draft);
     });
 
     if (pendingImports.length === 0) {
@@ -233,8 +352,11 @@ function parseFlexibleAmount(value) {
 
 function showImportModal() {
     const swishCount = pendingImports.filter(i => i.isSwishRepayment).length;
+    const transferCount = pendingImports.filter(i => i.kind === 'transfer-in' || i.kind === 'transfer-out').length;
     const incomeCount = pendingImports.filter(i => i.kind === 'income' && !i.isSwishRepayment).length;
-    const expenseCount = pendingImports.length - swishCount - incomeCount;
+    const expenseCount = pendingImports.length - swishCount - incomeCount - transferCount;
+    const exactDupCount = pendingImports.filter(i => i.duplicateStatus === 'exact').length;
+    const maybeDupCount = pendingImports.filter(i => i.duplicateStatus === 'maybe').length;
 
     // Update header summary
     const countEl = document.getElementById('importCount');
@@ -242,8 +364,17 @@ function showImportModal() {
     if (incomeCount > 0) {
         parts.push(`<span style="color: var(--success);">${t(incomeCount === 1 ? 'imports.incomeOne' : 'imports.incomeMany', { n: incomeCount })}</span>`);
     }
+    if (transferCount > 0) {
+        parts.push(`<span style="color: var(--text-light);">${t(transferCount === 1 ? 'imports.transferOne' : 'imports.transferMany', { n: transferCount })}</span>`);
+    }
     if (swishCount > 0) {
         parts.push(`<span style="color: var(--success);">${t(swishCount === 1 ? 'expenses.swishOne' : 'expenses.swishMany', { n: swishCount })}</span>`);
+    }
+    if (exactDupCount > 0) {
+        parts.push(`<span style="color: var(--text-light);">${t('imports.dupExactSummary', { n: exactDupCount })}</span>`);
+    }
+    if (maybeDupCount > 0) {
+        parts.push(`<span style="color: var(--warning, #b45309);">${t('imports.dupMaybeSummary', { n: maybeDupCount })}</span>`);
     }
     countEl.innerHTML = parts.join(' · ');
 
@@ -277,37 +408,125 @@ function renderAccountOptions(selectedId) {
 
 // Apply the default-account dropdown to every pending row that's still
 // unset. Called from the dropdown's onchange handler in the modal.
+// Rows whose kind the user manually picked keep that kind — only the
+// account is changed.
 function applyImportDefaultAccount() {
     const sel = document.getElementById('importDefaultAccount');
     if (!sel) return;
     const id = sel.value || null;
-    pendingImports.forEach((item, idx) => {
+    pendingImports.forEach(item => {
         item.accountId = id;
-        const rowSel = document.getElementById('import-acct-' + idx);
-        if (rowSel) rowSel.value = id || '';
+        if (!item.kindOverride) {
+            item.kind = deriveImportKind(item.signedAmount, item.isSwishRepayment, id, item.isSalary, item.transferDirection);
+        }
     });
+    showImportModal(); // re-render so flipped kinds show their new sign/tag
+}
+
+// Called from each row's account <select> onchange — keeps that one
+// row's kind in sync with the chosen account's type, unless the user
+// has manually overridden the kind for that row.
+function setImportRowAccount(idx, value) {
+    const item = pendingImports[idx];
+    if (!item) return;
+    item.accountId = value || null;
+    if (!item.kindOverride) {
+        item.kind = deriveImportKind(item.signedAmount, item.isSwishRepayment, item.accountId, item.isSalary, item.transferDirection);
+    }
+    showImportModal();
+}
+
+// Toggle whether a row will be inserted on import confirm. Lets the
+// user resurrect an exact-dup row ("import anyway") or skip a maybe-
+// dup row that they've decided is actually the same transaction.
+function setImportRowSkip(idx, skip) {
+    const item = pendingImports[idx];
+    if (!item) return;
+    item.skip = !!skip;
+    showImportModal();
+}
+
+// User-facing manual kind override from the per-row Type dropdown.
+// Marks the row so later account/default changes don't clobber it.
+function setImportRowKind(idx, value) {
+    const item = pendingImports[idx];
+    if (!item) return;
+    const validKinds = ['expense', 'income', 'transfer-in', 'transfer-out'];
+    if (!validKinds.includes(value)) return;
+    item.kind = value;
+    item.kindOverride = true;
+    showImportModal();
 }
 
 function renderExpenseImportRow(item, idx) {
     const isIncome = item.kind === 'income';
-    const amountClass = isIncome ? 'import-amount income' : 'import-amount';
-    const sign = isIncome ? '+' : '';
-    const kindBadge = isIncome
-        ? `<span class="import-tag income">${t('imports.incomeTag')}</span>`
-        : '';
+    const isTransferIn = item.kind === 'transfer-in';
+    const isTransferOut = item.kind === 'transfer-out';
+    const isTransfer = isTransferIn || isTransferOut;
+    const amountClass = isIncome
+        ? 'import-amount income'
+        : isTransfer ? 'import-amount transfer' : 'import-amount';
+    const sign = (isIncome || isTransferIn) ? '+' : (isTransferOut ? '−' : '');
+    let kindBadge = '';
+    if (isIncome) kindBadge = `<span class="import-tag income">${t('imports.incomeTag')}</span>`;
+    else if (isTransferIn) kindBadge = `<span class="import-tag transfer">${t('imports.transferIn')}</span>`;
+    else if (isTransferOut) kindBadge = `<span class="import-tag transfer">${t('imports.transferOut')}</span>`;
+
+    // Duplicate detection chip — sits inline with the kind badge so
+    // it's visible without expanding the row.
+    let dupBadge = '';
+    if (item.duplicateStatus === 'exact') {
+        dupBadge = `<span class="import-tag dup-exact" title="${escapeAttr(item.duplicateMatchDesc || '')}">${t('imports.dupExact')}</span>`;
+    } else if (item.duplicateStatus === 'maybe') {
+        const matchLabel = item.duplicateMatchDesc
+            ? t('imports.dupMaybeWith', { desc: item.duplicateMatchDesc })
+            : t('imports.dupMaybe');
+        dupBadge = `<span class="import-tag dup-maybe" title="${escapeAttr(matchLabel)}">${t('imports.dupMaybe')}</span>`;
+    }
+
+    // Skip toggle: only shown when there's something to skip about.
+    let skipToggle = '';
+    if (item.duplicateStatus) {
+        const skipLabel = item.duplicateStatus === 'exact'
+            ? t('imports.importAnyway')
+            : t('imports.skipDup');
+        // For exact dupes the toggle is "import anyway" (checked = import).
+        // For maybe dupes the toggle is "skip"           (checked = skip).
+        const checked = item.duplicateStatus === 'exact'
+            ? (!item.skip ? 'checked' : '')
+            : (item.skip ? 'checked' : '');
+        const onchange = item.duplicateStatus === 'exact'
+            ? `setImportRowSkip(${idx}, !this.checked)`
+            : `setImportRowSkip(${idx}, this.checked)`;
+        skipToggle = `
+            <label class="import-skip-toggle" style="display:inline-flex;align-items:center;gap:0.3rem;font-size:0.75rem;color:var(--text-light);margin-top:0.25rem;">
+                <input type="checkbox" ${checked} onchange="${onchange}" style="width:auto;margin:0;">
+                <span>${skipLabel}</span>
+            </label>`;
+    }
+
+    const dupRowClass = item.duplicateStatus === 'exact' ? 'dup-exact'
+        : item.duplicateStatus === 'maybe' ? 'dup-maybe' : '';
     return `
-        <div class="import-row ${isIncome ? 'income' : ''}">
+        <div class="import-row ${isIncome ? 'income' : ''} ${isTransfer ? 'transfer' : ''} ${dupRowClass}">
             <div style="flex: 1; min-width: 0;">
-                <strong>${item.description}</strong> ${kindBadge}<br>
+                <strong>${item.description}</strong> ${kindBadge}${dupBadge}<br>
                 <small style="color: var(--text-light);">${formatDate(item.date)}</small>
+                ${skipToggle}
             </div>
             <div class="${amountClass}">${sign}${formatCurrency(item.amount)}</div>
+            <select id="import-kind-${idx}" style="padding: 0.5rem; width: 130px;" onchange="setImportRowKind(${idx}, this.value)" title="${t('labels.transactionType')}">
+                <option value="expense"      ${item.kind === 'expense' ? 'selected' : ''}>${t('kinds.expense')}</option>
+                <option value="income"       ${item.kind === 'income' ? 'selected' : ''}>${t('kinds.income')}</option>
+                <option value="transfer-out" ${item.kind === 'transfer-out' ? 'selected' : ''}>${t('imports.transferOut')}</option>
+                <option value="transfer-in"  ${item.kind === 'transfer-in' ? 'selected' : ''}>${t('imports.transferIn')}</option>
+            </select>
             <select id="import-cat-${idx}" style="padding: 0.5rem; width: 140px;" onchange="pendingImports[${idx}].category = this.value">
                 ${categories.map(cat =>
                     `<option value="${cat.id}" ${item.category === cat.id ? 'selected' : ''}>${localizedCategoryName(cat)}</option>`
                 ).join('')}
             </select>
-            <select id="import-acct-${idx}" style="padding: 0.5rem; width: 160px;" onchange="pendingImports[${idx}].accountId = this.value || null">
+            <select id="import-acct-${idx}" style="padding: 0.5rem; width: 160px;" onchange="setImportRowAccount(${idx}, this.value)">
                 ${renderAccountOptions(item.accountId)}
             </select>
             <button class="delete-btn" onclick="removePendingImport(${idx})">×</button>
@@ -417,6 +636,7 @@ function confirmImport() {
     let insertedExpenses = 0;
     let attachedRepayments = 0;
     let skippedSwish = 0;
+    let skippedDuplicates = 0;
     const failed = [];
 
     // Map from "pending:idx" → assigned DB id, used so swish rows can attach to expenses we just inserted
@@ -425,11 +645,13 @@ function confirmImport() {
     // Phase 1: insert all non-swish expenses, recording their assigned IDs
     pendingImports.forEach((item, idx) => {
         if (item.isSwishRepayment) return;
+        if (item.skip) { skippedDuplicates++; return; }
         const id = baseId + idx;
         const accountId = (item.accountId != null && item.accountId !== '')
             ? parseInt(item.accountId, 10)
             : null;
-        const kind = item.kind === 'income' ? 'income' : 'expense';
+        const validKinds = ['income', 'expense', 'transfer-in', 'transfer-out'];
+        const kind = validKinds.includes(item.kind) ? item.kind : 'expense';
         try {
             db.run(
                 'INSERT INTO expenses (id, amount, category, description, date, swish_repayments, account_id, kind) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
@@ -487,6 +709,7 @@ function confirmImport() {
     if (insertedExpenses > 0) parts.push(t(insertedExpenses === 1 ? 'imports.oneExpenseImported' : 'imports.expensesImported', { n: insertedExpenses }));
     if (attachedRepayments > 0) parts.push(t(attachedRepayments === 1 ? 'imports.oneSwishAttached' : 'imports.swishAttached', { n: attachedRepayments }));
     if (skippedSwish > 0) parts.push(t(skippedSwish === 1 ? 'imports.oneSwishSkipped' : 'imports.swishSkipped', { n: skippedSwish }));
+    if (skippedDuplicates > 0) parts.push(t(skippedDuplicates === 1 ? 'imports.oneDupSkipped' : 'imports.dupSkipped', { n: skippedDuplicates }));
     let msg = parts.length > 0 ? parts.join(' · ') : t('imports.nothingImported');
     if (failed.length > 0) msg += '\n\n' + t('imports.failedSuffix', { n: failed.length });
     alert(msg);

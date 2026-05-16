@@ -4,14 +4,16 @@
 function renderHero(monthSpent) {
     const totalFixed = fixedExpenses.reduce((sum, f) => sum + f.amount, 0);
 
-    // Savings Rate
+    // Savings Rate — prefer income tagged on transactions in the
+    // current cycle; fall back to the manual Monthly Income setting.
+    const incomeRef = effectiveMonthlyIncome(getCycleBounds(currentViewMonth));
     const heroValue = document.getElementById('heroSavingsRate');
     const heroDetail = document.getElementById('heroSavingsDetail');
 
-    if (monthlyIncome > 0) {
+    if (incomeRef > 0) {
         const totalOutflow = monthSpent + totalFixed;
-        const saved = monthlyIncome - totalOutflow;
-        const rate = (saved / monthlyIncome) * 100;
+        const saved = incomeRef - totalOutflow;
+        const rate = (saved / incomeRef) * 100;
         const sign = saved >= 0 ? '+' : '−';
         heroValue.textContent = `${rate.toFixed(0)}%`;
         heroValue.style.color = saved >= 0 ? '' : 'var(--danger)';
@@ -70,6 +72,7 @@ function computeStreak() {
     // doesn't snap the streak.
     const dailyMap = {};
     expenses.forEach(exp => {
+        if (!isSpendingKind(exp.kind)) return; // skip income + transfers
         if (isEssentialCategory(exp.category)) return;
         const repayments = (exp.swishRepayments || []).reduce((s, r) => s + r.amount, 0);
         dailyMap[exp.date] = (dailyMap[exp.date] || 0) + (exp.amount - repayments);
@@ -173,6 +176,7 @@ function computeAvoidanceWins() {
         start.setDate(start.getDate() - 6);
         let total = 0;
         expenses.forEach(exp => {
+            if (!isSpendingKind(exp.kind)) return;
             const d = new Date(exp.date + 'T00:00:00');
             if (d >= start && d <= end) {
                 const repayments = (exp.swishRepayments || []).reduce((s, r) => s + r.amount, 0);

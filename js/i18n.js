@@ -173,6 +173,19 @@ const translations = {
             noAccount: '— No account —',
             applyAccountToAll: 'Account for all rows:',
             incomeTag: 'Income',
+            transferIn: 'Transfer in',
+            transferOut: 'Transfer out',
+            transferOne: '{n} transfer',
+            transferMany: '{n} transfers',
+            dupExact: 'Duplicate',
+            dupMaybe: 'Possible duplicate',
+            dupMaybeWith: 'Possible duplicate of: {desc}',
+            dupExactSummary: '{n} duplicate skipped',
+            dupMaybeSummary: '{n} possible duplicate — review',
+            importAnyway: 'Import anyway',
+            skipDup: 'Skip — this is a duplicate',
+            oneDupSkipped: '{n} duplicate skipped',
+            dupSkipped: '{n} duplicates skipped',
             incomeOne: '{n} incoming payment',
             incomeMany: '{n} incoming payments',
             oneExpenseImported: '{n} expense imported',
@@ -489,7 +502,15 @@ const translations = {
             progress: 'Progress',
             icon: 'Icon',
             categoryOptional: 'Category (Optional)',
-            swishRepayments: 'Swish Repayments'
+            swishRepayments: 'Swish Repayments',
+            tagAsIncome: 'Tag as income (counts toward monthly income)',
+            transactionType: 'Type'
+        },
+        kinds: {
+            expense: 'Expense',
+            income: 'Income',
+            transferOut: 'Transfer out (money left this account)',
+            transferIn: 'Transfer in (money arrived in this account)'
         },
         comparison: {
             vsLast: 'vs last cycle',
@@ -782,6 +803,19 @@ const translations = {
             noAccount: '— Inget konto —',
             applyAccountToAll: 'Konto för alla rader:',
             incomeTag: 'Insättning',
+            transferIn: 'Överföring in',
+            transferOut: 'Överföring ut',
+            transferOne: '{n} överföring',
+            transferMany: '{n} överföringar',
+            dupExact: 'Dubblett',
+            dupMaybe: 'Möjlig dubblett',
+            dupMaybeWith: 'Möjlig dubblett av: {desc}',
+            dupExactSummary: '{n} dubblett hoppas över',
+            dupMaybeSummary: '{n} möjlig dubblett — granska',
+            importAnyway: 'Importera ändå',
+            skipDup: 'Hoppa över — detta är en dubblett',
+            oneDupSkipped: '{n} dubblett hoppas över',
+            dupSkipped: '{n} dubbletter hoppade över',
             incomeOne: '{n} insättning',
             incomeMany: '{n} insättningar',
             oneExpenseImported: '{n} utgift importerad',
@@ -1098,7 +1132,15 @@ const translations = {
             progress: 'Framsteg',
             icon: 'Ikon',
             categoryOptional: 'Kategori (valfritt)',
-            swishRepayments: 'Swish-återbetalningar'
+            swishRepayments: 'Swish-återbetalningar',
+            tagAsIncome: 'Tagga som inkomst (räknas mot månadsinkomst)',
+            transactionType: 'Typ'
+        },
+        kinds: {
+            expense: 'Utgift',
+            income: 'Inkomst',
+            transferOut: 'Överföring ut (pengar lämnade detta konto)',
+            transferIn: 'Överföring in (pengar kom till detta konto)'
         },
         comparison: {
             vsLast: 'vs förra cykeln',

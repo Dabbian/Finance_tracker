@@ -4,9 +4,10 @@ function updateDashboard() {
     const endStr = isoDate(bounds.end);
 
     // Income rows (deposits / refunds) sit in the same table but are
-    // tagged kind='income'. They never count toward "spending" totals.
+    // tagged kind='income'. Transfers (transfer-in/out) move money
+    // between own accounts. Neither counts toward "spending" totals.
     const monthExpenses = expenses.filter(exp =>
-        exp.date >= startStr && exp.date <= endStr && exp.kind !== 'income'
+        exp.date >= startStr && exp.date <= endStr && isSpendingKind(exp.kind)
     );
 
     const totalFixed = fixedExpenses.reduce((sum, f) => sum + f.amount, 0);
@@ -218,7 +219,7 @@ function renderCycleComparison({ bounds, totalSpent, discretionarySpent, availab
     const prevStartStr = isoDate(prev.start);
     const prevEndStr = isoDate(prev.end);
     const prevExpenses = expenses.filter(e =>
-        e.date >= prevStartStr && e.date <= prevEndStr && e.kind !== 'income'
+        e.date >= prevStartStr && e.date <= prevEndStr && isSpendingKind(e.kind)
     );
     if (prevExpenses.length === 0) {
         band.hidden = true;
@@ -234,9 +235,11 @@ function renderCycleComparison({ bounds, totalSpent, discretionarySpent, availab
 
     band.hidden = false;
     setComparisonItem('comparisonSpend', t('comparison.spending'), prevTotalSpent, totalSpent, /*lowerIsBetter=*/true);
-    if (monthlyIncome > 0) {
-        const rateNow = (monthlyIncome - totalSpent) / monthlyIncome * 100;
-        const ratePrev = (monthlyIncome - prevTotalSpent) / monthlyIncome * 100;
+    const incomeNow = effectiveMonthlyIncome(bounds);
+    const incomePrev = effectiveMonthlyIncome(prev);
+    if (incomeNow > 0 && incomePrev > 0) {
+        const rateNow = (incomeNow - totalSpent) / incomeNow * 100;
+        const ratePrev = (incomePrev - prevTotalSpent) / incomePrev * 100;
         setComparisonItem('comparisonSavings', t('comparison.savingsRate'), ratePrev, rateNow, /*lowerIsBetter=*/false, '%', /*absolutePoints=*/true);
     } else {
         const el = document.getElementById('comparisonSavings');

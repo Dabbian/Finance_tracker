@@ -1440,6 +1440,17 @@
             background: color-mix(in srgb, var(--text) 10%, transparent);
             color: var(--text);
         }
+        .expense-tag.transfer {
+            background: color-mix(in srgb, var(--accent) 14%, transparent);
+            color: var(--accent);
+        }
+        .expense-amount.transfer {
+            color: var(--text-light);
+            font-style: italic;
+        }
+        .expense-item.transfer .expense-description {
+            color: var(--text-light);
+        }
         .expense-item.income .expense-description {
             color: var(--text);
         }
@@ -1564,6 +1575,25 @@
         }
         .import-amount.income { color: var(--success); }
         .import-row.income { background: color-mix(in srgb, var(--success) 6%, transparent); }
+        .import-tag.transfer {
+            background: color-mix(in srgb, var(--accent) 16%, transparent);
+            color: var(--accent);
+            margin-left: 0.4rem;
+        }
+        .import-amount.transfer { color: var(--text-light); font-style: italic; }
+        .import-row.transfer { background: color-mix(in srgb, var(--accent) 5%, transparent); }
+        .import-tag.dup-exact {
+            background: color-mix(in srgb, var(--text) 12%, transparent);
+            color: var(--text-light);
+            margin-left: 0.4rem;
+        }
+        .import-tag.dup-maybe {
+            background: color-mix(in srgb, var(--warning, #b45309) 18%, transparent);
+            color: var(--warning, #b45309);
+            margin-left: 0.4rem;
+        }
+        .import-row.dup-exact { opacity: 0.55; }
+        .import-row.dup-maybe { box-shadow: inset 3px 0 0 var(--warning, #b45309); }
 
         .expense-date {
             font-family: 'Nunito Sans', sans-serif; font-variant-numeric: tabular-nums;

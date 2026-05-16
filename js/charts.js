@@ -59,7 +59,9 @@ function updateCharts() {
     const endStr = isoDate(bounds.end);
     const includeFixed = document.getElementById('includeFixed').checked;
 
-    const monthExpenses = expenses.filter(exp => exp.date >= startStr && exp.date <= endStr);
+    const monthExpenses = expenses.filter(exp =>
+        exp.date >= startStr && exp.date <= endStr && isSpendingKind(exp.kind)
+    );
 
     // Category breakdown
     const categoryTotals = {};
